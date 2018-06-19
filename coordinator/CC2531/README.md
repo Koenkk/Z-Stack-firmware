@@ -26,5 +26,5 @@ to
 #else
 ```
 7. Right-click on *CC2531 - ProdHex** and click *Rebuild all*.
-8. Once finished, you can find the `.hex` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.
+8. Once finished, you can find the `CC2531ZNP-Prod.hex` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.
 
