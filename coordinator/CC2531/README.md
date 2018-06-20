@@ -11,7 +11,7 @@
 ```
 to
 ```c
-#define NWK_MAX_DEVICE_LIST 30
+#define NWK_MAX_DEVICE_LIST 25
 ```
 6. Open *CC2531 - ProdHex** -> `ZMain/OnBoard.h` and change:
 ```c
@@ -22,7 +22,7 @@ to
 to
 ```c
 #if defined TC_LINKKEY_JOIN
-#define MAXMEMHEAP  2687
+#define MAXMEMHEAP  2827
 #else
 ```
 7. Right-click on *CC2531 - ProdHex** and click *Rebuild all*.
