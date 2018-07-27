@@ -13,8 +13,9 @@ SECURE=1
 NWK_MAX_DEVICE_LIST=15
 MAXMEMHEAP=3190
 INTER_PAN
+INCLUDE_REVISION_INFORMATION
 ```
 6. Press OK.
-7. Right-click on *CC2531 - ProdHex** and click *Rebuild all*.
-8. Once finished, you can find the `CC2531ZNP-Prod.hex` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.
-
+7. Create `Z-Stack Home 1.2.2a.44539\Components\mt\revision_info.h` with contents `#define CODE_REVISION_NUMBER 20180507`.
+8. Right-click on *CC2531 - ProdHex** and click *Rebuild all*.
+9. Once finished, you can find the `CC2531ZNP-Prod.hex` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.
