@@ -17,6 +17,22 @@ And replace by:
 uartConfig.baudRate = HAL_UART_BR_115200;
 uartConfig.flowControl = FALSE;//Old value true
 ```   
+Edit file Components\mt\MT_SYS.c replace powerOffSoc(void) with:
+```
+  HAL_DISABLE_INTERRUPTS();
+  STIF = 0; //HAL_SLEEP_TIMER_CLEAR_INT;
+  if (ZNP_CFG1_UART == znpCfg1)
+  {
+    HalUARTSuspend();
+  }
+
+  /* Prep CC2530 power mode */
+  //HAL_SLEEP_PREP_POWER_MODE(3);
+  SLEEPCMD &= ~PMODE; /* clear mode bits */
+  SLEEPCMD |= 3;      /* set mode bits  to PM3 */
+  while (!(STLOAD & LDRDY));
+  SystemReset();
+```
 4. Right-click on *CC2530 - ProdHex** and press options. Go to C/C++ compiler -> preprocessor. Change the *Defined symbols* to:
 ```
 FEATURE_SYSTEM_STATS
