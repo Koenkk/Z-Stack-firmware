@@ -33,6 +33,17 @@ Edit file Components\mt\MT_SYS.c replace powerOffSoc(void) with:
   while (!(STLOAD & LDRDY));
   SystemReset();
 ```
+
+Edit znp_app.c add below MT_UartRegisterTaskID(znpTaskId);:
+
+```
+    //Add TX Setting
+    #ifdef HAL_PA_LNA
+      ZMacSetTransmitPower(TX_PWR_PLUS_19);
+    #else
+      ZMacSetTransmitPower(TX_PWR_PLUS_4);
+    #endif
+```
 4. Right-click on *CC2530 - ProdHex** and press options. Go to C/C++ compiler -> preprocessor. Change the *Defined symbols* to:
 ```
 CC2530ZNP
