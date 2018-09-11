@@ -17,5 +17,12 @@ INCLUDE_REVISION_INFORMATION
 ```
 6. Press OK.
 7. Create `Z-Stack Home 1.2.2a.44539\Components\mt\revision_info.h` with contents `#define CODE_REVISION_NUMBER 20180507`.
-8. Right-click on *CC2531 - ProdHex** and click *Rebuild all*.
-9. Once finished, you can find the `CC2531ZNP-Prod.hex` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.
+8. In `NWK\nwk_globals.c` change the following constants.
+```c
+#define NWK_MAX_DATABUFS_WAITING    32    // Waiting to be sent to MAC
+#define NWK_MAX_DATABUFS_SCHEDULED  20    // Timed messages to be sent
+#define NWK_MAX_DATABUFS_CONFIRMED  20    // Held after MAC confirms
+#define NWK_MAX_DATABUFS_TOTAL      48    // Total number of buffers
+```
+9. Right-click on *CC2531 - ProdHex** and click *Rebuild all*.
+10. Once finished, you can find the `CC2531ZNP-Prod.hex` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.
