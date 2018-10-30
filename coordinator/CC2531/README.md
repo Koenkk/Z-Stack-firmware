@@ -4,7 +4,7 @@
 3. In the dropdown, set target to *CC2531 - ProdHex*.
 ![Target](images/target.png)
 4. Right-click on *CC2531 - ProdHex** and press options. Go to C/C++ compiler -> preprocessor. Change the *Defined symbols* to:
-```
+```c
 CC2531ZNP
 ASSERT_RESET
 FAKE_CRC_SHDW
@@ -33,7 +33,7 @@ MAX_NEIGHBOR_ENTRIES=16
 ```
 5. Go to General Options -> Stack/Heap -> and change `XDATA` to `0X300`.
 6. Press OK.
-7. Create `Z-Stack Home 1.2.2a.44539\Components\mt\revision_info.h` with contents `#define CODE_REVISION_NUMBER 20180507`.
+7. Create `Z-Stack Home 1.2.2a.44539\Components\mt\revision_info.h` with contents `#define CODE_REVISION_NUMBER 20181024`.
 8. In `NWK\nwk_globals.c` change the following constants.
 ```c
 #define NWK_MAX_DATABUFS_WAITING    32    // Waiting to be sent to MAC
