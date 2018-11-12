@@ -1,0 +1,179 @@
+diff '--color=auto' -uNpr -x _iss -x Accessories -x Documents -x Tools -x '*.pdf' -x '*.ewd' -x '*.ewp' -x '*.ewt' -x '*.dep' -x settings -x '*.hex' -x CC2530-ProdHex -x CC2530-Debug -x CC2531-ProdHex "Z-Stack Home 1.2.2a.44539_original/Components/mt/MT_SYS.c" "Z-Stack Home 1.2.2a.44539/Components/mt/MT_SYS.c"
+--- "Z-Stack Home 1.2.2a.44539_original/Components/mt/MT_SYS.c"	2015-02-09 20:10:04.000000000 +0100
++++ "Z-Stack Home 1.2.2a.44539/Components/mt/MT_SYS.c"	2018-11-12 20:30:53.679213700 +0100
+@@ -2141,6 +2141,21 @@ static void MT_SysSnifferParameters( uin
+  *****************************************************************************/
+ static void powerOffSoc(void)
+ {
++#if 1
++  HAL_DISABLE_INTERRUPTS();
++  STIF = 0; //HAL_SLEEP_TIMER_CLEAR_INT;
++  if (ZNP_CFG1_UART == znpCfg1)
++  {
++    HalUARTSuspend();
++  }
++
++  /* Prep CC2530 power mode */
++  //HAL_SLEEP_PREP_POWER_MODE(3);
++  SLEEPCMD &= ~PMODE; /* clear mode bits */
++  SLEEPCMD |= 3;      /* set mode bits  to PM3 */
++  while (!(STLOAD & LDRDY));
++  SystemReset();
++#else
+   HAL_DISABLE_INTERRUPTS();
+ 
+   /* turn off the RF front end device */
+@@ -2181,6 +2196,7 @@ static void powerOffSoc(void)
+     PCON = halSleepPconValue;
+     asm("NOP");
+   }
++#endif
+ }
+ #endif
+ 
+diff '--color=auto' -uNpr -x _iss -x Accessories -x Documents -x Tools -x '*.pdf' -x '*.ewd' -x '*.ewp' -x '*.ewt' -x '*.dep' -x settings -x '*.hex' -x CC2530-ProdHex -x CC2530-Debug -x CC2531-ProdHex "Z-Stack Home 1.2.2a.44539_original/Components/mt/revision_info.h" "Z-Stack Home 1.2.2a.44539/Components/mt/revision_info.h"
+--- "Z-Stack Home 1.2.2a.44539_original/Components/mt/revision_info.h"	1970-01-01 01:00:00.000000000 +0100
++++ "Z-Stack Home 1.2.2a.44539/Components/mt/revision_info.h"	2018-11-12 20:46:30.628025400 +0100
+@@ -0,0 +1 @@
++#define CODE_REVISION_NUMBER 20181112
+\ No newline at end of file
+diff '--color=auto' -uNpr -x _iss -x Accessories -x Documents -x Tools -x '*.pdf' -x '*.ewd' -x '*.ewp' -x '*.ewt' -x '*.dep' -x settings -x '*.hex' -x CC2530-ProdHex -x CC2530-Debug -x CC2531-ProdHex "Z-Stack Home 1.2.2a.44539_original/Components/stack/nwk/nwk_globals.c" "Z-Stack Home 1.2.2a.44539/Components/stack/nwk/nwk_globals.c"
+--- "Z-Stack Home 1.2.2a.44539_original/Components/stack/nwk/nwk_globals.c"	2015-01-08 17:32:12.000000000 +0100
++++ "Z-Stack Home 1.2.2a.44539/Components/stack/nwk/nwk_globals.c"	2018-11-12 16:34:25.518337100 +0100
+@@ -70,10 +70,10 @@
+  * CONSTANTS
+  */
+ // Maximums for the data buffer queue
+-#define NWK_MAX_DATABUFS_WAITING    8     // Waiting to be sent to MAC
+-#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
+-#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
+-#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
++#define NWK_MAX_DATABUFS_WAITING    32    // Waiting to be sent to MAC
++#define NWK_MAX_DATABUFS_SCHEDULED  20    // Timed messages to be sent
++#define NWK_MAX_DATABUFS_CONFIRMED  20    // Held after MAC confirms
++#define NWK_MAX_DATABUFS_TOTAL      48    // Total number of buffers
+ 
+ // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
+ // A known shortcoming is that when a message is enqueued as "hold" for a
+diff '--color=auto' -uNpr -x _iss -x Accessories -x Documents -x Tools -x '*.pdf' -x '*.ewd' -x '*.ewp' -x '*.ewt' -x '*.dep' -x settings -x '*.hex' -x CC2530-ProdHex -x CC2530-Debug -x CC2531-ProdHex "Z-Stack Home 1.2.2a.44539_original/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c" "Z-Stack Home 1.2.2a.44539/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c"
+--- "Z-Stack Home 1.2.2a.44539_original/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c"	2014-11-19 14:29:24.000000000 +0100
++++ "Z-Stack Home 1.2.2a.44539/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c"	2018-11-12 17:29:35.943981700 +0100
+@@ -145,7 +145,7 @@ void InitBoard( uint8 level )
+ #if defined CC2531ZNP
+     znpCfg1 = ZNP_CFG1_UART;
+ #elif defined CC2530_MK
+-    znpCfg1 = ZNP_CFG1_SPI;
++    znpCfg1 = ZNP_CFG1_UART;
+     znpCfg0 = ZNP_CFG0_32K_OSC;
+ #else
+     znpCfg1 = P2_0;
+diff '--color=auto' -uNpr -x _iss -x Accessories -x Documents -x Tools -x '*.pdf' -x '*.ewd' -x '*.ewp' -x '*.ewt' -x '*.dep' -x settings -x '*.hex' -x CC2530-ProdHex -x CC2530-Debug -x CC2531-ProdHex "Z-Stack Home 1.2.2a.44539_original/Projects/zstack/ZNP/CC253x/tools/znp-popmask.txt" "Z-Stack Home 1.2.2a.44539/Projects/zstack/ZNP/CC253x/tools/znp-popmask.txt"
+--- "Z-Stack Home 1.2.2a.44539_original/Projects/zstack/ZNP/CC253x/tools/znp-popmask.txt"	1970-01-01 01:00:00.000000000 +0100
++++ "Z-Stack Home 1.2.2a.44539/Projects/zstack/ZNP/CC253x/tools/znp-popmask.txt"	2018-11-12 12:17:10.931868700 +0100
+@@ -0,0 +1,5 @@
++00010
++The first byte of this file is a bit mask that forces the ZNP post processing
++to run popless for the corresponding build types.
++The bit mask is updated when the 'Cancel' button is pressed on a pop-up
++Simply delete this file to get all pop-ups back.
+diff '--color=auto' -uNpr -x _iss -x Accessories -x Documents -x Tools -x '*.pdf' -x '*.ewd' -x '*.ewp' -x '*.ewt' -x '*.dep' -x settings -x '*.hex' -x CC2530-ProdHex -x CC2530-Debug -x CC2531-ProdHex "Z-Stack Home 1.2.2a.44539_original/Projects/zstack/ZNP/Source/preinclude.h" "Z-Stack Home 1.2.2a.44539/Projects/zstack/ZNP/Source/preinclude.h"
+--- "Z-Stack Home 1.2.2a.44539_original/Projects/zstack/ZNP/Source/preinclude.h"	1970-01-01 01:00:00.000000000 +0100
++++ "Z-Stack Home 1.2.2a.44539/Projects/zstack/ZNP/Source/preinclude.h"	2018-11-12 20:39:11.183170700 +0100
+@@ -0,0 +1,64 @@
++//#define CC2530_CC2591 // Uncomment to build for CC2530 + CC2591
++
++#ifndef CC2531ZNP
++  #define ZNP_ALT       // Comment to enable flow control
++  #ifndef CC2530_CC2591
++    // CC2530
++    #undef POWER_SAVING
++    //#define FEATURE_SYSTEM_STATS       // Defined in project settings
++    //#define ASSERT_RESET               // Defined in project settings
++    //#define FAKE_CRC_SHDW              // Defined in project settings
++    #define TC_LINKKEY_JOIN
++    #define ENABLE_MT_SYS_RESET_SHUTDOWN
++    #define SECURE 1
++    //#define INTER_PAN                  // Defined in project settings
++    #define ZTOOL_P1
++    #define CC2530_MK
++    #define HAL_LCD FALSE
++    #define HAL_ADC FALSE
++    #define HAL_UART_DMA_RX_MAX 128
++    #define NWK_MAX_DEVICE_LIST 15
++    #define MAX_NEIGHBOR_ENTRIES 10
++    #define MAXMEMHEAP 3120
++    #define INCLUDE_REVISION_INFORMATION
++  #else
++    // CC2530 + CC2591
++    #undef POWER_SAVING
++    #define CC2530ZNP // This should not be needed
++    //#define FEATURE_SYSTEM_STATS       // Defined in project settings
++    //#define ASSERT_RESET               // Defined in project settings
++    //#define FAKE_CRC_SHDW              // Defined in project settings
++    #define TC_LINKKEY_JOIN
++    #define ENABLE_MT_SYS_RESET_SHUTDOWN
++    #define SECURE 1
++    //#define INTER_PAN                  // Defined in project settings
++    #define ZTOOL_P1
++    #define CC2530_MK // Missing from README.md, but needed to force UART
++    #define HAL_LCD FALSE
++    #define HAL_ADC FALSE
++    #define HAL_UART_DMA_RX_MAX 128
++    #define NWK_MAX_DEVICE_LIST 15
++    #define MAX_NEIGHBOR_ENTRIES 10
++    #define MAXMEMHEAP 3120
++    #define INCLUDE_REVISION_INFORMATION
++    #define HAL_PA_LNA
++  #endif
++#else
++  // CC2531
++  #undef POWER_SAVING
++  //#define ASSERT_RESET               // Defined in project settings
++  //#define FAKE_CRC_SHDW              // Defined in project settings
++  #define TC_LINKKEY_JOIN
++  #undef FEATURE_SYSTEM_STATS
++  #define SECURE 1
++  #define NWK_MAX_DEVICE_LIST 15
++  #define MAXMEMHEAP 3190
++  //#define INTER_PAN                  // Defined in project settings
++  #define INCLUDE_REVISION_INFORMATION
++#endif
++
++// Force UART baud rate to 115200
++#ifdef ZNP_UART_BAUD
++#undef ZNP_UART_BAUD
++#endif
++#define ZNP_UART_BAUD HAL_UART_BR_115200
+\ No newline at end of file
+diff '--color=auto' -uNpr -x _iss -x Accessories -x Documents -x Tools -x '*.pdf' -x '*.ewd' -x '*.ewp' -x '*.ewt' -x '*.dep' -x settings -x '*.hex' -x CC2530-ProdHex -x CC2530-Debug -x CC2531-ProdHex "Z-Stack Home 1.2.2a.44539_original/Projects/zstack/ZNP/Source/znp.cfg" "Z-Stack Home 1.2.2a.44539/Projects/zstack/ZNP/Source/znp.cfg"
+--- "Z-Stack Home 1.2.2a.44539_original/Projects/zstack/ZNP/Source/znp.cfg"	2015-02-22 12:04:32.000000000 +0100
++++ "Z-Stack Home 1.2.2a.44539/Projects/zstack/ZNP/Source/znp.cfg"	2018-11-12 14:55:09.403493800 +0100
+@@ -101,4 +101,6 @@
+ -DMT_ZDO_EXTENSIONS
+ 
+ /* MT_APP interface - useful when ZAP defines ZAP_ZNP_MT for MT_SYS_APP_MSG pass-through. */
+--DMT_APP_FUNC
+\ No newline at end of file
++-DMT_APP_FUNC
++
++--preinclude=preinclude.h
+\ No newline at end of file
+diff '--color=auto' -uNpr -x _iss -x Accessories -x Documents -x Tools -x '*.pdf' -x '*.ewd' -x '*.ewp' -x '*.ewt' -x '*.dep' -x settings -x '*.hex' -x CC2530-ProdHex -x CC2530-Debug -x CC2531-ProdHex "Z-Stack Home 1.2.2a.44539_original/Projects/zstack/ZNP/Source/znp_app.c" "Z-Stack Home 1.2.2a.44539/Projects/zstack/ZNP/Source/znp_app.c"
+--- "Z-Stack Home 1.2.2a.44539_original/Projects/zstack/ZNP/Source/znp_app.c"	2014-11-24 19:26:24.000000000 +0100
++++ "Z-Stack Home 1.2.2a.44539/Projects/zstack/ZNP/Source/znp_app.c"	2018-11-12 20:45:21.634451200 +0100
+@@ -409,6 +409,15 @@ static void npInit(void)
+   {
+     /* npSpiInit() is called by hal_spi.c: HalSpiInit().*/
+   }
++  
++  //Add TX Setting
++#ifdef CC2530_CC2591
++#ifdef HAL_PA_LNA
++    ZMacSetTransmitPower(TX_PWR_PLUS_19);
++#else
++    ZMacSetTransmitPower(TX_PWR_PLUS_4);
++#endif
++#endif
+ 
+   npInitNV();
+ #if defined (MT_ZDO_FUNC)
