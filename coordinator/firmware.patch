@@ -1,0 +1,86 @@
+diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
+new file mode 100644
+index 0000000..4e84274
+--- /dev/null
++++ b/Components/mt/revision_info.h
+@@ -0,0 +1 @@
++#define CODE_REVISION_NUMBER 20181119
+\ No newline at end of file
+diff --git a/Components/stack/nwk/nwk_globals.c b/Components/stack/nwk/nwk_globals.c
+index ba06b98..85c9cfe 100644
+--- a/Components/stack/nwk/nwk_globals.c
++++ b/Components/stack/nwk/nwk_globals.c
+@@ -70,10 +70,10 @@
+  * CONSTANTS
+  */
+ // Maximums for the data buffer queue
+-#define NWK_MAX_DATABUFS_WAITING    8     // Waiting to be sent to MAC
+-#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
+-#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
+-#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
++#define NWK_MAX_DATABUFS_WAITING    32     // Waiting to be sent to MAC
++#define NWK_MAX_DATABUFS_SCHEDULED  20     // Timed messages to be sent
++#define NWK_MAX_DATABUFS_CONFIRMED  20     // Held after MAC confirms
++#define NWK_MAX_DATABUFS_TOTAL      48     // Total number of buffers
+ 
+ // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
+ // A known shortcoming is that when a message is enqueued as "hold" for a
+diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
+new file mode 100644
+index 0000000..344ece2
+--- /dev/null
++++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
+@@ -0,0 +1,38 @@
++#if defined FIRMWARE_CC2531_DEFAULT
++  #define CC2531ZNP
++  #define ASSERT_RESET
++  #define FAKE_CRC_SHDW
++  #define TC_LINKKEY_JOIN
++  #define SECURE 1
++  #define NWK_MAX_DEVICE_LIST 20
++  #define MAXMEMHEAP 3199
++  #define INTER_PAN 1
++  #define INCLUDE_REVISION_INFORMATION
++  #define CONCENTRATOR_ENABLE 1
++  #define CONCENTRATOR_DISCOVERY_TIME 120
++  #define MAX_RTG_SRC_ENTRIES 65
++  #define SRC_RTG_EXPIRY_TIME 2
++  #define CONCENTRATOR_ROUTE_CACHE 1
++  #define MTO_RREQ_LIMIT_TIME 5000
++  #define LINK_DOWN_TRIGGER 5
++  #define BCAST_DELIVERY_TIME 100
++  #define DEF_NWK_RADIUS 5
++  #define NWK_ROUTE_AGE_LIMIT 15
++  #define DEFAULT_ROUTE_REQUEST_RADIUS 15
++  #define ROUTE_DISCOVERY_TIME 10
++  #define NWK_LINK_STATUS_PERIOD 23
++  #define MAX_NEIGHBOR_ENTRIES 16
++
++#elif defined FIRMWARE_CC2531_MAX_DEVICES
++  #define CC2531ZNP
++  #define ASSERT_RESET
++  #define FAKE_CRC_SHDW
++  #define TC_LINKKEY_JOIN
++  #define SECURE 1
++  #define NWK_MAX_DEVICE_LIST 43
++  #define MAXMEMHEAP 3199
++  #define INTER_PAN 1
++  #define INCLUDE_REVISION_INFORMATION
++  #define MAX_NEIGHBOR_ENTRIES 1
++
++#endif
+\ No newline at end of file
+diff --git a/Projects/zstack/ZNP/Source/znp.cfg b/Projects/zstack/ZNP/Source/znp.cfg
+index 409fadb..823bf43 100644
+--- a/Projects/zstack/ZNP/Source/znp.cfg
++++ b/Projects/zstack/ZNP/Source/znp.cfg
+@@ -101,4 +101,6 @@
+ -DMT_ZDO_EXTENSIONS
+ 
+ /* MT_APP interface - useful when ZAP defines ZAP_ZNP_MT for MT_SYS_APP_MSG pass-through. */
+--DMT_APP_FUNC
+\ No newline at end of file
++-DMT_APP_FUNC
++
++--preinclude=preinclude.h
+\ No newline at end of file
