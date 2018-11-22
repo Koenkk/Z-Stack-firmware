@@ -1,12 +1,12 @@
 diff --git a/Components/mt/MT_SYS.c b/Components/mt/MT_SYS.c
-index 514f7bd..d2f8f97 100644
+index 514f7bd..7984305 100644
 --- a/Components/mt/MT_SYS.c
 +++ b/Components/mt/MT_SYS.c
 @@ -2141,6 +2141,21 @@ static void MT_SysSnifferParameters( uint8 *pBuf )
   *****************************************************************************/
  static void powerOffSoc(void)
  {
-+#if defined FIRMWARE_CC2530_DEFAULT
++#if defined(FIRMWARE_CC2530_DEFAULT) || defined(FIRMWARE_CC2530_CC2591_DEFAULT)
 +  HAL_DISABLE_INTERRUPTS();
 +  STIF = 0; //HAL_SLEEP_TIMER_CLEAR_INT;
 +  if (ZNP_CFG1_UART == znpCfg1)
@@ -34,11 +34,11 @@ index 514f7bd..d2f8f97 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..a02968d
+index 0000000..c73110c
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20181122
++#define CODE_REVISION_NUMBER 20181123
 \ No newline at end of file
 diff --git a/Components/stack/nwk/nwk_globals.c b/Components/stack/nwk/nwk_globals.c
 index ba06b98..85c9cfe 100644
@@ -60,29 +60,33 @@ index ba06b98..85c9cfe 100644
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
 diff --git a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
-index 310944f..cecffcd 100644
+index 310944f..2413f14 100644
 --- a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
 +++ b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
-@@ -145,7 +145,13 @@ void InitBoard( uint8 level )
+@@ -144,8 +144,17 @@ void InitBoard( uint8 level )
+ 
  #if defined CC2531ZNP
      znpCfg1 = ZNP_CFG1_UART;
++#elif defined FIRMWARE_CC2530_CC2591_DEFAULT
++    znpCfg1 = ZNP_CFG1_UART;
++    znpCfg0 = ZNP_CFG0_32K_OSC;
  #elif defined CC2530_MK
 +    
-+#if defined FIRMWARE_CC2530_DEFAULT
++  #if defined FIRMWARE_CC2530_DEFAULT
 +    znpCfg1 = ZNP_CFG1_UART;
-+#else
++  #else
      znpCfg1 = ZNP_CFG1_SPI;
-+#endif
++  #endif
 + 
      znpCfg0 = ZNP_CFG0_32K_OSC;
  #else
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..547ed6e
+index 0000000..9bbcb1e
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,58 @@
+@@ -0,0 +1,60 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +#define FAKE_CRC_SHDW
@@ -95,20 +99,7 @@ index 0000000..547ed6e
 +  #define CC2531ZNP
 +  #define NWK_MAX_DEVICE_LIST 20
 +  #define MAXMEMHEAP 3199
-+  #define CONCENTRATOR_ENABLE 1
-+  #define CONCENTRATOR_DISCOVERY_TIME 120
-+  #define MAX_RTG_SRC_ENTRIES 65
-+  #define SRC_RTG_EXPIRY_TIME 2
-+  #define CONCENTRATOR_ROUTE_CACHE 1
-+  #define MTO_RREQ_LIMIT_TIME 5000
-+  #define LINK_DOWN_TRIGGER 5
-+  #define BCAST_DELIVERY_TIME 100
-+  #define DEF_NWK_RADIUS 5
-+  #define NWK_ROUTE_AGE_LIMIT 15
-+  #define DEFAULT_ROUTE_REQUEST_RADIUS 15
-+  #define ROUTE_DISCOVERY_TIME 10
-+  #define NWK_LINK_STATUS_PERIOD 23
-+  #define MAX_NEIGHBOR_ENTRIES 16
++  #define OPTIMIZE_LARGE_NETWORK
 +
 +#elif defined FIRMWARE_CC2531_MAX_DEVICES
 +  #define CC2531ZNP
@@ -125,6 +116,22 @@ index 0000000..547ed6e
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define CC2530_MK
++  #define OPTIMIZE_LARGE_NETWORK  
++
++#elif defined FIRMWARE_CC2530_CC2591_DEFAULT
++  #define NWK_MAX_DEVICE_LIST 15
++  #define MAXMEMHEAP 3135
++  #define ENABLE_MT_SYS_RESET_SHUTDOWN
++  #define ZTOOL_P1
++  #define HAL_LCD FALSE
++  #define HAL_ADC FALSE
++  #define HAL_UART_DMA_RX_MAX 128
++  #define HAL_PA_LNA
++  #define OPTIMIZE_LARGE_NETWORK
++
++#endif
++
++#if defined OPTIMIZE_LARGE_NETWORK
 +  #define CONCENTRATOR_ENABLE 1
 +  #define CONCENTRATOR_DISCOVERY_TIME 120
 +  #define MAX_RTG_SRC_ENTRIES 65
@@ -138,8 +145,7 @@ index 0000000..547ed6e
 +  #define DEFAULT_ROUTE_REQUEST_RADIUS 15
 +  #define ROUTE_DISCOVERY_TIME 10
 +  #define NWK_LINK_STATUS_PERIOD 23
-+  #define MAX_NEIGHBOR_ENTRIES 16  
-+
++  #define MAX_NEIGHBOR_ENTRIES 16
 +#endif
 \ No newline at end of file
 diff --git a/Projects/zstack/ZNP/Source/znp.cfg b/Projects/zstack/ZNP/Source/znp.cfg
@@ -157,7 +163,7 @@ index 409fadb..823bf43 100644
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/Projects/zstack/ZNP/Source/znp_app.c b/Projects/zstack/ZNP/Source/znp_app.c
-index e461086..9dec66a 100644
+index e461086..bde923f 100644
 --- a/Projects/zstack/ZNP/Source/znp_app.c
 +++ b/Projects/zstack/ZNP/Source/znp_app.c
 @@ -390,12 +390,23 @@ static void npInit(void)
@@ -165,14 +171,14 @@ index e461086..9dec66a 100644
  
      uartConfig.configured           = TRUE;
 +
-+#if defined FIRMWARE_CC2530_DEFAULT
++#if defined(FIRMWARE_CC2530_DEFAULT) || defined(FIRMWARE_CC2530_CC2591_DEFAULT)
 +    uartConfig.baudRate             = HAL_UART_BR_115200;
 +#else
      uartConfig.baudRate             = ZNP_UART_BAUD;
 -#ifdef ZNP_ALT
 +#endif
 +
-+#if defined FIRMWARE_CC2530_DEFAULT
++#if defined(FIRMWARE_CC2530_DEFAULT) || defined(FIRMWARE_CC2530_CC2591_DEFAULT)
      uartConfig.flowControl          = FALSE;
  #else
 +  #ifdef ZNP_ALT
@@ -185,3 +191,19 @@ index e461086..9dec66a 100644
      uartConfig.flowControlThreshold = HAL_UART_FLOW_THRESHOLD;
      uartConfig.rx.maxBufSize        = HAL_UART_RX_BUF_SIZE;
      uartConfig.tx.maxBufSize        = HAL_UART_TX_BUF_SIZE;
+@@ -404,6 +415,15 @@ static void npInit(void)
+     uartConfig.callBackFunc         = npUartCback;
+     HalUARTOpen(HAL_UART_PORT, &uartConfig);
+     MT_UartRegisterTaskID(znpTaskId);
++
++#if defined FIRMWARE_CC2530_CC2591_DEFAULT
++    //Add TX Setting
++    #ifdef HAL_PA_LNA
++      ZMacSetTransmitPower(TX_PWR_PLUS_19);
++    #else
++      ZMacSetTransmitPower(TX_PWR_PLUS_4);
++    #endif
++#endif
+   }
+   else
+   {
