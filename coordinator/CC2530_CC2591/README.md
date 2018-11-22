@@ -1,4 +1,4 @@
-# CC2530 coordinator firmware
+# CC2530_CC2591 coordinator firmware
 1. Copy `..\firmware.patch` to `Z-Stack Home 1.2.2a.44539`
 2. Open Git Bash, go to `Z-Stack Home 1.2.2a.44539` and apply the patch using `git apply firmware.patch`.
 3. Open `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\znp.eww` with IAR Embedded workbench for 8051.
