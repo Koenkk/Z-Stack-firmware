@@ -4,7 +4,7 @@
 3. Open `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\znp.eww` with IAR Embedded workbench for 8051.
 4. You will get a warning: *The project file 'CC253(0/1).ewp' is in an old format. Would you like to convert it for use with this version?*. Press **yes** for both.
 5. In the dropdown, set target to *CC2530 - ProdHex*.
-![Target](images/target.PNG)
+![Target](images/target.png)
 6. Right-click on *CC2530 - ProdHex** and press options. Go to C/C++ compiler -> preprocessor. Change the *Defined symbols* to:
 ```c
 FIRMWARE_CC2530_CC2591_DEFAULT
