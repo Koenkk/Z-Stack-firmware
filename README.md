@@ -9,4 +9,4 @@ This reposistory contains:
 - Download and install [IAR Embedded Workbench for 8051](https://www.iar.com/iar-embedded-workbench/#!?architecture=8051).
 - Follow instructions from firmware folder.
 
-*NOTE: For IAR Embedded Workbench for 8051 you need either the full (payed) version or the 30-days evaluation version.*
+*NOTE: For IAR Embedded Workbench for 8051 you need either the full (paid) version or the 30-days evaluation version.*
