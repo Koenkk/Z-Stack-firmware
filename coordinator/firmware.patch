@@ -38,7 +38,7 @@ index 0000000..c73110c
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20181123
++#define CODE_REVISION_NUMBER 20181217
 \ No newline at end of file
 diff --git a/Components/stack/nwk/nwk_globals.c b/Components/stack/nwk/nwk_globals.c
 index ba06b98..85c9cfe 100644
@@ -97,8 +97,8 @@ index 0000000..9bbcb1e
 +
 +#if defined FIRMWARE_CC2531_DEFAULT
 +  #define CC2531ZNP
-+  #define NWK_MAX_DEVICE_LIST 20
-+  #define MAXMEMHEAP 3199
++  #define NWK_MAX_DEVICE_LIST 15
++  #define MAXMEMHEAP 3083
 +  #define OPTIMIZE_LARGE_NETWORK
 +
 +#elif defined FIRMWARE_CC2531_MAX_DEVICES
