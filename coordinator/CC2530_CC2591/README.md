@@ -9,7 +9,7 @@
 ```c
 FIRMWARE_CC2530_CC2591_DEFAULT
 ```
-5. Go to General Options -> Stack/Heap -> Stack sizes -> and change `XDATA` to `0X300`.
+5. Go to General Options -> Stack/Heap -> Stack sizes -> and change `XDATA` to `0x400`.
 6. Press OK.
 7. Right-click on *CC2530 - ProdHex** and click *Rebuild all*.
 8. Once finished, you can find the `CC2530ZNP-Prod.hex` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.
