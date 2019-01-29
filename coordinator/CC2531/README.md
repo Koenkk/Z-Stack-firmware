@@ -9,7 +9,6 @@
 ```c
 FIRMWARE_CC2531_DEFAULT
 ```
-5. Go to General Options -> Stack/Heap -> Stack sizes -> and change `XDATA` to `0X300`.
-6. Press OK.
-7. Right-click on *CC2531 - ProdHex** and click *Rebuild all*.
-8. Once finished, you can find the `CC2531ZNP-Prod.hex` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.
+7. Press OK.
+8. Right-click on *CC2531 - ProdHex** and click *Rebuild all*.
+9. Once finished, you can find the `CC2531ZNP-Prod.hex` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.

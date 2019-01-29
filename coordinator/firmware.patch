@@ -34,14 +34,14 @@ index 514f7bd..7984305 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..c73110c
+index 0000000..0a62cce
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20181123
++#define CODE_REVISION_NUMBER 20190109
 \ No newline at end of file
 diff --git a/Components/stack/nwk/nwk_globals.c b/Components/stack/nwk/nwk_globals.c
-index ba06b98..85c9cfe 100644
+index ba06b98..a8b8c43 100644
 --- a/Components/stack/nwk/nwk_globals.c
 +++ b/Components/stack/nwk/nwk_globals.c
 @@ -70,10 +70,10 @@
@@ -52,10 +52,10 @@ index ba06b98..85c9cfe 100644
 -#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
 -#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
 -#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
-+#define NWK_MAX_DATABUFS_WAITING    32     // Waiting to be sent to MAC
-+#define NWK_MAX_DATABUFS_SCHEDULED  20     // Timed messages to be sent
-+#define NWK_MAX_DATABUFS_CONFIRMED  20     // Held after MAC confirms
-+#define NWK_MAX_DATABUFS_TOTAL      48     // Total number of buffers
++#define NWK_MAX_DATABUFS_WAITING    16     // Waiting to be sent to MAC
++#define NWK_MAX_DATABUFS_SCHEDULED  10     // Timed messages to be sent
++#define NWK_MAX_DATABUFS_CONFIRMED  10     // Held after MAC confirms
++#define NWK_MAX_DATABUFS_TOTAL      24     // Total number of buffers
  
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
@@ -83,23 +83,26 @@ index 310944f..2413f14 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..9bbcb1e
+index 0000000..317cf94
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,60 @@
+@@ -0,0 +1,63 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +#define FAKE_CRC_SHDW
 +#define TC_LINKKEY_JOIN
 +#define SECURE 1
-+#define INTER_PAN 1
 +#define INCLUDE_REVISION_INFORMATION
++
++// Disabling MULTICAST is required in order for proper group support.
++// If MULTICAST is not disabled, the group adress is not included in the APS header
++#define MULTICAST_ENABLED FALSE
 +
 +#if defined FIRMWARE_CC2531_DEFAULT
 +  #define CC2531ZNP
-+  #define NWK_MAX_DEVICE_LIST 20
-+  #define MAXMEMHEAP 3199
-+  #define OPTIMIZE_LARGE_NETWORK
++  #define NWK_MAX_DEVICE_LIST 15
++  #define MAXMEMHEAP 3115
++  #define OPTIMIZE_LARGE_NETWORK  
 +
 +#elif defined FIRMWARE_CC2531_MAX_DEVICES
 +  #define CC2531ZNP
@@ -112,7 +115,7 @@ index 0000000..9bbcb1e
 +  #define HAL_ADC FALSE
 +  #define HAL_UART_DMA_RX_MAX 128
 +  #define NWK_MAX_DEVICE_LIST 15
-+  #define MAXMEMHEAP 3221
++  #define MAXMEMHEAP 2997
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define CC2530_MK
@@ -120,7 +123,7 @@ index 0000000..9bbcb1e
 +
 +#elif defined FIRMWARE_CC2530_CC2591_DEFAULT
 +  #define NWK_MAX_DEVICE_LIST 15
-+  #define MAXMEMHEAP 3135
++  #define MAXMEMHEAP 2995
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define HAL_LCD FALSE
@@ -134,17 +137,17 @@ index 0000000..9bbcb1e
 +#if defined OPTIMIZE_LARGE_NETWORK
 +  #define CONCENTRATOR_ENABLE 1
 +  #define CONCENTRATOR_DISCOVERY_TIME 120
-+  #define MAX_RTG_SRC_ENTRIES 65
-+  #define SRC_RTG_EXPIRY_TIME 2
++  #define MAX_RTG_SRC_ENTRIES 25
++  #define SRC_RTG_EXPIRY_TIME 5
 +  #define CONCENTRATOR_ROUTE_CACHE 1
 +  #define MTO_RREQ_LIMIT_TIME 5000
-+  #define LINK_DOWN_TRIGGER 5
++  #define LINK_DOWN_TRIGGER 6
 +  #define BCAST_DELIVERY_TIME 100
-+  #define DEF_NWK_RADIUS 5
-+  #define NWK_ROUTE_AGE_LIMIT 15
-+  #define DEFAULT_ROUTE_REQUEST_RADIUS 15
-+  #define ROUTE_DISCOVERY_TIME 10
-+  #define NWK_LINK_STATUS_PERIOD 23
++  #define DEF_NWK_RADIUS 10
++  #define NWK_ROUTE_AGE_LIMIT 10
++  #define DEFAULT_ROUTE_REQUEST_RADIUS 20
++  #define ROUTE_DISCOVERY_TIME 8
++  #define NWK_LINK_STATUS_PERIOD 20
 +  #define MAX_NEIGHBOR_ENTRIES 16
 +#endif
 \ No newline at end of file
