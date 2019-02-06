@@ -83,13 +83,19 @@ index 7c6c77e..b49a5ca 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..317cf94
+index 0000000..326889b
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,69 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
-+#define FAKE_CRC_SHDW
++
++#if defined FIRMWARE_SBL
++  #define MAKE_CRC_SHDW
++#else 
++  #define FAKE_CRC_SHDW
++#endif
++
 +#define TC_LINKKEY_JOIN
 +#define SECURE 1
 +#define INCLUDE_REVISION_INFORMATION

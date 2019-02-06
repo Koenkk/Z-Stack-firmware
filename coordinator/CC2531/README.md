@@ -8,6 +8,9 @@
 6. Right-click on *CC2531 - ProdHex** and press options. Go to C/C++ compiler -> preprocessor. Change the *Defined symbols* to:
 ```c
 FIRMWARE_CC2531_DEFAULT
+
+// Uncomment this if you want to compile the SBL (.bin) firmware:
+// FIRMWARE_SBL 
 ```
 7. Press OK.
 8. Right-click on *CC2531 - ProdHex** and click *Rebuild all*.
