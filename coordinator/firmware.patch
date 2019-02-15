@@ -96,10 +96,10 @@ index 7c6c77e..b49a5ca 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..326889b
+index 0000000..a22da72
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,69 @@
+@@ -0,0 +1,84 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +
@@ -116,6 +116,22 @@ index 0000000..326889b
 +// Disabling MULTICAST is required in order for proper group support.
 +// If MULTICAST is not disabled, the group adress is not included in the APS header
 +#define MULTICAST_ENABLED FALSE
++
++
++/**
++ * Reduce BCAST_DELIVERY_TIME and increase MAX_BCAST time.
++ * BCAST_DELIVERY_TIME is the length of time a broadcast message is kept in the broadcast table
++ * MAX_BCAST is the max number of messages that are in the broadcast table
++ * If e.g. BCAST_DELIVERY_TIME = 1 second and MAX_BCAST = 10; 10 broadcast messages per second can be send.
++ * 
++ * Zigbee2mqtt has a fixed delay of 170ms between each command.
++ * Therefore a BCAST_DELIVERY_TIME = 20 (= 2 seconds) and MAX_BCAST = 12 allows us to send
++ * 2 / 12 = 1 group command per 166ms, which is just below the zigbee2mqtt delay.
++ * Therefore the broadcast table will never get full.
++ */
++#define BCAST_DELIVERY_TIME 20
++#undef MAX_BCAST // avoids incompatible redefinition of macro warning
++#define MAX_BCAST 12
 +
 +#if defined FIRMWARE_CC2531_DEFAULT
 +  #define CC2531ZNP
@@ -161,7 +177,6 @@ index 0000000..326889b
 +  #define CONCENTRATOR_ROUTE_CACHE 1
 +  #define MTO_RREQ_LIMIT_TIME 5000
 +  #define LINK_DOWN_TRIGGER 6
-+  #define BCAST_DELIVERY_TIME 100
 +  #define DEF_NWK_RADIUS 10
 +  #define NWK_ROUTE_AGE_LIMIT 10
 +  #define DEFAULT_ROUTE_REQUEST_RADIUS 20
