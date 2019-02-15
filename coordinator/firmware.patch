@@ -34,11 +34,11 @@ index 35aae57..176a2ae 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..0a62cce
+index 0000000..47b5e73
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190109
++#define CODE_REVISION_NUMBER 20190215
 \ No newline at end of file
 diff --git a/Components/stack/nwk/nwk_globals.c b/Components/stack/nwk/nwk_globals.c
 index 20df18e..15c9cbb 100644
@@ -59,6 +59,19 @@ index 20df18e..15c9cbb 100644
  
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
+diff --git a/Components/stack/zdo/ZDApp.c b/Components/stack/zdo/ZDApp.c
+index 242be04..cca4781 100644
+--- a/Components/stack/zdo/ZDApp.c
++++ b/Components/stack/zdo/ZDApp.c
+@@ -3463,7 +3463,7 @@ void ZDApp_NVUpdate( void )
+  */
+ uint16 ZDApp_CoordStartPANIDConflictCB( uint16 panid )
+ {
+-  return ( panid + 1 );
++  return ( panid );
+ }
+ 
+ /*********************************************************************
 diff --git a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
 index 7c6c77e..b49a5ca 100644
 --- a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
