@@ -34,12 +34,39 @@ index 35aae57..176a2ae 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..47b5e73
+index 0000000..004588d
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190215
++#define CODE_REVISION_NUMBER 20190217
 \ No newline at end of file
+diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
+index c6183b6..cd5b455 100644
+--- a/Components/stack/af/AF.c
++++ b/Components/stack/af/AF.c
+@@ -372,10 +372,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16 Src
+ #if !defined ( APS_NO_GROUPS )
+     // Find the first endpoint for this group
+     grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
+-    if ( grpEp == APS_GROUPS_EP_NOT_FOUND )
+-      return;   // No endpoint found
+-
+-    epDesc = afFindEndPointDesc( grpEp );
++    if ( grpEp == APS_GROUPS_EP_NOT_FOUND ) {
++      // No endpoint found, default to endpoint 1.
++      // In the original source code there is a return here. 
++      // This prevent the messags from being forwarded.
++      // For our use-case we want to capture all messages. 
++      // Even if the coordinator is not in the group.
++      epDesc = afFindEndPointDesc( 1 );
++    }
++    else {
++      epDesc = afFindEndPointDesc( grpEp );
++    }
++    
+     if ( epDesc == NULL )
+       return;   // Endpoint descriptor not found
+ 
 diff --git a/Components/stack/nwk/nwk_globals.c b/Components/stack/nwk/nwk_globals.c
 index 20df18e..15c9cbb 100644
 --- a/Components/stack/nwk/nwk_globals.c
