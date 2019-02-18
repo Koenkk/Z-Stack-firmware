@@ -123,7 +123,7 @@ index 7c6c77e..b49a5ca 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..a22da72
+index 0000000..393f8fd
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 @@ -0,0 +1,84 @@
@@ -163,7 +163,7 @@ index 0000000..a22da72
 +#if defined FIRMWARE_CC2531_DEFAULT
 +  #define CC2531ZNP
 +  #define NWK_MAX_DEVICE_LIST 15
-+  #define MAXMEMHEAP 3115
++  #define MAXMEMHEAP 3075
 +  #define OPTIMIZE_LARGE_NETWORK  
 +
 +#elif defined FIRMWARE_CC2531_MAX_DEVICES
