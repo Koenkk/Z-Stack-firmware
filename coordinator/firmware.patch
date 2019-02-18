@@ -41,7 +41,7 @@ index 0000000..004588d
 +#define CODE_REVISION_NUMBER 20190217
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
-index c6183b6..cd5b455 100644
+index c6183b6..2b885b6 100644
 --- a/Components/stack/af/AF.c
 +++ b/Components/stack/af/AF.c
 @@ -372,10 +372,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16 Src
@@ -67,6 +67,19 @@ index c6183b6..cd5b455 100644
      if ( epDesc == NULL )
        return;   // Endpoint descriptor not found
  
+@@ -392,6 +400,12 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16 Src
+       epDesc = pList->epDesc;
+     }
+   }
++  else if ( aff->DstEndPoint == 10 || aff->DstEndPoint == 11 ) {
++    if ( (epDesc = afFindEndPointDesc( 1 )) )
++    {
++      pList = afFindEndPointDescList( epDesc->endPoint );
++    }
++  }
+   else if ( (epDesc = afFindEndPointDesc( aff->DstEndPoint )) )
+   {
+     pList = afFindEndPointDescList( epDesc->endPoint );
 diff --git a/Components/stack/nwk/nwk_globals.c b/Components/stack/nwk/nwk_globals.c
 index 20df18e..15c9cbb 100644
 --- a/Components/stack/nwk/nwk_globals.c
