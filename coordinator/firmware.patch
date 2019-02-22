@@ -34,11 +34,11 @@ index 35aae57..176a2ae 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..4eb48f2
+index 0000000..82ad6bc
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190218
++#define CODE_REVISION_NUMBER 20190222
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index c6183b6..2b885b6 100644
@@ -80,25 +80,6 @@ index c6183b6..2b885b6 100644
    else if ( (epDesc = afFindEndPointDesc( aff->DstEndPoint )) )
    {
      pList = afFindEndPointDescList( epDesc->endPoint );
-diff --git a/Components/stack/nwk/nwk_globals.c b/Components/stack/nwk/nwk_globals.c
-index 20df18e..15c9cbb 100644
---- a/Components/stack/nwk/nwk_globals.c
-+++ b/Components/stack/nwk/nwk_globals.c
-@@ -70,10 +70,10 @@
-  * CONSTANTS
-  */
- // Maximums for the data buffer queue
--#define NWK_MAX_DATABUFS_WAITING    8     // Waiting to be sent to MAC
--#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
--#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
--#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
-+#define NWK_MAX_DATABUFS_WAITING    16     // Waiting to be sent to MAC
-+#define NWK_MAX_DATABUFS_SCHEDULED  10     // Timed messages to be sent
-+#define NWK_MAX_DATABUFS_CONFIRMED  10     // Held after MAC confirms
-+#define NWK_MAX_DATABUFS_TOTAL      24     // Total number of buffers
- 
- // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
- // A known shortcoming is that when a message is enqueued as "hold" for a
 diff --git a/Components/stack/zdo/ZDApp.c b/Components/stack/zdo/ZDApp.c
 index 242be04..cca4781 100644
 --- a/Components/stack/zdo/ZDApp.c
@@ -136,10 +117,10 @@ index 7c6c77e..b49a5ca 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..393f8fd
+index 0000000..5ec46d5
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,84 @@
+@@ -0,0 +1,90 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +
@@ -152,6 +133,12 @@ index 0000000..393f8fd
 +#define TC_LINKKEY_JOIN
 +#define SECURE 1
 +#define INCLUDE_REVISION_INFORMATION
++
++#undef APS_MAX_GROUPS
++#define APS_MAX_GROUPS 1
++
++#undef NWK_MAX_BINDING_ENTRIES
++#define NWK_MAX_BINDING_ENTRIES 1
 +
 +// Disabling MULTICAST is required in order for proper group support.
 +// If MULTICAST is not disabled, the group adress is not included in the APS header
@@ -176,7 +163,7 @@ index 0000000..393f8fd
 +#if defined FIRMWARE_CC2531_DEFAULT
 +  #define CC2531ZNP
 +  #define NWK_MAX_DEVICE_LIST 15
-+  #define MAXMEMHEAP 3075
++  #define MAXMEMHEAP 3117
 +  #define OPTIMIZE_LARGE_NETWORK  
 +
 +#elif defined FIRMWARE_CC2531_MAX_DEVICES
