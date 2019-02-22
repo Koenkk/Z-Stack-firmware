@@ -1,3 +1,7 @@
+# 20190222
+- Decreased binding and group table size to 1, allows for more memory allocated to the heap. It's not used by Zigbee2mqtt anyway.
+- Reverted size of data buffers to default, a buffer full error is now properly handled by Zigbee2mqtt.
+
 # 20190218
 - Fixed `MAXMEMHEAP`
 - Forward messages to endpoint 10 and 11 to 1.
