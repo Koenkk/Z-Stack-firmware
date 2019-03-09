@@ -117,7 +117,7 @@ index 7c6c77e..b49a5ca 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..7db1502
+index 0000000..60cdc2d
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 @@ -0,0 +1,82 @@
@@ -179,7 +179,7 @@ index 0000000..7db1502
 +#elif defined FIRMWARE_CC2530_DEFAULT
 +  #define HAL_UART_DMA_RX_MAX 128
 +  #define NWK_MAX_DEVICE_LIST 15
-+  #define MAXMEMHEAP 2997
++  #define MAXMEMHEAP 2909
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define CC2530_MK
@@ -187,7 +187,7 @@ index 0000000..7db1502
 +
 +#elif defined FIRMWARE_CC2530_CC2591_DEFAULT
 +  #define NWK_MAX_DEVICE_LIST 15
-+  #define MAXMEMHEAP 2995
++  #define MAXMEMHEAP 2907
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define HAL_UART_DMA_RX_MAX 128
