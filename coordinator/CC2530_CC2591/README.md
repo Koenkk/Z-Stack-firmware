@@ -15,3 +15,5 @@ FIRMWARE_CC2530_CC2591_DEFAULT
 7. Press OK.
 8. Right-click on *CC2530 - ProdHex** (or *CC2530 - ProdSBL for SBL) and click *Rebuild all*.
 9. Once finished, you can find the `CC2530ZNP-Prod.hex` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.
+
+**NOTE:** This Firmware is also compatible with CC2530 + RFX2401 Device like the GBA GB2530S Zigbee USB-Stick.
