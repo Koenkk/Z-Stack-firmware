@@ -1,3 +1,7 @@
+# 20190315
+- Restructured repo
+- Added `MAX_STABILITY` firmware
+
 # 20190223
 - Reduced memory footprint
 - Increased number of routes to remember to 40

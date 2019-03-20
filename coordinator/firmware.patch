@@ -1,12 +1,12 @@
 diff --git a/Components/mt/MT_SYS.c b/Components/mt/MT_SYS.c
-index 35aae57..176a2ae 100644
+index 35aae57..a74d800 100644
 --- a/Components/mt/MT_SYS.c
 +++ b/Components/mt/MT_SYS.c
 @@ -2141,6 +2141,21 @@ static void MT_SysSnifferParameters( uint8 *pBuf )
   *****************************************************************************/
  static void powerOffSoc(void)
  {
-+#if defined(FIRMWARE_CC2530_DEFAULT) || defined(FIRMWARE_CC2530_CC2591_DEFAULT)
++#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591)
 +  HAL_DISABLE_INTERRUPTS();
 +  STIF = 0; //HAL_SLEEP_TIMER_CLEAR_INT;
 +  if (ZNP_CFG1_UART == znpCfg1)
@@ -34,11 +34,11 @@ index 35aae57..176a2ae 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..4edc622
+index 0000000..ca3db55
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190223
++#define CODE_REVISION_NUMBER 20190315
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index c6183b6..2b885b6 100644
@@ -94,19 +94,28 @@ index 242be04..cca4781 100644
  
  /*********************************************************************
 diff --git a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
-index 7c6c77e..b49a5ca 100644
+index 7c6c77e..c99b840 100644
 --- a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
 +++ b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
+@@ -24,7 +24,7 @@
+   its documentation for any purpose.
+ 
+   YOU FURTHER ACKNOWLEDGE AND AGREE THAT THE SOFTWARE AND DOCUMENTATION ARE
+-  PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
++  PROVIDED ï¿½AS ISï¿½ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+   INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY, TITLE,
+   NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL
+   TEXAS INSTRUMENTS OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER CONTRACT,
 @@ -144,8 +144,17 @@ void InitBoard( uint8 level )
  
  #if defined CC2531ZNP
      znpCfg1 = ZNP_CFG1_UART;
-+#elif defined FIRMWARE_CC2530_CC2591_DEFAULT
++#elif defined FIRMWARE_CC2530_CC2591
 +    znpCfg1 = ZNP_CFG1_UART;
 +    znpCfg0 = ZNP_CFG0_32K_OSC;
  #elif defined CC2530_MK
 +    
-+  #if defined FIRMWARE_CC2530_DEFAULT
++  #if defined FIRMWARE_CC2530
 +    znpCfg1 = ZNP_CFG1_UART;
 +  #else
      znpCfg1 = ZNP_CFG1_SPI;
@@ -117,10 +126,10 @@ index 7c6c77e..b49a5ca 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..60cdc2d
+index 0000000..f1a30c7
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,115 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +
@@ -164,35 +173,68 @@ index 0000000..60cdc2d
 +#define HAL_LCD FALSE
 +#define HAL_ADC FALSE
 +
-+#if defined FIRMWARE_CC2531_DEFAULT
++/**
++ * CC2531
++ */
++#if defined FIRMWARE_CC2531
 +  #define CC2531ZNP
-+  #define NWK_MAX_DEVICE_LIST 15
-+  #define MAXMEMHEAP 3029
-+  #define OPTIMIZE_LARGE_NETWORK  
 +
-+#elif defined FIRMWARE_CC2531_MAX_DEVICES
-+  #define CC2531ZNP
-+  #define NWK_MAX_DEVICE_LIST 43
-+  #define MAXMEMHEAP 3199
-+  #define MAX_NEIGHBOR_ENTRIES 1
++  #if defined FIRMWARE_DEFAULT
++    #define NWK_MAX_DEVICE_LIST 15
++    #define MAXMEMHEAP 3029
++    #define OPTIMIZE_LARGE_NETWORK 
 +
-+#elif defined FIRMWARE_CC2530_DEFAULT
++  #elif defined FIRMWARE_MAX_STABILITY 
++    #define NWK_MAX_DEVICE_LIST 5
++    #define MAXMEMHEAP 3309
++    #define OPTIMIZE_LARGE_NETWORK 
++
++  #elif defined FIRMWARE_MAX_DEVICES
++    #define NWK_MAX_DEVICE_LIST 43
++    #define MAXMEMHEAP 3199
++    #define MAX_NEIGHBOR_ENTRIES 1 
++
++  #endif 
++
++/**
++ * CC2530
++ */
++#elif defined FIRMWARE_CC2530
 +  #define HAL_UART_DMA_RX_MAX 128
-+  #define NWK_MAX_DEVICE_LIST 15
-+  #define MAXMEMHEAP 2909
++  #define OPTIMIZE_LARGE_NETWORK  
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define CC2530_MK
-+  #define OPTIMIZE_LARGE_NETWORK  
 +
-+#elif defined FIRMWARE_CC2530_CC2591_DEFAULT
-+  #define NWK_MAX_DEVICE_LIST 15
-+  #define MAXMEMHEAP 2907
++  #if defined FIRMWARE_DEFAULT
++    #define NWK_MAX_DEVICE_LIST 15
++    #define MAXMEMHEAP 2909
++
++  #elif defined FIRMWARE_MAX_STABILITY 
++    #define NWK_MAX_DEVICE_LIST 5
++    #define MAXMEMHEAP 3189
++  
++  #endif  
++
++/**
++ * CC2530 + CC2591
++ */
++#elif defined FIRMWARE_CC2530_CC2591
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define HAL_UART_DMA_RX_MAX 128
 +  #define HAL_PA_LNA
 +  #define OPTIMIZE_LARGE_NETWORK
++
++  #if defined FIRMWARE_DEFAULT
++    #define NWK_MAX_DEVICE_LIST 15
++    #define MAXMEMHEAP 2907
++
++  #elif defined FIRMWARE_MAX_STABILITY 
++    #define NWK_MAX_DEVICE_LIST 5
++    #define MAXMEMHEAP 3187
++
++  #endif
 +
 +#endif
 +
@@ -219,7 +261,7 @@ index 7e524a9..6326400 100644
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/Projects/zstack/ZNP/Source/znp_app.c b/Projects/zstack/ZNP/Source/znp_app.c
-index 470ff12..d8ff88e 100644
+index 470ff12..c646a87 100644
 --- a/Projects/zstack/ZNP/Source/znp_app.c
 +++ b/Projects/zstack/ZNP/Source/znp_app.c
 @@ -390,12 +390,23 @@ static void npInit(void)
@@ -227,14 +269,14 @@ index 470ff12..d8ff88e 100644
  
      uartConfig.configured           = TRUE;
 +
-+#if defined(FIRMWARE_CC2530_DEFAULT) || defined(FIRMWARE_CC2530_CC2591_DEFAULT)
++#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591)
 +    uartConfig.baudRate             = HAL_UART_BR_115200;
 +#else
      uartConfig.baudRate             = ZNP_UART_BAUD;
 -#ifdef ZNP_ALT
 +#endif
 +
-+#if defined(FIRMWARE_CC2530_DEFAULT) || defined(FIRMWARE_CC2530_CC2591_DEFAULT)
++#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591)
      uartConfig.flowControl          = FALSE;
  #else
 +  #ifdef ZNP_ALT
@@ -252,7 +294,7 @@ index 470ff12..d8ff88e 100644
      HalUARTOpen(HAL_UART_PORT, &uartConfig);
      MT_UartRegisterTaskID(znpTaskId);
 +
-+#if defined FIRMWARE_CC2530_CC2591_DEFAULT
++#if defined FIRMWARE_CC2530_CC2591
 +    //Add TX Setting
 +    #ifdef HAL_PA_LNA
 +      ZMacSetTransmitPower(TX_PWR_PLUS_19);
