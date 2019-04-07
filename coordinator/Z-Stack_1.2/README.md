@@ -23,6 +23,3 @@ In order to make a good choice, it's recommended to first read [the Zigbee2mqtt 
 
 ## Compiling the firmware
 In case you want to compile the firmware yourself, read [COMPILE.md](./COMPILE.md).
-
-## Notes
-- The CC2530_CC2591 firmware is also compatible with CC2530 + RFX2401 devices like the GBA GB2530S Zigbee USB-Stick.
