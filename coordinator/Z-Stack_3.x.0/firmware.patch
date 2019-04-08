@@ -1,0 +1,140 @@
+diff --git a/Application/mt/mt_sys.c b/Application/mt/mt_sys.c
+index 279a97f..d58ca3a 100644
+--- a/Application/mt/mt_sys.c
++++ b/Application/mt/mt_sys.c
+@@ -514,9 +514,10 @@ static void MT_SysVersion(void)
+   uint8 *pBuf = &verStr[sizeof(MTVersionString)];
+ #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
+   uint32 sblSig;
+-  uint32 sblRev;
+ #endif
+ 
++  uint32 sblRev;
++
+   MAP_osal_memcpy(verStr, (uint8 *)MTVersionString, sizeof(MTVersionString));
+ 
+ #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
+diff --git a/Application/mt/mt_version.c b/Application/mt/mt_version.c
+index 305dfc7..51d8890 100644
+--- a/Application/mt/mt_version.c
++++ b/Application/mt/mt_version.c
+@@ -69,7 +69,7 @@
+  *****************************************************************************/
+ const uint8 MTVersionString[] = {
+                                    2,  /* Transport protocol revision */
+-                                   0,  /* Product ID */
++                                   1,  /* Product ID */
+                                    2,  /* Software major release number */
+                                    7,  /* Software minor release number */
+                                    1,  /* Software maintenance release number */
+diff --git a/Application/mt/revision_info.h b/Application/mt/revision_info.h
+new file mode 100644
+index 0000000..11450cf
+--- /dev/null
++++ b/Application/mt/revision_info.h
+@@ -0,0 +1,13 @@
++/*
++ * revision_info.h
++ *
++ *  Created on: 8 Apr 2019
++ *      Author: Koenkk
++ */
++
++#ifndef APPLICATION_MT_REVISION_INFO_H_
++#define APPLICATION_MT_REVISION_INFO_H_
++
++#define CODE_REVISION_NUMBER 20190408
++
++#endif /* APPLICATION_MT_REVISION_INFO_H_ */
+diff --git a/Stack/Config/preinclude.h b/Stack/Config/preinclude.h
+new file mode 100644
+index 0000000..04580d0
+--- /dev/null
++++ b/Stack/Config/preinclude.h
+@@ -0,0 +1,23 @@
++/**
++ * Enable Many-To-One (MTO) Routing (all ZC only)
++ */
++#define CONCENTRATOR_ENABLE TRUE
++#define CONCENTRATOR_DISCOVERY_TIME 60
++#define CONCENTRATOR_ROUTE_CACHE TRUE
++#define MAX_RTG_SRC_ENTRIES 200
++#define SRC_RTG_EXPIRY_TIME 255
++
++/**
++ * Scale device tables
++ */
++#define NWK_MAX_DEVICE_LIST 50
++#define ZDSECMGR_TC_DEVICE_MAX 200
++#define MAX_NEIGHBOR_ENTRIES 20
++#define MAX_RTG_ENTRIES 100
++
++/**
++ * Others
++ */
++#define INCLUDE_REVISION_INFORMATION
++#define MT_SYS_KEY_MANAGEMENT
++#define SECURE 1
+diff --git a/Stack/Config/znp_cnf.opts b/Stack/Config/znp_cnf.opts
+index 1be73a8..81f5f4e 100644
+--- a/Stack/Config/znp_cnf.opts
++++ b/Stack/Config/znp_cnf.opts
+@@ -93,3 +93,5 @@
+ 
+ /* BDB interface */
+ -DMT_APP_CNF_FUNC
++
++--preinclude=preinclude.h
+diff --git a/Stack/af/af.c b/Stack/af/af.c
+index d303202..55c53d4 100644
+--- a/Stack/af/af.c
++++ b/Stack/af/af.c
+@@ -405,10 +405,19 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16 Src
+ #if !defined ( APS_NO_GROUPS )
+     // Find the first endpoint for this group
+     grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
+-    if ( grpEp == APS_GROUPS_EP_NOT_FOUND )
+-      return;   // No endpoint found
+ 
+-    epDesc = afFindEndPointDesc( grpEp );
++    if ( grpEp == APS_GROUPS_EP_NOT_FOUND ) {
++        // No endpoint found, default to endpoint 1.
++        // In the original source code there is a return here.
++        // This prevent the messags from being forwarded.
++        // For our use-case we want to capture all messages.
++        // Even if the coordinator is not in the group.
++        epDesc = afFindEndPointDesc( 1 );
++    }
++    else {
++      epDesc = afFindEndPointDesc( grpEp );
++    }
++
+     if ( epDesc == NULL )
+       return;   // Endpoint descriptor not found
+ 
+@@ -425,6 +434,12 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16 Src
+       epDesc = pList->epDesc;
+     }
+   }
++  else if ( aff->DstEndPoint == 10 || aff->DstEndPoint == 11 ) {
++      if ( (epDesc = afFindEndPointDesc( 1 )) )
++      {
++          pList = afFindEndPointDescList( epDesc->endPoint );
++      }
++  }
+   else if ( (epDesc = afFindEndPointDesc( aff->DstEndPoint )) )
+   {
+     pList = afFindEndPointDescList( epDesc->endPoint );
+diff --git a/Stack/zdo/zd_app.c b/Stack/zdo/zd_app.c
+index 57dd82a..0516e0d 100644
+--- a/Stack/zdo/zd_app.c
++++ b/Stack/zdo/zd_app.c
+@@ -3518,7 +3518,7 @@ void ZDApp_NVUpdate( void )
+  */
+ uint16 ZDApp_CoordStartPANIDConflictCB( uint16 panid )
+ {
+-  return ( panid + 1 );
++  return ( panid );
+ }
+ 
+ /*********************************************************************
