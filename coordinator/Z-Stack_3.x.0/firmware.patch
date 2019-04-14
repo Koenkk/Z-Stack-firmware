@@ -29,7 +29,7 @@ index 305dfc7..51d8890 100644
                                     1,  /* Software maintenance release number */
 diff --git a/Application/mt/revision_info.h b/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..11450cf
+index 0000000..5536a3e
 --- /dev/null
 +++ b/Application/mt/revision_info.h
 @@ -0,0 +1,13 @@
@@ -43,17 +43,17 @@ index 0000000..11450cf
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
 +
-+#define CODE_REVISION_NUMBER 20190408
++#define CODE_REVISION_NUMBER 20190414
 +
 +#endif /* APPLICATION_MT_REVISION_INFO_H_ */
 diff --git a/Stack/Config/preinclude.h b/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..04580d0
+index 0000000..fd61349
 --- /dev/null
 +++ b/Stack/Config/preinclude.h
 @@ -0,0 +1,23 @@
 +/**
-+ * Enable Many-To-One (MTO) Routing (all ZC only)
++ * Enable Many-To-One (MTO) Routing
 + */
 +#define CONCENTRATOR_ENABLE TRUE
 +#define CONCENTRATOR_DISCOVERY_TIME 60
@@ -73,7 +73,7 @@ index 0000000..04580d0
 + * Others
 + */
 +#define INCLUDE_REVISION_INFORMATION
-+#define MT_SYS_KEY_MANAGEMENT
++#define MT_SYS_KEY_MANAGEMENT 1
 +#define SECURE 1
 diff --git a/Stack/Config/znp_cnf.opts b/Stack/Config/znp_cnf.opts
 index 1be73a8..81f5f4e 100644
@@ -125,16 +125,3 @@ index d303202..55c53d4 100644
    else if ( (epDesc = afFindEndPointDesc( aff->DstEndPoint )) )
    {
      pList = afFindEndPointDescList( epDesc->endPoint );
-diff --git a/Stack/zdo/zd_app.c b/Stack/zdo/zd_app.c
-index 57dd82a..0516e0d 100644
---- a/Stack/zdo/zd_app.c
-+++ b/Stack/zdo/zd_app.c
-@@ -3518,7 +3518,7 @@ void ZDApp_NVUpdate( void )
-  */
- uint16 ZDApp_CoordStartPANIDConflictCB( uint16 panid )
- {
--  return ( panid + 1 );
-+  return ( panid );
- }
- 
- /*********************************************************************
