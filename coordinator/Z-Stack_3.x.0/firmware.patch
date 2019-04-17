@@ -29,7 +29,7 @@ index 305dfc7..51d8890 100644
                                     1,  /* Software maintenance release number */
 diff --git a/Application/mt/revision_info.h b/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..b71f052
+index 0000000..4cef6d1
 --- /dev/null
 +++ b/Application/mt/revision_info.h
 @@ -0,0 +1,13 @@
@@ -43,15 +43,15 @@ index 0000000..b71f052
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
 +
-+#define CODE_REVISION_NUMBER 20190415
++#define CODE_REVISION_NUMBER 20190417
 +
 +#endif /* APPLICATION_MT_REVISION_INFO_H_ */
 diff --git a/Stack/Config/preinclude.h b/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..81e19ab
+index 0000000..11f4953
 --- /dev/null
 +++ b/Stack/Config/preinclude.h
-@@ -0,0 +1,30 @@
+@@ -0,0 +1,35 @@
 +/**
 + * Enable Many-To-One (MTO) Routing
 + */
@@ -82,6 +82,11 @@ index 0000000..81e19ab
 + * If MULTICAST is not disabled, the group adress is not included in the APS header
 + */
 +#define MULTICAST_ENABLED FALSE
++
++/**
++ * Increase end device child aging from 256 minutes to 4096 minutes
++ */
++#define NWK_END_DEV_TIMEOUT_DEFAULT 12
 \ No newline at end of file
 diff --git a/Stack/Config/znp_cnf.opts b/Stack/Config/znp_cnf.opts
 index 1be73a8..81f5f4e 100644
