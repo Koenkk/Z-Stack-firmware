@@ -29,7 +29,7 @@ index 305dfc7..51d8890 100644
                                     1,  /* Software maintenance release number */
 diff --git a/Application/mt/revision_info.h b/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..4cef6d1
+index 0000000..98752c1
 --- /dev/null
 +++ b/Application/mt/revision_info.h
 @@ -0,0 +1,13 @@
@@ -43,15 +43,15 @@ index 0000000..4cef6d1
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
 +
-+#define CODE_REVISION_NUMBER 20190417
++#define CODE_REVISION_NUMBER 20190418
 +
 +#endif /* APPLICATION_MT_REVISION_INFO_H_ */
 diff --git a/Stack/Config/preinclude.h b/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..11f4953
+index 0000000..231eb79
 --- /dev/null
 +++ b/Stack/Config/preinclude.h
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,38 @@
 +/**
 + * Enable Many-To-One (MTO) Routing
 + */
@@ -65,9 +65,12 @@ index 0000000..11f4953
 + * Scale device tables
 + */
 +#define NWK_MAX_DEVICE_LIST 50
-+#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
++
++// Use default of 40 until NVOCTP driver issue has been fixed
++// http://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/794106/2937749#2937749
++// #define ZDSECMGR_TC_DEVICE_MAX 200
 +
 +/**
 + * Others
