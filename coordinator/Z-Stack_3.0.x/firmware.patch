@@ -22,11 +22,11 @@ index f374554..720a8fe 100644
                                     2,  /* Software maintenance release number */
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..f3887eb
+index 0000000..ae3d86b
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190407
++#define CODE_REVISION_NUMBER 20190418
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index 5e54237..988416f 100644
@@ -67,25 +67,12 @@ index 5e54237..988416f 100644
    else if ( (epDesc = afFindEndPointDesc( aff->DstEndPoint )) )
    {
      pList = afFindEndPointDescList( epDesc->endPoint );
-diff --git a/Components/stack/zdo/ZDApp.c b/Components/stack/zdo/ZDApp.c
-index 4947bd8..83a590c 100644
---- a/Components/stack/zdo/ZDApp.c
-+++ b/Components/stack/zdo/ZDApp.c
-@@ -3676,7 +3676,7 @@ void ZDApp_NVUpdate( void )
-  */
- uint16 ZDApp_CoordStartPANIDConflictCB( uint16 panid )
- {
--  return ( panid + 1 );
-+  return ( panid );
- }
- 
- /*********************************************************************
 diff --git a/Projects/zstack/ZNP/Source/preinclude.h b/Projects/zstack/ZNP/Source/preinclude.h
 new file mode 100644
-index 0000000..8f8aebf
+index 0000000..2ac6bb2
 --- /dev/null
 +++ b/Projects/zstack/ZNP/Source/preinclude.h
-@@ -0,0 +1,70 @@
+@@ -0,0 +1,67 @@
 +// Shared accross all firmwares
 +#define TC_LINKKEY_JOIN
 +#define FAKE_CRC_SHDW
@@ -93,8 +80,10 @@ index 0000000..8f8aebf
 +#define INCLUDE_REVISION_INFORMATION
 +#define SECURE 1
 +#define BDB_FINDING_BINDING_CAPABILITY_ENABLED 0
-+#define ZDSECMGR_TC_DEVICE_MAX 27
++#define ZDSECMGR_TC_DEVICE_MAX 30
 +#define DISABLE_GREENPOWER_BASIC_PROXY
++#define MT_SYS_KEY_MANAGEMENT 1
++#define TP2_LEGACY_ZC
 +
 +// Save memory
 +#undef NWK_MAX_BINDING_ENTRIES
@@ -126,22 +115,17 @@ index 0000000..8f8aebf
 +#define MAX_BCAST 12
 +
 +/**
-+ * Enable MTO concentrator
++ * Device tables
 + */
-+#define CONCENTRATOR_ENABLE TRUE
-+#define CONCENTRATOR_ROUTE_CACHE TRUE
-+#define CONCENTRATOR_DISCOVERY_TIME 120
-+#define MAX_RTG_SRC_ENTRIES 35
-+#define SRC_RTG_EXPIRY_TIME 0
++#define NWK_MAX_DEVICE_LIST 10
++#define MAX_NEIGHBOR_ENTRIES 6
 +
 +/**
 + * CC2531
 + */
 +#if defined FIRMWARE_CC2531
 +  #define CC2531ZNP
-+  #define NWK_MAX_DEVICE_LIST 5
-+  #define MAX_NEIGHBOR_ENTRIES 8
-+  #define MAXMEMHEAP 3189
++  #define MAXMEMHEAP 3205 
 +
 +/**
 + * CC2530
