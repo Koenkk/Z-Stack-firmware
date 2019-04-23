@@ -13,13 +13,13 @@
 4. You will get a warning: *The project file 'CC253(0/1).ewp' is in an old format. Would you like to convert it for use with this version?*. Press **yes** for both.
 5. Select the correct target:
   - For CC2531 select *CC2531 - X*
-  - For CC2530 or CC2530_CC2591 select *CC2530 - X*
+  - For CC2530, CC2530_CC2591, CC2530_CC2592 select *CC2530 - X*
   - Depending if you want to compile the `.hex` or SBL firmware select *- ProdHex* or *- ProdSBL*
 
 ![Target](images/target.png)
 
 6. Right-click on your target and press options. Go to C/C++ compiler -> preprocessor. Depending on what you want to compile, add the following symbols to *Defined symbols*:
-- Device type: `FIRMWARE_CC2530`, `FIRMWARE_CC2530_CC2531` or `FIRMWARE_CC2531`.
+- Device type: `FIRMWARE_CC2530`, `FIRMWARE_CC2530_CC2591`, `FIRMWARE_CC2531` or `FIRMWARE_CC2530_CC2592`
 - Firmware type: `FIRMWARE_DEFAULT`, `FIRMWARE_MAX_STABILITY` or `FIRMWARE_MAX_DEVICES`.
 - In case you want to compile the SBL firmware, also add `FIRMWARE_SBL`.
 
