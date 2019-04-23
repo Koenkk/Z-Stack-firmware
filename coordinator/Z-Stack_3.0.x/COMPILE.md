@@ -17,6 +17,7 @@
 - `FIRMWARE_CC2530` (TODO)
 - `FIRMWARE_CC2530_CC2531` (TODO)
 - `FIRMWARE_CC2531`
-6. Press OK.
-7. Right-click on your target and click *Rebuild all*.
-8. Once finished, you can find the `CC253(0|1)ZNP-Prod.(hex|bin)` file in `Z-Stack 3.0.2\Projects\zstack\ZNP\CC253x\dev`.
+6. Go to General Options -> Stack/Heap -> Stack sizes -> and change `XDATA` to `0x400`.
+7. Press OK.
+8. Right-click on your target and click *Rebuild all*.
+9. Once finished, you can find the `CC253(0|1)ZNP-Prod.(hex|bin)` file in `Z-Stack 3.0.2\Projects\zstack\ZNP\CC253x\dev`.
