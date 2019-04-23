@@ -22,11 +22,11 @@ index f374554..720a8fe 100644
                                     2,  /* Software maintenance release number */
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..ae3d86b
+index 0000000..3755669
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190418
++#define CODE_REVISION_NUMBER 20190423
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index 5e54237..988416f 100644
@@ -67,12 +67,29 @@ index 5e54237..988416f 100644
    else if ( (epDesc = afFindEndPointDesc( aff->DstEndPoint )) )
    {
      pList = afFindEndPointDescList( epDesc->endPoint );
+diff --git a/Components/stack/sys/ZGlobals.c b/Components/stack/sys/ZGlobals.c
+index d170283..292659a 100644
+--- a/Components/stack/sys/ZGlobals.c
++++ b/Components/stack/sys/ZGlobals.c
+@@ -212,7 +212,11 @@ uint8 zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
+ //
+ // NOTICE:  Before enabling Child Aging make sure to review all the related
+ // definitions in this file, especially zgNwkParentInformation.
+-uint8 zgChildAgingEnable = TRUE;
++
++/**
++ * Disable child aging, otherwise Xiaomi devices are being kicked off the network.
++ */
++uint8 zgChildAgingEnable = FALSE;
+ 
+ //==========    TouchLink NWK configuration    ===============
+ // Values used by Router when starts a network as initiator
 diff --git a/Projects/zstack/ZNP/Source/preinclude.h b/Projects/zstack/ZNP/Source/preinclude.h
 new file mode 100644
-index 0000000..2ac6bb2
+index 0000000..e113fdc
 --- /dev/null
 +++ b/Projects/zstack/ZNP/Source/preinclude.h
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,63 @@
 +// Shared accross all firmwares
 +#define TC_LINKKEY_JOIN
 +#define FAKE_CRC_SHDW
@@ -115,17 +132,13 @@ index 0000000..2ac6bb2
 +#define MAX_BCAST 12
 +
 +/**
-+ * Device tables
-+ */
-+#define NWK_MAX_DEVICE_LIST 10
-+#define MAX_NEIGHBOR_ENTRIES 6
-+
-+/**
 + * CC2531
 + */
 +#if defined FIRMWARE_CC2531
++  #define NWK_MAX_DEVICE_LIST 15
++  #define MAX_NEIGHBOR_ENTRIES 8
 +  #define CC2531ZNP
-+  #define MAXMEMHEAP 3205 
++  #define MAXMEMHEAP 3227 
 +
 +/**
 + * CC2530
