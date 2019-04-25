@@ -65,11 +65,11 @@ index 35aae57..1f8ee82 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..ca3db55
+index 0000000..34b4980
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190315
++#define CODE_REVISION_NUMBER 20190425
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index c6183b6..2b885b6 100644
@@ -157,10 +157,10 @@ index 7c6c77e..69daba2 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..62f9a55
+index 0000000..1b96d90
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,119 @@
+@@ -0,0 +1,93 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +
@@ -174,16 +174,20 @@ index 0000000..62f9a55
 +#define SECURE 1
 +#define INCLUDE_REVISION_INFORMATION
 +
++// Increase NWK_LINK_STATUS_PERIOD to reduce amount of messages on the network
++#define NWK_LINK_STATUS_PERIOD 60
++
++// Save memory
 +#undef APS_MAX_GROUPS
 +#define APS_MAX_GROUPS 1
-+
 +#undef NWK_MAX_BINDING_ENTRIES
 +#define NWK_MAX_BINDING_ENTRIES 1
 +
-+// Disabling MULTICAST is required in order for proper group support.
-+// If MULTICAST is not disabled, the group adress is not included in the APS header
++/**
++ * Disabling MULTICAST is required in order for proper group support.
++ * If MULTICAST is not disabled, the group adress is not included in the APS header
++ */
 +#define MULTICAST_ENABLED FALSE
-+
 +
 +/**
 + * Reduce BCAST_DELIVERY_TIME and increase MAX_BCAST time.
@@ -204,81 +208,51 @@ index 0000000..62f9a55
 +#define HAL_LCD FALSE
 +#define HAL_ADC FALSE
 +
-+/**
-+ * CC2531
++/** 
++ * Enable MTO routing, but disable source routing.
++ * https://github.com/Koenkk/zigbee2mqtt/issues/1408
 + */
++#define CONCENTRATOR_ENABLE TRUE
++#define CONCENTRATOR_ROUTE_CACHE FALSE
++#define CONCENTRATOR_DISCOVERY_TIME 120
++#define MAX_RTG_SRC_ENTRIES 1 // Source table is not used, reduce to minimal size
++#undef MAX_RTG_ENTRIES
++#define MAX_RTG_ENTRIES 60
++#define MAX_NEIGHBOR_ENTRIES 8
++  
++// CC2531
 +#if defined FIRMWARE_CC2531
 +  #define CC2531ZNP
++  #define NWK_MAX_DEVICE_LIST 25
++  #define MAXMEMHEAP 3235
 +
-+  #if defined FIRMWARE_DEFAULT
-+    #define NWK_MAX_DEVICE_LIST 15
-+    #define MAXMEMHEAP 3029
-+    #define OPTIMIZE_LARGE_NETWORK 
-+
-+  #elif defined FIRMWARE_MAX_STABILITY 
-+    #define NWK_MAX_DEVICE_LIST 5
-+    #define MAXMEMHEAP 3309
-+    #define OPTIMIZE_LARGE_NETWORK 
-+
-+  #elif defined FIRMWARE_MAX_DEVICES
-+    #define NWK_MAX_DEVICE_LIST 43
-+    #define MAXMEMHEAP 3199
-+    #define MAX_NEIGHBOR_ENTRIES 1 
-+
-+  #endif 
-+
-+/**
-+ * CC2530
-+ */
++// CC2530
 +#elif defined FIRMWARE_CC2530
 +  #define HAL_UART_DMA_RX_MAX 128
-+  #define OPTIMIZE_LARGE_NETWORK  
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define CC2530_MK
++  #define NWK_MAX_DEVICE_LIST 21
++  #define MAXMEMHEAP 3227
 +
-+  #if defined FIRMWARE_DEFAULT
-+    #define NWK_MAX_DEVICE_LIST 15
-+    #define MAXMEMHEAP 2909
-+
-+  #elif defined FIRMWARE_MAX_STABILITY 
-+    #define NWK_MAX_DEVICE_LIST 5
-+    #define MAXMEMHEAP 3189
-+  
-+  #endif  
-+
-+/**
-+ * CC2530 + CC2591/CC2592
-+ */
-+#elif defined FIRMWARE_CC2530_CC2591 || defined FIRMWARE_CC2530_CC2592
++// CC2530 + CC2591
++#elif defined FIRMWARE_CC2530_CC2591
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define HAL_UART_DMA_RX_MAX 128
-+  #if defined FIRMWARE_CC2530_CC2591
-+    #define HAL_PA_LNA
-+  #elif defined FIRMWARE_CC2530_CC2592
-+    #define HAL_PA_LNA_CC2592
-+  #endif
-+  #define OPTIMIZE_LARGE_NETWORK
++  #define HAL_PA_LNA
++  #define NWK_MAX_DEVICE_LIST 21
++  #define MAXMEMHEAP 3225
 +
-+  #if defined FIRMWARE_DEFAULT
-+    #define NWK_MAX_DEVICE_LIST 15
-+    #define MAXMEMHEAP 2907
++// CC2530 + CC2592
++#elif defined FIRMWARE_CC2530_CC2591
++  #define ENABLE_MT_SYS_RESET_SHUTDOWN
++  #define ZTOOL_P1
++  #define HAL_UART_DMA_RX_MAX 128
++  #define HAL_PA_LNA_CC2592
++  #define NWK_MAX_DEVICE_LIST 21
++  #define MAXMEMHEAP 3225
 +
-+  #elif defined FIRMWARE_MAX_STABILITY 
-+    #define NWK_MAX_DEVICE_LIST 5
-+    #define MAXMEMHEAP 3187
-+
-+  #endif
-+
-+#endif
-+
-+#if defined OPTIMIZE_LARGE_NETWORK
-+  #define CONCENTRATOR_ENABLE TRUE
-+  #define CONCENTRATOR_ROUTE_CACHE TRUE
-+  #define CONCENTRATOR_DISCOVERY_TIME 120
-+  #define MAX_RTG_SRC_ENTRIES 40
-+  #define SRC_RTG_EXPIRY_TIME 0
 +#endif
 \ No newline at end of file
 diff --git a/Projects/zstack/ZNP/Source/znp.cfg b/Projects/zstack/ZNP/Source/znp.cfg
