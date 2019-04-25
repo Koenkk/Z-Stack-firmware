@@ -1,3 +1,9 @@
+# 20190425
+- Unified firmwares, only one firmware for every device
+- Increased direct children to 25 for CC2531 and 21 for CC2530
+- Disabled source routing
+- Decreased XDATA size
+
 # 20190315
 - Restructured repo
 - Added `MAX_STABILITY` firmware
