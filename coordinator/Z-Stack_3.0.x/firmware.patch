@@ -22,11 +22,11 @@ index f374554..720a8fe 100644
                                     2,  /* Software maintenance release number */
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..3755669
+index 0000000..34b4980
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190423
++#define CODE_REVISION_NUMBER 20190425
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index 5e54237..988416f 100644
@@ -86,10 +86,10 @@ index d170283..292659a 100644
  // Values used by Router when starts a network as initiator
 diff --git a/Projects/zstack/ZNP/Source/preinclude.h b/Projects/zstack/ZNP/Source/preinclude.h
 new file mode 100644
-index 0000000..e113fdc
+index 0000000..4bec90a
 --- /dev/null
 +++ b/Projects/zstack/ZNP/Source/preinclude.h
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,77 @@
 +// Shared accross all firmwares
 +#define TC_LINKKEY_JOIN
 +#define FAKE_CRC_SHDW
@@ -97,10 +97,13 @@ index 0000000..e113fdc
 +#define INCLUDE_REVISION_INFORMATION
 +#define SECURE 1
 +#define BDB_FINDING_BINDING_CAPABILITY_ENABLED 0
-+#define ZDSECMGR_TC_DEVICE_MAX 30
++#define ZDSECMGR_TC_DEVICE_MAX 40
 +#define DISABLE_GREENPOWER_BASIC_PROXY
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define TP2_LEGACY_ZC
++
++// Increase NWK_LINK_STATUS_PERIOD to reduce amount of messages on the network
++#define NWK_LINK_STATUS_PERIOD 60
 +
 +// Save memory
 +#undef NWK_MAX_BINDING_ENTRIES
@@ -131,14 +134,25 @@ index 0000000..e113fdc
 +#undef MAX_BCAST // avoids incompatible redefinition of macro warning
 +#define MAX_BCAST 12
 +
++/** 
++ * Enable MTO routing, but disable source routing.
++ * https://github.com/Koenkk/zigbee2mqtt/issues/1408
++ */
++#define CONCENTRATOR_ENABLE TRUE
++#define CONCENTRATOR_ROUTE_CACHE FALSE
++#define CONCENTRATOR_DISCOVERY_TIME 120
++#define MAX_RTG_SRC_ENTRIES 1 // Source table is not used, reduce to minimal size
++#undef MAX_RTG_ENTRIES
++#define MAX_RTG_ENTRIES 40
++#define MAX_NEIGHBOR_ENTRIES 8
++
 +/**
 + * CC2531
 + */
 +#if defined FIRMWARE_CC2531
 +  #define NWK_MAX_DEVICE_LIST 15
-+  #define MAX_NEIGHBOR_ENTRIES 8
 +  #define CC2531ZNP
-+  #define MAXMEMHEAP 3227 
++  #define MAXMEMHEAP 3203 
 +
 +/**
 + * CC2530
