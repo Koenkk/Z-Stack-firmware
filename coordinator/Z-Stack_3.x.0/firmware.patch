@@ -29,7 +29,7 @@ index 305dfc7..51d8890 100644
                                     1,  /* Software maintenance release number */
 diff --git a/Application/mt/revision_info.h b/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..323e369
+index 0000000..37ef9f2
 --- /dev/null
 +++ b/Application/mt/revision_info.h
 @@ -0,0 +1,13 @@
@@ -43,15 +43,15 @@ index 0000000..323e369
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
 +
-+#define CODE_REVISION_NUMBER 20190423
++#define CODE_REVISION_NUMBER 20190426
 +
 +#endif /* APPLICATION_MT_REVISION_INFO_H_ */
 diff --git a/Stack/Config/preinclude.h b/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..8ae8c48
+index 0000000..d71d794
 --- /dev/null
 +++ b/Stack/Config/preinclude.h
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,45 @@
 +/**
 + * 1. There is currently an issue which doesn't allow us to scale to device
 + * tables expansively.
@@ -61,16 +61,18 @@ index 0000000..8ae8c48
 +/**
 + * Enable Many-To-One (MTO) Routing
 + */
-+#define CONCENTRATOR_ENABLE TRUE
-+#define CONCENTRATOR_DISCOVERY_TIME 60
-+#define CONCENTRATOR_ROUTE_CACHE TRUE
-+// Use 40 for now, see 1 #define MAX_RTG_SRC_ENTRIES 200
-+#define MAX_RTG_SRC_ENTRIES 40
-+#define SRC_RTG_EXPIRY_TIME 255
++// TODO enabled this
++// #define CONCENTRATOR_ENABLE TRUE
++// #define CONCENTRATOR_DISCOVERY_TIME 60
++// #define CONCENTRATOR_ROUTE_CACHE TRUE
++// // Use 40 for now, see 1 #define MAX_RTG_SRC_ENTRIES 200
++// #define MAX_RTG_SRC_ENTRIES 40
++// #define SRC_RTG_EXPIRY_TIME 255
 +
 +/**
 + * Scale device tables
 + */
++// TODO enable this
 +// Use default of 20, see 1 #define NWK_MAX_DEVICE_LIST 50
 +// Use default of 4, see 1 #define MAX_NEIGHBOR_ENTRIES 20
 +// Use default of 40, see 1 #define MAX_RTG_ENTRIES 100
