@@ -1,3 +1,6 @@
+# 20190507
+- CC2530_CC2591 and CC2530_CC2592 only; fix transmit power
+
 # 20190425
 - Unified firmwares, only one firmware for every device
 - Increased direct children to 25 for CC2531 and 21 for CC2530
