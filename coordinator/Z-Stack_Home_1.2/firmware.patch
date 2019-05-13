@@ -65,11 +65,11 @@ index 35aae57..1f8ee82 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..6f8878c
+index 0000000..f42acc8
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190507
++#define CODE_REVISION_NUMBER 20190513
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index c6183b6..2b885b6 100644
@@ -270,7 +270,7 @@ index 7e524a9..6326400 100644
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/Projects/zstack/ZNP/Source/znp_app.c b/Projects/zstack/ZNP/Source/znp_app.c
-index 470ff12..03392ae 100644
+index 470ff12..e42ac65 100644
 --- a/Projects/zstack/ZNP/Source/znp_app.c
 +++ b/Projects/zstack/ZNP/Source/znp_app.c
 @@ -390,12 +390,23 @@ static void npInit(void)
@@ -305,7 +305,7 @@ index 470ff12..03392ae 100644
 +
 +#if defined FIRMWARE_CC2530_CC2591 || defined(FIRMWARE_CC2530_CC2592)
 +    //Add TX Setting
-+    #ifdef defined HAL_PA_LNA || defined HAL_PA_LNA_CC2592
++    #if defined HAL_PA_LNA || defined HAL_PA_LNA_CC2592
 +      ZMacSetTransmitPower(TX_PWR_PLUS_19);
 +    #else
 +      ZMacSetTransmitPower(TX_PWR_PLUS_4);
