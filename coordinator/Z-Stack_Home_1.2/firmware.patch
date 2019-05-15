@@ -65,11 +65,11 @@ index 35aae57..1f8ee82 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..f42acc8
+index 0000000..dea5610
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190513
++#define CODE_REVISION_NUMBER 20190515
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index c6183b6..2b885b6 100644
@@ -157,7 +157,7 @@ index 7c6c77e..69daba2 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..1b96d90
+index 0000000..f53e95a
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 @@ -0,0 +1,93 @@
@@ -245,7 +245,7 @@ index 0000000..1b96d90
 +  #define MAXMEMHEAP 3225
 +
 +// CC2530 + CC2592
-+#elif defined FIRMWARE_CC2530_CC2591
++#elif defined FIRMWARE_CC2530_CC2592
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define HAL_UART_DMA_RX_MAX 128

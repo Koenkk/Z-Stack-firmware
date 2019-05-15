@@ -1,3 +1,6 @@
+# 20190515
+- CC2530_CC2591 and CC2530_CC2592 only; fix transmit power (yes, again, finally)
+
 # 20190513
 - CC2530_CC2591 and CC2530_CC2592 only; fix transmit power (yes, again)
 
