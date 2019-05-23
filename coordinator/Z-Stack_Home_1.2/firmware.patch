@@ -65,11 +65,11 @@ index 35aae57..1f8ee82 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..dea5610
+index 0000000..34cd616
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190515
++#define CODE_REVISION_NUMBER 20190523
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index c6183b6..2b885b6 100644
@@ -157,10 +157,10 @@ index 7c6c77e..69daba2 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..f53e95a
+index 0000000..49c3128
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,94 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +
@@ -213,12 +213,13 @@ index 0000000..f53e95a
 + * https://github.com/Koenkk/zigbee2mqtt/issues/1408
 + */
 +#define CONCENTRATOR_ENABLE TRUE
-+#define CONCENTRATOR_ROUTE_CACHE FALSE
++#define CONCENTRATOR_ROUTE_CACHE TRUE
 +#define CONCENTRATOR_DISCOVERY_TIME 120
-+#define MAX_RTG_SRC_ENTRIES 1 // Source table is not used, reduce to minimal size
++#define MAX_RTG_SRC_ENTRIES 40 // Source table is not used, reduce to minimal size
++#define SRC_RTG_EXPIRY_TIME 0
 +#undef MAX_RTG_ENTRIES
-+#define MAX_RTG_ENTRIES 60
-+#define MAX_NEIGHBOR_ENTRIES 8
++#define MAX_RTG_ENTRIES 20
++#define MAX_NEIGHBOR_ENTRIES 10
 +  
 +// CC2531
 +#if defined FIRMWARE_CC2531
