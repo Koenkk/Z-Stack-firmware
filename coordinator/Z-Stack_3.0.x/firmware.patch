@@ -1,3 +1,37 @@
+diff --git a/Components/mt/MT_SYS.c b/Components/mt/MT_SYS.c
+index aa57766..b53f309 100644
+--- a/Components/mt/MT_SYS.c
++++ b/Components/mt/MT_SYS.c
+@@ -2141,6 +2141,21 @@ static void MT_SysSnifferParameters( uint8 *pBuf )
+  *****************************************************************************/
+ static void powerOffSoc(void)
+ {
++#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591)
++  HAL_DISABLE_INTERRUPTS();
++  STIF = 0; //HAL_SLEEP_TIMER_CLEAR_INT;
++  if (ZNP_CFG1_UART == znpCfg1)
++  {
++    HalUARTSuspend();
++  }
++
++  /* Prep CC2530 power mode */
++  //HAL_SLEEP_PREP_POWER_MODE(3);
++  SLEEPCMD &= ~PMODE; /* clear mode bits */
++  SLEEPCMD |= 3;      /* set mode bits  to PM3 */
++  while (!(STLOAD & LDRDY));
++  SystemReset();
++#else
+   HAL_DISABLE_INTERRUPTS();
+ 
+   /* turn off the RF front end device */
+@@ -2181,6 +2196,7 @@ static void powerOffSoc(void)
+     PCON = halSleepPconValue;
+     asm("NOP");
+   }
++#endif
+ }
+ #endif
+ 
 diff --git a/Components/mt/MT_VERSION.c b/Components/mt/MT_VERSION.c
 index f374554..720a8fe 100644
 --- a/Components/mt/MT_VERSION.c
@@ -22,11 +56,11 @@ index f374554..720a8fe 100644
                                     2,  /* Software maintenance release number */
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..34b4980
+index 0000000..34cd616
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190425
++#define CODE_REVISION_NUMBER 20190523
 \ No newline at end of file
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index 5e54237..988416f 100644
@@ -84,12 +118,34 @@ index d170283..292659a 100644
  
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
+diff --git a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
+index eebe038..95041a8 100644
+--- a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
++++ b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
+@@ -149,8 +149,17 @@ void InitBoard( uint8 level )
+ 
+ #if defined CC2531ZNP
+     znpCfg1 = ZNP_CFG1_UART;
++#elif defined FIRMWARE_CC2530_CC2591
++    znpCfg1 = ZNP_CFG1_UART;
++    znpCfg0 = ZNP_CFG0_32K_OSC;
+ #elif defined CC2530_MK
++    
++  #if defined FIRMWARE_CC2530
++    znpCfg1 = ZNP_CFG1_UART;
++  #else
+     znpCfg1 = ZNP_CFG1_SPI;
++  #endif
++    
+     znpCfg0 = ZNP_CFG0_32K_OSC;
+ #else
+     znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/Source/preinclude.h b/Projects/zstack/ZNP/Source/preinclude.h
 new file mode 100644
-index 0000000..4bec90a
+index 0000000..53064e2
 --- /dev/null
 +++ b/Projects/zstack/ZNP/Source/preinclude.h
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,81 @@
 +// Shared accross all firmwares
 +#define TC_LINKKEY_JOIN
 +#define FAKE_CRC_SHDW
@@ -146,25 +202,29 @@ index 0000000..4bec90a
 +#define MAX_RTG_ENTRIES 40
 +#define MAX_NEIGHBOR_ENTRIES 8
 +
-+/**
-+ * CC2531
-+ */
++// CC2531
 +#if defined FIRMWARE_CC2531
 +  #define NWK_MAX_DEVICE_LIST 15
 +  #define CC2531ZNP
 +  #define MAXMEMHEAP 3203 
 +
-+/**
-+ * CC2530
-+ */
++// CC2530
 +#elif defined FIRMWARE_CC2530
-+  #define TODO 1
++  #define HAL_UART_DMA_RX_MAX 128
++  #define ENABLE_MT_SYS_RESET_SHUTDOWN
++  #define ZTOOL_P1
++  #define CC2530_MK
++  #define NWK_MAX_DEVICE_LIST 10
++  #define MAXMEMHEAP 3225
 +
-+/**
-+ * CC2530 + CC2591
-+ */
++// CC2530 + CC2591
 +#elif defined FIRMWARE_CC2530_CC2591
-+  #define TODO 1
++  #define ENABLE_MT_SYS_RESET_SHUTDOWN
++  #define ZTOOL_P1
++  #define HAL_UART_DMA_RX_MAX 128
++  #define HAL_PA_LNA
++  #define NWK_MAX_DEVICE_LIST 10
++  #define MAXMEMHEAP 3223
 +
 +#endif
 \ No newline at end of file
@@ -178,3 +238,52 @@ index 2b8d56d..adb5e42 100644
  
 +--preinclude=preinclude.h
 \ No newline at end of file
+diff --git a/Projects/zstack/ZNP/Source/znp_app.c b/Projects/zstack/ZNP/Source/znp_app.c
+index 31b115e..035e9f8 100644
+--- a/Projects/zstack/ZNP/Source/znp_app.c
++++ b/Projects/zstack/ZNP/Source/znp_app.c
+@@ -390,12 +390,23 @@ static void npInit(void)
+     halUARTCfg_t uartConfig;
+ 
+     uartConfig.configured           = TRUE;
++    
++#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591)
++    uartConfig.baudRate             = HAL_UART_BR_115200;
++#else
+     uartConfig.baudRate             = ZNP_UART_BAUD;
+-#ifdef ZNP_ALT
++#endif
++
++#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591)
+     uartConfig.flowControl          = FALSE;
+ #else
++  #ifdef ZNP_ALT
++    uartConfig.flowControl          = FALSE;
++  #else
+     uartConfig.flowControl          = TRUE;
++  #endif
+ #endif
++ 
+     uartConfig.flowControlThreshold = HAL_UART_FLOW_THRESHOLD;
+     uartConfig.rx.maxBufSize        = HAL_UART_RX_BUF_SIZE;
+     uartConfig.tx.maxBufSize        = HAL_UART_TX_BUF_SIZE;
+@@ -405,11 +416,14 @@ static void npInit(void)
+     HalUARTOpen(HAL_UART_PORT, &uartConfig);
+     MT_UartRegisterTaskID(znpTaskId);
+ 
+-#ifdef HAL_PA_LNA_CC2592
+-   ZMacSetTransmitPower(TX_PWR_PLUS_19);
+-#else
+-   ZMacSetTransmitPower(TX_PWR_PLUS_4);
+-#endif 
++#if defined FIRMWARE_CC2530_CC2591
++    //Add TX Setting
++    #if defined HAL_PA_LNA || defined HAL_PA_LNA_CC2592
++      ZMacSetTransmitPower(TX_PWR_PLUS_19);
++    #else
++      ZMacSetTransmitPower(TX_PWR_PLUS_4);
++    #endif
++#endif
+   }
+   else
+   {

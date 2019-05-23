@@ -46,10 +46,26 @@ This repository contains various Z-Stack coordinator firmwares.
     <td> </td>
   </tr>
   <tr>
-    <td>Z-Stack_3.0.x</td>
+    <td rowspan="3">Z-Stack_3.0.x</td>
     <td>CC2531</td>
     <td>3.0</td>
     <td>15</td>
+    <td>No</td>
+    <td>40</td>
+    <td><a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">#1445</a></td>
+  </tr>
+  <tr>
+    <td>CC2530</td>
+    <td>3.0</td>
+    <td>10</td>
+    <td>No</td>
+    <td>40</td>
+    <td><a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">#1445</a></td>
+  </tr>
+    <tr>
+    <td>CC2530_CC2591</td>
+    <td>3.0</td>
+    <td>10</td>
     <td>No</td>
     <td>40</td>
     <td><a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">#1445</a></td>
