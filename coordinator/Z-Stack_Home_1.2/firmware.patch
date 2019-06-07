@@ -65,12 +65,11 @@ index 35aae57..1f8ee82 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..34cd616
+index 0000000..86f052a
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190523
-\ No newline at end of file
++#define CODE_REVISION_NUMBER 20190608
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index c6183b6..2b885b6 100644
 --- a/Components/stack/af/AF.c
@@ -125,18 +124,9 @@ index 242be04..cca4781 100644
  
  /*********************************************************************
 diff --git a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
-index 7c6c77e..69daba2 100644
+index 7c6c77e..8265ff1 100644
 --- a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
 +++ b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
-@@ -24,7 +24,7 @@
-   its documentation for any purpose.
- 
-   YOU FURTHER ACKNOWLEDGE AND AGREE THAT THE SOFTWARE AND DOCUMENTATION ARE
--  PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
-+  PROVIDED ï¿½AS ISï¿½ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
-   INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY, TITLE,
-   NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL
-   TEXAS INSTRUMENTS OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER CONTRACT,
 @@ -144,8 +144,17 @@ void InitBoard( uint8 level )
  
  #if defined CC2531ZNP
@@ -157,10 +147,10 @@ index 7c6c77e..69daba2 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..49c3128
+index 0000000..0bf1e17
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,94 @@
+@@ -0,0 +1,93 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +
@@ -213,19 +203,18 @@ index 0000000..49c3128
 + * https://github.com/Koenkk/zigbee2mqtt/issues/1408
 + */
 +#define CONCENTRATOR_ENABLE TRUE
-+#define CONCENTRATOR_ROUTE_CACHE TRUE
++#define CONCENTRATOR_ROUTE_CACHE FALSE
 +#define CONCENTRATOR_DISCOVERY_TIME 120
-+#define MAX_RTG_SRC_ENTRIES 40 // Source table is not used, reduce to minimal size
-+#define SRC_RTG_EXPIRY_TIME 0
++#define MAX_RTG_SRC_ENTRIES 1 // Source table is not used, reduce to minimal size
 +#undef MAX_RTG_ENTRIES
-+#define MAX_RTG_ENTRIES 20
-+#define MAX_NEIGHBOR_ENTRIES 10
++#define MAX_RTG_ENTRIES 40
++#define MAX_NEIGHBOR_ENTRIES 9
 +  
 +// CC2531
 +#if defined FIRMWARE_CC2531
 +  #define CC2531ZNP
-+  #define NWK_MAX_DEVICE_LIST 25
-+  #define MAXMEMHEAP 3235
++  #define NWK_MAX_DEVICE_LIST 22
++  #define MAXMEMHEAP 3227
 +
 +// CC2530
 +#elif defined FIRMWARE_CC2530
@@ -255,9 +244,8 @@ index 0000000..49c3128
 +  #define MAXMEMHEAP 3225
 +
 +#endif
-\ No newline at end of file
 diff --git a/Projects/zstack/ZNP/Source/znp.cfg b/Projects/zstack/ZNP/Source/znp.cfg
-index 7e524a9..6326400 100644
+index 7e524a9..d5b88a3 100644
 --- a/Projects/zstack/ZNP/Source/znp.cfg
 +++ b/Projects/zstack/ZNP/Source/znp.cfg
 @@ -101,4 +101,6 @@
