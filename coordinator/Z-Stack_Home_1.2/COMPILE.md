@@ -18,6 +18,7 @@
 6. Right-click on your target and press options. Go to C/C++ compiler -> preprocessor. **Remove** all *Defined symbols* and depending on what you want to compile, add the following symbols to *Defined symbols*:
 - Device type: `FIRMWARE_CC2530`, `FIRMWARE_CC2530_CC2591`, `FIRMWARE_CC2531` or `FIRMWARE_CC2530_CC2592`
 - In case you want to compile the SBL firmware, also add `FIRMWARE_SBL`.
+- In case you want to compile the source routing firmware, also add `SOURCE_ROUTING`.
 7. Press OK.
 8. Right-click on your target and click *Rebuild all*.
 9. Once finished, you can find the `CC253(0|1)ZNP-Prod.(hex|bin)` file in `Z-Stack Home 1.2.2a.44539\Projects\zstack\ZNP\CC253x\dev`.

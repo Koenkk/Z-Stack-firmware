@@ -1,4 +1,7 @@
-# 20190608 
+# 20191008
+- One firmware doesn't seem to be feasible, also add source routing firmware
+
+# 20190608
 - Try with source routing disabled and more XDATA
 
 # 20190523
