@@ -65,11 +65,11 @@ index 35aae57..1f8ee82 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..86f052a
+index 0000000..efbe7a1
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190608
++#define CODE_REVISION_NUMBER 20190610
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
 index c6183b6..2b885b6 100644
 --- a/Components/stack/af/AF.c
@@ -147,10 +147,10 @@ index 7c6c77e..8265ff1 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..0bf1e17
+index 0000000..5342d26
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,105 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +
@@ -163,9 +163,6 @@ index 0000000..0bf1e17
 +#define TC_LINKKEY_JOIN
 +#define SECURE 1
 +#define INCLUDE_REVISION_INFORMATION
-+
-+// Increase NWK_LINK_STATUS_PERIOD to reduce amount of messages on the network
-+#define NWK_LINK_STATUS_PERIOD 60
 +
 +// Save memory
 +#undef APS_MAX_GROUPS
@@ -199,23 +196,38 @@ index 0000000..0bf1e17
 +#define HAL_ADC FALSE
 +
 +/** 
-+ * Enable MTO routing, but disable source routing.
-+ * https://github.com/Koenkk/zigbee2mqtt/issues/1408
++ * Enable MTO routing/source routing
++ * Source routing could have issues: https://github.com/Koenkk/zigbee2mqtt/issues/1408
 + */
 +#define CONCENTRATOR_ENABLE TRUE
-+#define CONCENTRATOR_ROUTE_CACHE FALSE
-+#define CONCENTRATOR_DISCOVERY_TIME 120
-+#define MAX_RTG_SRC_ENTRIES 1 // Source table is not used, reduce to minimal size
-+#undef MAX_RTG_ENTRIES
-+#define MAX_RTG_ENTRIES 40
-+#define MAX_NEIGHBOR_ENTRIES 9
-+  
++#define CONCENTRATOR_DISCOVERY_TIME 60
++
++#if defined SOURCE_ROUTING
++  #define CONCENTRATOR_ROUTE_CACHE TRUE
++  #define MAX_RTG_SRC_ENTRIES 50
++  #undef MAX_RTG_ENTRIES
++  #define MAX_RTG_ENTRIES 5
++  #define MAX_NEIGHBOR_ENTRIES 14
++  #define SRC_RTG_EXPIRY_TIME 0
++#else
++  #define CONCENTRATOR_ROUTE_CACHE FALSE
++  #define MAX_RTG_SRC_ENTRIES 1 // Source table is not used, reduce to minimal size
++  #undef MAX_RTG_ENTRIES
++  #define MAX_RTG_ENTRIES 30
++  #define MAX_NEIGHBOR_ENTRIES 12
++#endif
++
 +// CC2531
 +#if defined FIRMWARE_CC2531
 +  #define CC2531ZNP
-+  #define NWK_MAX_DEVICE_LIST 22
-+  #define MAXMEMHEAP 3227
-+
++  #if defined SOURCE_ROUTING
++    #define NWK_MAX_DEVICE_LIST 10
++    #define MAXMEMHEAP 3399
++  #else
++    #define NWK_MAX_DEVICE_LIST 20
++    #define MAXMEMHEAP 3285
++  #endif
++  
 +// CC2530
 +#elif defined FIRMWARE_CC2530
 +  #define HAL_UART_DMA_RX_MAX 128
