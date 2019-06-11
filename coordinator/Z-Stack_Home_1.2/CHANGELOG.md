@@ -1,4 +1,7 @@
-# 20191008
+# 20190611
+- Attempt to improve source routing firmware
+
+# 20190608
 - One firmware doesn't seem to be feasible, also add source routing firmware
 
 # 20190608
