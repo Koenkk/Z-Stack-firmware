@@ -147,10 +147,10 @@ index 7c6c77e..8265ff1 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..1423c15
+index 0000000..f3353a1
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,105 @@
+@@ -0,0 +1,117 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +
@@ -234,8 +234,14 @@ index 0000000..1423c15
 +  #define ENABLE_MT_SYS_RESET_SHUTDOWN
 +  #define ZTOOL_P1
 +  #define CC2530_MK
-+  #define NWK_MAX_DEVICE_LIST 21
-+  #define MAXMEMHEAP 3227
++
++  #if defined SOURCE_ROUTING
++    #define NWK_MAX_DEVICE_LIST 5
++    #define MAXMEMHEAP 3449
++  #else
++    #define NWK_MAX_DEVICE_LIST 21
++    #define MAXMEMHEAP 3227
++  #endif
 +
 +// CC2530 + CC2591
 +#elif defined FIRMWARE_CC2530_CC2591
@@ -243,8 +249,14 @@ index 0000000..1423c15
 +  #define ZTOOL_P1
 +  #define HAL_UART_DMA_RX_MAX 128
 +  #define HAL_PA_LNA
-+  #define NWK_MAX_DEVICE_LIST 21
-+  #define MAXMEMHEAP 3225
++
++  #if defined SOURCE_ROUTING
++    #define NWK_MAX_DEVICE_LIST 5
++    #define MAXMEMHEAP 3327
++  #else
++    #define NWK_MAX_DEVICE_LIST 21
++    #define MAXMEMHEAP 3227
++  #endif
 +
 +// CC2530 + CC2592
 +#elif defined FIRMWARE_CC2530_CC2592
