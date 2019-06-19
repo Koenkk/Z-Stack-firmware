@@ -1,3 +1,6 @@
+# 20190619
+- Make source routing firmware identical to 20190315 MAX_STABILITY
+
 # 20190611
 - Attempt to improve source routing firmware
 
