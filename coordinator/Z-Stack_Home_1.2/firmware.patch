@@ -147,10 +147,10 @@ index 7c6c77e..8265ff1 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..9910539
+index 0000000..e918c7d
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
-@@ -0,0 +1,117 @@
+@@ -0,0 +1,123 @@
 +// Shared accross all firmwares
 +#define ASSERT_RESET
 +
@@ -239,8 +239,8 @@ index 0000000..9910539
 +    #define NWK_MAX_DEVICE_LIST 5
 +    #define MAXMEMHEAP 3449
 +  #else
-+    #define NWK_MAX_DEVICE_LIST 21
-+    #define MAXMEMHEAP 3227
++    #define NWK_MAX_DEVICE_LIST 16
++    #define MAXMEMHEAP 3277
 +  #endif
 +
 +// CC2530 + CC2591
@@ -254,8 +254,8 @@ index 0000000..9910539
 +    #define NWK_MAX_DEVICE_LIST 5
 +    #define MAXMEMHEAP 3327
 +  #else
-+    #define NWK_MAX_DEVICE_LIST 21
-+    #define MAXMEMHEAP 3227
++    #define NWK_MAX_DEVICE_LIST 16
++    #define MAXMEMHEAP 3275
 +  #endif
 +
 +// CC2530 + CC2592
@@ -264,8 +264,14 @@ index 0000000..9910539
 +  #define ZTOOL_P1
 +  #define HAL_UART_DMA_RX_MAX 128
 +  #define HAL_PA_LNA_CC2592
-+  #define NWK_MAX_DEVICE_LIST 21
-+  #define MAXMEMHEAP 3225
++
++  #if defined SOURCE_ROUTING
++    #define NWK_MAX_DEVICE_LIST 5
++    #define MAXMEMHEAP 3327
++  #else
++    #define NWK_MAX_DEVICE_LIST 16
++    #define MAXMEMHEAP 3275
++  #endif
 +
 +#endif
 diff --git a/Projects/zstack/ZNP/Source/znp.cfg b/Projects/zstack/ZNP/Source/znp.cfg
