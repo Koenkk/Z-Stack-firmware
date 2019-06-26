@@ -147,7 +147,7 @@ index 7c6c77e..8265ff1 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/CC253x/Source/preinclude.h b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 new file mode 100644
-index 0000000..e918c7d
+index 0000000..5ab4fd5
 --- /dev/null
 +++ b/Projects/zstack/ZNP/CC253x/Source/preinclude.h
 @@ -0,0 +1,123 @@
@@ -237,7 +237,7 @@ index 0000000..e918c7d
 +
 +  #if defined SOURCE_ROUTING
 +    #define NWK_MAX_DEVICE_LIST 5
-+    #define MAXMEMHEAP 3449
++    #define MAXMEMHEAP 3189
 +  #else
 +    #define NWK_MAX_DEVICE_LIST 16
 +    #define MAXMEMHEAP 3277
@@ -252,7 +252,7 @@ index 0000000..e918c7d
 +
 +  #if defined SOURCE_ROUTING
 +    #define NWK_MAX_DEVICE_LIST 5
-+    #define MAXMEMHEAP 3327
++    #define MAXMEMHEAP 3187
 +  #else
 +    #define NWK_MAX_DEVICE_LIST 16
 +    #define MAXMEMHEAP 3275
@@ -267,7 +267,7 @@ index 0000000..e918c7d
 +
 +  #if defined SOURCE_ROUTING
 +    #define NWK_MAX_DEVICE_LIST 5
-+    #define MAXMEMHEAP 3327
++    #define MAXMEMHEAP 3187
 +  #else
 +    #define NWK_MAX_DEVICE_LIST 16
 +    #define MAXMEMHEAP 3275
