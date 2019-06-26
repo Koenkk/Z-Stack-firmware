@@ -5,63 +5,87 @@ This repository contains various Z-Stack coordinator firmwares.
 <table>
   <tr>
     <td><b>Z-Stack</b></td>
+    <td><b>Type</b></td>
     <td><b>Device</b></td>
     <td><b>Zigbee</b></td>
     <td><b>Direct children</b></td>
-    <td><b>Source routing</b></td>
-    <td><b># of 3.0 devices</b></td>
     <td><b>Notes</b></td>
   </tr>
   <tr>
     <td rowspan="4">Z-Stack_Home_1.2</td>
+    <td rowspan="4">Default</td>
     <td>CC2531</td>
     <td>1.2 HA</td>
-    <td>25</td>
-    <td>No</td>
+    <td>20</td>
     <td>-</td>
-    <td> </td>
   </tr>
   <tr>
     <td>CC2530</td>
     <td>1.2 HA</td>
-    <td>21</td>
-    <td>No</td>
+    <td>16</td>
     <td>-</td>
-    <td> </td>
   </tr>
   <tr>
     <td>CC2530 + CC2591</td>
     <td>1.2 HA</td>
-    <td>21</td>
-    <td>No</td>
+    <td>16</td>
     <td>-</td>
-    <td> </td>
   </tr>
   <tr>
     <td>CC2530 + CC2592</td>
     <td>1.2 HA</td>
-    <td>21</td>
-    <td>No</td>
+    <td>16</td>
     <td>-</td>
-    <td> </td>
+  </tr>
+    <tr>
+    <td rowspan="4">Z-Stack_Home_1.2</td>
+    <td rowspan="4">Source routing</td>
+    <td>CC2531</td>
+    <td>1.2 HA</td>
+    <td>5</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>CC2530</td>
+    <td>1.2 HA</td>
+    <td>5</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>CC2530 + CC2591</td>
+    <td>1.2 HA</td>
+    <td>5</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>CC2530 + CC2592</td>
+    <td>1.2 HA</td>
+    <td>5</td>
+    <td>-</td>
   </tr>
   <tr>
     <td>Z-Stack_3.0.x</td>
+    <td>Default</td>
     <td>CC2531</td>
     <td>3.0</td>
     <td>15</td>
-    <td>No</td>
-    <td>40</td>
-    <td><a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">#1445</a></td>
+    <td>
+      <li>
+        <ul><a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">WIP, see #1445</a></ul>
+        <ul>Max 40 Zigbee 3.0 devices</ul>
+      <li>
+    </td>
   </tr>
   <tr>
     <td>Z-Stack_3.x.0</td>
+    <td>Default</td>
     <td>CC2652R</td>
     <td>3.0</td>
     <td>20</td>
-    <td>No</td>
-    <td>40</td>
-    <td><a href="https://github.com/Koenkk/zigbee2mqtt/issues/1429">#1429</a></td>
+    <li>
+        <ul><a href="https://github.com/Koenkk/zigbee2mqtt/issues/1429">WIP, see #1429</a></ul>
+        <ul>Max 40 Zigbee 3.0 devices</ul>
+    <li>
   </tr>
 </table>
 
