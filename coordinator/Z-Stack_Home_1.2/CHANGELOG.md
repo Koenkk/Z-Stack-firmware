@@ -1,3 +1,18 @@
+# 20190619
+- Make source routing firmware identical to 20190315 MAX_STABILITY
+
+# 20190611
+- Attempt to improve source routing firmware
+
+# 20190608
+- One firmware doesn't seem to be feasible, also add source routing firmware
+
+# 20190608
+- Try with source routing disabled and more XDATA
+
+# 20190523
+- Re-enable source routing
+
 # 20190515
 - CC2530_CC2591 and CC2530_CC2592 only; fix transmit power (yes, again, finally)
 
