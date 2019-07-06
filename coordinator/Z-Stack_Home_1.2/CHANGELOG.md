@@ -1,3 +1,6 @@
+# 20190706
+- Increase end device timeout for source routing firmware
+
 # 20190619
 - Make source routing firmware identical to 20190315 MAX_STABILITY
 
