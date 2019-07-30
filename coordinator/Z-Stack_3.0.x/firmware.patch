@@ -1,12 +1,43 @@
+diff --git a/Components/hal/target/CC2530ZNP/hal_board_cfg.h b/Components/hal/target/CC2530ZNP/hal_board_cfg.h
+index 4af8164..4be21ca 100644
+--- a/Components/hal/target/CC2530ZNP/hal_board_cfg.h
++++ b/Components/hal/target/CC2530ZNP/hal_board_cfg.h
+@@ -314,7 +314,7 @@ extern unsigned char znpCfg0;
+  */
+ 
+ /* ----------- RF-frontend Connection Initialization ---------- */
+-#if defined HAL_PA_LNA || defined HAL_PA_LNA_CC2590
++#if defined HAL_PA_LNA || defined HAL_PA_LNA_CC2590 || defined HAL_PA_LNA_CC2592
+ extern void MAC_RfFrontendSetup(void);
+ #define HAL_BOARD_RF_FRONTEND_SETUP() MAC_RfFrontendSetup()
+ #else
+@@ -343,7 +343,7 @@ extern void MAC_RfFrontendSetup(void);
+ #endif
+ 
+ /* ----------- Board Initialization ---------- */
+-#if defined (HAL_BOARD_CC2530EB_REV17) && !defined (HAL_PA_LNA) && !defined (HAL_PA_LNA_CC2590)
++#if defined (HAL_BOARD_CC2530EB_REV17) && !defined (HAL_PA_LNA) && !defined (HAL_PA_LNA_CC2590) && !defined (HAL_PA_LNA_CC2592)
+ 
+ #define HAL_BOARD_INIT() st                                      \
+ (                                                                \
+@@ -362,7 +362,7 @@ extern void MAC_RfFrontendSetup(void);
+   PREFETCH_ENABLE();                                             \
+ )
+ 
+-#elif defined (HAL_BOARD_CC2530EB_REV13) || defined (HAL_PA_LNA) || defined (HAL_PA_LNA_CC2590)
++#elif defined (HAL_BOARD_CC2530EB_REV13) || defined (HAL_PA_LNA) || defined (HAL_PA_LNA_CC2590) || defined (HAL_PA_LNA_CC2592)
+ 
+ #ifdef HAL_ENABLE_WIFI_COEX_PINS
+ #define HAL_BOARD_ENABLE_WIFI_COEX_PINS() st                                      \
 diff --git a/Components/mt/MT_SYS.c b/Components/mt/MT_SYS.c
-index aa57766..b53f309 100644
+index aa57766..f80e1e5 100644
 --- a/Components/mt/MT_SYS.c
 +++ b/Components/mt/MT_SYS.c
 @@ -2141,6 +2141,21 @@ static void MT_SysSnifferParameters( uint8 *pBuf )
   *****************************************************************************/
  static void powerOffSoc(void)
  {
-+#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591)
++#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591) || defined(FIRMWARE_CC2530_CC2592)
 +  HAL_DISABLE_INTERRUPTS();
 +  STIF = 0; //HAL_SLEEP_TIMER_CLEAR_INT;
 +  if (ZNP_CFG1_UART == znpCfg1)
@@ -119,14 +150,14 @@ index d170283..292659a 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
-index eebe038..95041a8 100644
+index eebe038..dcc2618 100644
 --- a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
 +++ b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
 @@ -149,8 +149,17 @@ void InitBoard( uint8 level )
  
  #if defined CC2531ZNP
      znpCfg1 = ZNP_CFG1_UART;
-+#elif defined FIRMWARE_CC2530_CC2591
++#elif defined FIRMWARE_CC2530_CC2591 || defined(FIRMWARE_CC2530_CC2592)
 +    znpCfg1 = ZNP_CFG1_UART;
 +    znpCfg0 = ZNP_CFG0_32K_OSC;
  #elif defined CC2530_MK
@@ -142,13 +173,18 @@ index eebe038..95041a8 100644
      znpCfg1 = P2_0;
 diff --git a/Projects/zstack/ZNP/Source/preinclude.h b/Projects/zstack/ZNP/Source/preinclude.h
 new file mode 100644
-index 0000000..53064e2
+index 0000000..2f5a0c6
 --- /dev/null
 +++ b/Projects/zstack/ZNP/Source/preinclude.h
-@@ -0,0 +1,81 @@
+@@ -0,0 +1,95 @@
++#if defined FIRMWARE_SBL
++  #define MAKE_CRC_SHDW
++#else
++  #define FAKE_CRC_SHDW
++#endif
++
 +// Shared accross all firmwares
 +#define TC_LINKKEY_JOIN
-+#define FAKE_CRC_SHDW
 +#define ASSERT_RESET
 +#define INCLUDE_REVISION_INFORMATION
 +#define SECURE 1
@@ -226,6 +262,15 @@ index 0000000..53064e2
 +  #define NWK_MAX_DEVICE_LIST 10
 +  #define MAXMEMHEAP 3223
 +
++// CC2530 + CC2592
++#elif defined FIRMWARE_CC2530_CC2592
++  #define ENABLE_MT_SYS_RESET_SHUTDOWN
++  #define ZTOOL_P1
++  #define HAL_UART_DMA_RX_MAX 128
++  #define HAL_PA_LNA_CC2592
++  #define NWK_MAX_DEVICE_LIST 10
++  #define MAXMEMHEAP 3223
++
 +#endif
 \ No newline at end of file
 diff --git a/Projects/zstack/ZNP/Source/znp.cfg b/Projects/zstack/ZNP/Source/znp.cfg
@@ -239,7 +284,7 @@ index 2b8d56d..adb5e42 100644
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/Projects/zstack/ZNP/Source/znp_app.c b/Projects/zstack/ZNP/Source/znp_app.c
-index 31b115e..035e9f8 100644
+index 31b115e..e8bd3ab 100644
 --- a/Projects/zstack/ZNP/Source/znp_app.c
 +++ b/Projects/zstack/ZNP/Source/znp_app.c
 @@ -390,12 +390,23 @@ static void npInit(void)
@@ -247,14 +292,14 @@ index 31b115e..035e9f8 100644
  
      uartConfig.configured           = TRUE;
 +    
-+#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591)
++#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591) || defined(FIRMWARE_CC2530_CC2592)
 +    uartConfig.baudRate             = HAL_UART_BR_115200;
 +#else
      uartConfig.baudRate             = ZNP_UART_BAUD;
 -#ifdef ZNP_ALT
 +#endif
 +
-+#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591)
++#if defined(FIRMWARE_CC2530) || defined(FIRMWARE_CC2530_CC2591) || defined(FIRMWARE_CC2530_CC2592)
      uartConfig.flowControl          = FALSE;
  #else
 +  #ifdef ZNP_ALT
@@ -276,7 +321,7 @@ index 31b115e..035e9f8 100644
 -#else
 -   ZMacSetTransmitPower(TX_PWR_PLUS_4);
 -#endif 
-+#if defined FIRMWARE_CC2530_CC2591
++#if defined FIRMWARE_CC2530_CC2591 || defined(FIRMWARE_CC2530_CC2592)
 +    //Add TX Setting
 +    #if defined HAL_PA_LNA || defined HAL_PA_LNA_CC2592
 +      ZMacSetTransmitPower(TX_PWR_PLUS_19);
