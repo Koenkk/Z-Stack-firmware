@@ -1,59 +1,145 @@
-diff --git a/Application/mt/mt_sys.c b/Application/mt/mt_sys.c
-index 279a97f..d58ca3a 100644
---- a/Application/mt/mt_sys.c
-+++ b/Application/mt/mt_sys.c
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
+index d637d03..91d5fbb 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 @@ -514,9 +514,10 @@ static void MT_SysVersion(void)
-   uint8 *pBuf = &verStr[sizeof(MTVersionString)];
+   uint8_t *pBuf = &verStr[sizeof(MTVersionString)];
  #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
-   uint32 sblSig;
--  uint32 sblRev;
+   uint32_t sblSig;
+-  uint32_t sblRev;
  #endif
  
-+  uint32 sblRev;
++  uint32_t sblRev;
 +
-   MAP_osal_memcpy(verStr, (uint8 *)MTVersionString, sizeof(MTVersionString));
+   OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
  
  #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
-diff --git a/Application/mt/mt_version.c b/Application/mt/mt_version.c
-index 305dfc7..51d8890 100644
---- a/Application/mt/mt_version.c
-+++ b/Application/mt/mt_version.c
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
+index dbe48fb..f8402cd 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -69,7 +69,7 @@
   *****************************************************************************/
- const uint8 MTVersionString[] = {
+ const uint8_t MTVersionString[] = {
                                     2,  /* Transport protocol revision */
 -                                   0,  /* Product ID */
 +                                   1,  /* Product ID */
                                     2,  /* Software major release number */
                                     7,  /* Software minor release number */
                                     1,  /* Software maintenance release number */
-diff --git a/Application/mt/revision_info.h b/Application/mt/revision_info.h
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..0eb55ad
+index 0000000..fce70f1
 --- /dev/null
-+++ b/Application/mt/revision_info.h
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20190515
++#define CODE_REVISION_NUMBER 20190916
 +#endif
-\ No newline at end of file
-diff --git a/Stack/Config/preinclude.h b/Stack/Config/preinclude.h
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..e6436c2
+index 0000000..8ba9e2a
 --- /dev/null
-+++ b/Stack/Config/preinclude.h
-@@ -0,0 +1,3 @@
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
+@@ -0,0 +1,47 @@
 +#define INCLUDE_REVISION_INFORMATION
 +#define MT_SYS_KEY_MANAGEMENT 1
++
++// Save memory
++#undef NWK_MAX_BINDING_ENTRIES
++#define NWK_MAX_BINDING_ENTRIES 1
++#undef APS_MAX_GROUPS
++#define APS_MAX_GROUPS 1
++
++// Disabling MULTICAST is required in order for proper group support.
++// If MULTICAST is not disabled, the group adress is not included in the APS header
 +#define MULTICAST_ENABLED FALSE
-diff --git a/Stack/Config/znp_cnf.opts b/Stack/Config/znp_cnf.opts
-index 1be73a8..81f5f4e 100644
---- a/Stack/Config/znp_cnf.opts
-+++ b/Stack/Config/znp_cnf.opts
++
++// Increase the max number of boardcasts, the default broadcast delivery time is 3 seconds
++// with the value below this will allow for 1 broadcast every 0.15 second
++#define MAX_BCAST 20
++
++/**
++ * Memory calculation
++ * Post: http://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/834603/3105789#3105789
++ * Total amount of NV = 0x4000 bytes = 16384 bytes
++ * NWK_MAX_DEVICE_LIST = 50 * 23 bytes = 1150 bytes
++ * ZDSECMGR_TC_DEVICE_MAX = 200 * 27 bytes = 5400 bytes
++ * NWK_MAX_ADDRESSES = 257 * 19 bytes = 4883 bytes ((NWK_MAX_DEVICE_LIST + 1) + NWK_MAX_BINDING_ENTRIES + (ZDSECMGR_TC_DEVICE_MAX + 5))
++ * MAX_NEIGHBOR_ENTRIES = 20 * 20 bytes = 400 bytes
++ * MAX_RTG_ENTRIES = 100 * 7 bytes = 700 bytes
++ * MAX_RTG_SRC_ENTRIES = 200 * 6 bytes = 1200 bytes
++ * Others = +- 2300 bytes
++ * Remaining = 351 bytes
++ */
++
++/**
++ * Enable MTO routing
++ */
++#define CONCENTRATOR_ENABLE TRUE
++#define CONCENTRATOR_DISCOVERY_TIME 120
++#define CONCENTRATOR_ROUTE_CACHE TRUE
++#define MAX_RTG_SRC_ENTRIES 200
++#define SRC_RTG_EXPIRY_TIME 255
++
++/**
++ * Scale other device tables appropriately
++ */
++#define NWK_MAX_DEVICE_LIST 50
++#define ZDSECMGR_TC_DEVICE_MAX 200
++#define MAX_NEIGHBOR_ENTRIES 30
++#define MAX_RTG_ENTRIES 100
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
+index d809fb2..abb769e 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 @@ -93,3 +93,5 @@
  
  /* BDB interface */
  -DMT_APP_CNF_FUNC
 +
 +--preinclude=preinclude.h
+\ No newline at end of file
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
+index 088a5b2..c147e16 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
+@@ -405,10 +405,19 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+ #if !defined ( APS_NO_GROUPS )
+     // Find the first endpoint for this group
+     grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
+-    if ( grpEp == APS_GROUPS_EP_NOT_FOUND )
+-      return;   // No endpoint found
+ 
+-    epDesc = afFindEndPointDesc( grpEp );
++    if ( grpEp == APS_GROUPS_EP_NOT_FOUND ) {
++      // No endpoint found, default to endpoint 1.
++      // In the original source code there is a return here.
++      // This prevent the messags from being forwarded.
++      // For our use-case we want to capture all messages.
++      // Even if the coordinator is not in the group.
++      epDesc = afFindEndPointDesc( 1 );
++    }
++    else {
++      epDesc = afFindEndPointDesc( grpEp );
++    }
++
+     if ( epDesc == NULL )
+       return;   // Endpoint descriptor not found
+ 
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
+index 76946be..1865169 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
+@@ -191,7 +191,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
+ //
+ // NOTICE:  Before enabling Child Aging make sure to review all the related
+ // definitions in this file, especially zgNwkParentInformation.
+-uint8_t zgChildAgingEnable = TRUE;
++
++// Disable child aging, otherwise Xiaomi devices are being kicked off the network.
++uint8_t zgChildAgingEnable = FALSE;
+ 
+ //==========    TouchLink NWK configuration    ===============
+ // Values used by Router when starts a network as initiator
