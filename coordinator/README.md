@@ -59,18 +59,7 @@ This repository contains various Z-Stack coordinator firmwares.
   </tr>
   <tr>
     <td rowspan="2">Z-Stack_3.x.0</td>
-    <td>CC26X2R1</td>
-    <td>3.0</td>
-    <td>50</td>
-    <td>100/200</td>
-    <td>
-      - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1429">WIP (see #1429)</a>
-      <br/>
-      - Max 100 Zigbee 3.0 devices
-    </td>
-  </tr>
-  <tr>
-    <td>CC1352P_2</td>
+    <td>CC26X2R1, CC1352P_2</td>
     <td>3.0</td>
     <td>50</td>
     <td>100/200</td>
