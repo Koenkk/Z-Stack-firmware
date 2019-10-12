@@ -5,70 +5,41 @@ This repository contains various Z-Stack coordinator firmwares.
 <table>
   <tr>
     <td><b>Z-Stack</b></td>
-    <td><b>Type</b></td>
     <td><b>Device</b></td>
     <td><b>Zigbee</b></td>
     <td><b>Direct children</b></td>
+    <td><b>Routes</b></td>
     <td><b>Notes</b></td>
   </tr>
   <tr>
-    <td rowspan="4">Z-Stack_Home_1.2</td>
-    <td rowspan="4">Default</td>
+    <td rowspan="2">Z-Stack_Home_1.2 (default)</td>
     <td>CC2531</td>
     <td>1.2 HA</td>
     <td>20</td>
+    <td>30/0</td>
     <td></td>
   </tr>
   <tr>
-    <td>CC2530</td>
+    <td>CC2530, CC2530 + CC2591, CC2530 + CC2592</td>
     <td>1.2 HA</td>
     <td>16</td>
+    <td>30/0</td>
     <td></td>
   </tr>
   <tr>
-    <td>CC2530 + CC2591</td>
-    <td>1.2 HA</td>
-    <td>16</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>CC2530 + CC2592</td>
-    <td>1.2 HA</td>
-    <td>16</td>
-    <td></td>
-  </tr>
-    <tr>
-    <td rowspan="4">Z-Stack_Home_1.2</td>
-    <td rowspan="4">Source routing</td>
-    <td>CC2531</td>
+    <td>Z-Stack_Home_1.2 (source_routing)</td>
+    <td>CC2531, CC2530, CC2530 + CC2591, CC2530 + CC2592</td>
     <td>1.2 HA</td>
     <td>5</td>
+    <td>40/40</td>
     <td></td>
   </tr>
   <tr>
-    <td>CC2530</td>
-    <td>1.2 HA</td>
-    <td>5</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>CC2530 + CC2591</td>
-    <td>1.2 HA</td>
-    <td>5</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>CC2530 + CC2592</td>
-    <td>1.2 HA</td>
-    <td>5</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Z-Stack_3.0.x</td>
-    <td>Default</td>
+    <td rowspan="2">Z-Stack_3.0.x</td>
     <td>CC2531</td>
     <td>3.0</td>
     <td>15</td>
+    <td>40/0</td>
     <td>
       - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">WIP (see #1445)</a>
       <br/>
@@ -76,15 +47,37 @@ This repository contains various Z-Stack coordinator firmwares.
     </td>
   </tr>
   <tr>
-    <td>Z-Stack_3.x.0</td>
-    <td>Default</td>
-    <td>CC2652R</td>
+    <td>CC2530, CC2530 + CC2591, CC2530 + CC2592</td>
     <td>3.0</td>
-    <td>20</td>
+    <td>10</td>
+    <td>40/0</td>
+    <td>
+      - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">WIP (see #1445)</a>
+      <br/>
+      - Max 40 Zigbee 3.0 devices
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2">Z-Stack_3.x.0</td>
+    <td>CC26X2R1</td>
+    <td>3.0</td>
+    <td>50</td>
+    <td>100/200</td>
     <td>
       - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1429">WIP (see #1429)</a>
       <br/>
-      - Max 40 Zigbee 3.0 devices
+      - Max 100 Zigbee 3.0 devices
+    </td>
+  </tr>
+  <tr>
+    <td>CC1352P_2</td>
+    <td>3.0</td>
+    <td>50</td>
+    <td>100/200</td>
+    <td>
+      - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1429">WIP (see #1429)</a>
+      <br/>
+      - Max 100 Zigbee 3.0 devices
     </td>
   </tr>
 </table>
@@ -98,11 +91,11 @@ This depends:
 
 ### Legend
 - *Z-Stack:* Z-Stack is the Zigbee stack for Texas Instruments Zigbee devices
-- *Type:* The source routing firmware allows the coordinator to remember the routes to the devices. Improves performance for larger (40+ nodes) networks. For more information read [Large ZigBee Networks and Source Routing
-](http://cms.digi.com/resources/documentation/digidocs/90001537/references/r_large_zigbee_networks-source_routing.htm?TocPath=Working%20with%20Zigbee%7C_____14). Because of memory limitations, the number of direct children are reduced for these firmwares.
 - *Device:* The Zigbee hardware
 - *Zigbee:* Zigbee version, for more information read [What's New in Zigbee 3.0](http://www.ti.com/lit/an/swra615a/swra615a.pdf)
 - *Direct children:* Number of children that directly can join the coordinator. Note that this is **not** the maximum network size. For more information, read [the Zigbee2mqtt FAQ about device limit](http://www.zigbee2mqtt.io/information/FAQ.html#i-read-that-zigbee2mqtt-has-a-limit-of-15-devices-is-this-true)
+- *Routes:* This indicates how many routes the coordinator can keep in memory. For example 100/200 would mean that: 100 normal routes and 200 source routes can be kept in memory. 0 source routes mean that source routing is disabled. Source routes improve the performance for larger (40+ nodes) networks. For more information read [Large ZigBee Networks and Source Routing
+](http://cms.digi.com/resources/documentation/digidocs/90001537/references/r_large_zigbee_networks-source_routing.htm?TocPath=Working%20with%20Zigbee%7C_____14).
 
 #### Notes
 - Due to new security requirements in Zigbee 3.0, Zigbee 3.0 coordinators can only support a limited amount of Zigbee 3.0 devices. For Zigbee 1.2 coordinators there is no limit on the max number of Zigbee 3.0 devices that can join.

@@ -1,5 +1,31 @@
+From f5d92b64b46c6b17d093480bde0e82ba4e2b3ed5 Mon Sep 17 00:00:00 2001
+From: Koen Kanters <koenkanters94@gmail.com>
+Date: Sat, 12 Oct 2019 14:29:02 +0200
+Subject: [PATCH] Patch
+
+---
+ .../Application/mt/mt_sys.c                   |  6 ++-
+ .../Application/mt/mt_version.c               |  2 +-
+ .../Application/mt/revision_info.h            |  4 ++
+ .../Stack/Config/preinclude.h                 | 49 +++++++++++++++++++
+ .../Stack/Config/znp_cnf.opts                 |  2 +
+ .../Stack/af/af.c                             | 14 ++++--
+ .../Stack/sys/zglobals.c                      |  4 +-
+ .../Application/mt/mt_sys.c                   |  6 ++-
+ .../Application/mt/mt_version.c               |  2 +-
+ .../Application/mt/revision_info.h            |  4 ++
+ .../Stack/Config/preinclude.h                 | 49 +++++++++++++++++++
+ .../Stack/Config/znp_cnf.opts                 |  2 +
+ .../Stack/af/af.c                             | 14 ++++--
+ .../Stack/sys/zglobals.c                      |  4 +-
+ 14 files changed, 148 insertions(+), 14 deletions(-)
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
+ create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
+ create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
+
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-index e9ca64c..7ae61c3 100644
+index e9ca64c..04873f9 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 @@ -510,9 +510,10 @@ static void MT_SysVersion(void)
@@ -14,6 +40,16 @@ index e9ca64c..7ae61c3 100644
    OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
  
  #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
+@@ -1327,7 +1328,8 @@ static void MT_SysNvWrite(uint8_t *pBuf)
+     else
+     {
+       /* Attempt to write data (existing) to the specified item */
+-      error = pZStackCfg->nvFps.writeItemEx( nvId, dataOfs, dataLen, pBuf );
++      error = pZStackCfg->nvFps.writeItem( nvId, dataLen, pBuf );
++      // error = pZStackCfg->nvFps.writeItemEx( nvId, dataOfs, dataLen, pBuf );
+     }
+   }
+ 
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 index 64dd210..4deedea 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
@@ -29,22 +65,23 @@ index 64dd210..4deedea 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..8acffe6
+index 0000000..50e85b0
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20191010
++#define CODE_REVISION_NUMBER 20191011
 +#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..b96265e
+index 0000000..b2a03e1
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,47 @@
+@@ -0,0 +1,49 @@
 +#define INCLUDE_REVISION_INFORMATION
 +#define MT_SYS_KEY_MANAGEMENT 1
++#define FEATURE_NVEXID 1
 +
 +// Save memory
 +#undef NWK_MAX_BINDING_ENTRIES
@@ -87,7 +124,8 @@ index 0000000..b96265e
 + * Scale other device tables appropriately
 + */
 +#define NWK_MAX_DEVICE_LIST 50
-+#define ZDSECMGR_TC_DEVICE_MAX 200
++// Setting this from 100 to 200 causes NV issues; further investigation required
++#define ZDSECMGR_TC_DEVICE_MAX 100
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -142,7 +180,7 @@ index 55dfb43..396f8b0 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-index e9ca64c..7ae61c3 100644
+index e9ca64c..48746d6 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 @@ -510,9 +510,10 @@ static void MT_SysVersion(void)
@@ -157,6 +195,16 @@ index e9ca64c..7ae61c3 100644
    OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
  
  #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
+@@ -1327,7 +1328,8 @@ static void MT_SysNvWrite(uint8_t *pBuf)
+     else
+     {
+       /* Attempt to write data (existing) to the specified item */
+-      error = pZStackCfg->nvFps.writeItemEx( nvId, dataOfs, dataLen, pBuf );
++      error = pZStackCfg->nvFps.writeItem( nvId, dataLen, pBuf );
++      //error = pZStackCfg->nvFps.writeItemEx( nvId, dataOfs, dataLen, pBuf );
+     }
+   }
+ 
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 index 64dd210..4deedea 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
@@ -172,22 +220,23 @@ index 64dd210..4deedea 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..8acffe6
+index 0000000..50e85b0
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20191010
++#define CODE_REVISION_NUMBER 20191011
 +#endif
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..b96265e
+index 0000000..b2a03e1
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,47 @@
+@@ -0,0 +1,49 @@
 +#define INCLUDE_REVISION_INFORMATION
 +#define MT_SYS_KEY_MANAGEMENT 1
++#define FEATURE_NVEXID 1
 +
 +// Save memory
 +#undef NWK_MAX_BINDING_ENTRIES
@@ -230,7 +279,8 @@ index 0000000..b96265e
 + * Scale other device tables appropriately
 + */
 +#define NWK_MAX_DEVICE_LIST 50
-+#define ZDSECMGR_TC_DEVICE_MAX 200
++// Setting this from 100 to 200 causes NV issues; further investigation required
++#define ZDSECMGR_TC_DEVICE_MAX 100
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -284,3 +334,6 @@ index 55dfb43..396f8b0 100644
  
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
+-- 
+2.21.0 (Apple Git-122)
+
