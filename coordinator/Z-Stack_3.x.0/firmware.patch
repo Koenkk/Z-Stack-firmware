@@ -1,4 +1,4 @@
-From f5d92b64b46c6b17d093480bde0e82ba4e2b3ed5 Mon Sep 17 00:00:00 2001
+From a6cc9609793fa64542b550b197c50d4620972015 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Sat, 12 Oct 2019 14:29:02 +0200
 Subject: [PATCH] Patch
@@ -65,17 +65,17 @@ index 64dd210..4deedea 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..50e85b0
+index 0000000..cde8dea
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20191011
++#define CODE_REVISION_NUMBER 20191015
 +#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..b2a03e1
+index 0000000..ba0f93a
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,49 @@
@@ -95,7 +95,7 @@ index 0000000..b2a03e1
 +
 +// Increase the max number of boardcasts, the default broadcast delivery time is 3 seconds
 +// with the value below this will allow for 1 broadcast every 0.15 second
-+#define MAX_BCAST 20
++#define MAX_BCAST 30
 +
 +/**
 + * Memory calculation
@@ -220,17 +220,17 @@ index 64dd210..4deedea 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..50e85b0
+index 0000000..cde8dea
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20191011
++#define CODE_REVISION_NUMBER 20191015
 +#endif
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..b2a03e1
+index 0000000..ba0f93a
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,49 @@
@@ -250,7 +250,7 @@ index 0000000..b2a03e1
 +
 +// Increase the max number of boardcasts, the default broadcast delivery time is 3 seconds
 +// with the value below this will allow for 1 broadcast every 0.15 second
-+#define MAX_BCAST 20
++#define MAX_BCAST 30
 +
 +/**
 + * Memory calculation
