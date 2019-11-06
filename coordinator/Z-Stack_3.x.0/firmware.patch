@@ -1,4 +1,4 @@
-From a6cc9609793fa64542b550b197c50d4620972015 Mon Sep 17 00:00:00 2001
+From b2b624316325f92056ab29e14f30affd5e2d3ae8 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Sat, 12 Oct 2019 14:29:02 +0200
 Subject: [PATCH] Patch
@@ -7,18 +7,22 @@ Subject: [PATCH] Patch
  .../Application/mt/mt_sys.c                   |  6 ++-
  .../Application/mt/mt_version.c               |  2 +-
  .../Application/mt/revision_info.h            |  4 ++
- .../Stack/Config/preinclude.h                 | 49 +++++++++++++++++++
+ .../Stack/Config/preinclude.h                 | 38 +++++++++++++++++++
  .../Stack/Config/znp_cnf.opts                 |  2 +
- .../Stack/af/af.c                             | 14 ++++--
+ .../Stack/af/af.c                             | 14 +++++--
  .../Stack/sys/zglobals.c                      |  4 +-
+ .../cc13x2lp.cmd                              |  6 +--
+ znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  |  6 +--
  .../Application/mt/mt_sys.c                   |  6 ++-
  .../Application/mt/mt_version.c               |  2 +-
  .../Application/mt/revision_info.h            |  4 ++
- .../Stack/Config/preinclude.h                 | 49 +++++++++++++++++++
+ .../Stack/Config/preinclude.h                 | 38 +++++++++++++++++++
  .../Stack/Config/znp_cnf.opts                 |  2 +
- .../Stack/af/af.c                             | 14 ++++--
+ .../Stack/af/af.c                             | 14 +++++--
  .../Stack/sys/zglobals.c                      |  4 +-
- 14 files changed, 148 insertions(+), 14 deletions(-)
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  6 +--
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |  6 +--
+ 18 files changed, 138 insertions(+), 26 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
@@ -65,20 +69,20 @@ index 64dd210..4deedea 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..cde8dea
+index 0000000..90086ea
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20191015
++#define CODE_REVISION_NUMBER 20191106
 +#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..ba0f93a
+index 0000000..733be1d
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,38 @@
 +#define INCLUDE_REVISION_INFORMATION
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
@@ -89,6 +93,10 @@ index 0000000..ba0f93a
 +#undef APS_MAX_GROUPS
 +#define APS_MAX_GROUPS 1
 +
++// Increase NV pages to 3 to allow for bigger device tables
++#undef NVOCMP_NVPAGES
++#define NVOCMP_NVPAGES 3
++
 +// Disabling MULTICAST is required in order for proper group support.
 +// If MULTICAST is not disabled, the group adress is not included in the APS header
 +#define MULTICAST_ENABLED FALSE
@@ -96,20 +104,6 @@ index 0000000..ba0f93a
 +// Increase the max number of boardcasts, the default broadcast delivery time is 3 seconds
 +// with the value below this will allow for 1 broadcast every 0.15 second
 +#define MAX_BCAST 30
-+
-+/**
-+ * Memory calculation
-+ * Post: http://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/834603/3105789#3105789
-+ * Total amount of NV = 0x4000 bytes = 16384 bytes
-+ * NWK_MAX_DEVICE_LIST = 50 * 23 bytes = 1150 bytes
-+ * ZDSECMGR_TC_DEVICE_MAX = 200 * 27 bytes = 5400 bytes
-+ * NWK_MAX_ADDRESSES = 257 * 19 bytes = 4883 bytes ((NWK_MAX_DEVICE_LIST  1)  NWK_MAX_BINDING_ENTRIES  (ZDSECMGR_TC_DEVICE_MAX  5))
-+ * MAX_NEIGHBOR_ENTRIES = 20 * 20 bytes = 400 bytes
-+ * MAX_RTG_ENTRIES = 100 * 7 bytes = 700 bytes
-+ * MAX_RTG_SRC_ENTRIES = 200 * 6 bytes = 1200 bytes
-+ * Others = - 2300 bytes
-+ * Remaining = 351 bytes
-+ */
 +
 +/**
 + * Enable MTO routing
@@ -124,8 +118,7 @@ index 0000000..ba0f93a
 + * Scale other device tables appropriately
 + */
 +#define NWK_MAX_DEVICE_LIST 50
-+// Setting this from 100 to 200 causes NV issues; further investigation required
-+#define ZDSECMGR_TC_DEVICE_MAX 100
++#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -179,6 +172,47 @@ index 55dfb43..396f8b0 100644
  
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
+index 2b5d2ae..c12e296 100755
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
+@@ -70,9 +70,9 @@
+ /* must be located at the beginning of the application.                      */
+ 
+ #define FLASH_BASE              0x00000000
+-#define FLASH_SIZE              0x52000
+-#define FLASH_NV_BASE           0x52000
+-#define FLASH_NV_SIZE           0x4000
++#define FLASH_SIZE              0x50000
++#define FLASH_NV_BASE           0x50000
++#define FLASH_NV_SIZE           0x6000
+ #define FLASH_LAST_BASE         0x56000
+ #define FLASH_LAST_SIZE         0x2000
+ 
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
+index 7e73711..b94e6c7 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
+@@ -29,7 +29,7 @@
+  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-// @cliArgs --board /ti/boards/CC1352P_2_LAUNCHXL
++// @cliArgs --board /ti/boards/CC1352P_2_LAUNCHXL
+ 
+ /*
+  *  znp.syscfg
+@@ -124,8 +124,8 @@ Button2.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN2";
+ /* Internal NVS */
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.nvsType                  = "Internal";
+-NVS1.internalFlash.regionBase = 0x52000;
+-NVS1.internalFlash.regionSize = 0x4000;
++NVS1.internalFlash.regionBase = 0x50000;
++NVS1.internalFlash.regionSize = 0x6000;
+ 
+ 
+ /* External NVS */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 index e9ca64c..48746d6 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
@@ -220,20 +254,20 @@ index 64dd210..4deedea 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..cde8dea
+index 0000000..90086ea
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20191015
++#define CODE_REVISION_NUMBER 20191106
 +#endif
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..ba0f93a
+index 0000000..733be1d
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,38 @@
 +#define INCLUDE_REVISION_INFORMATION
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
@@ -244,6 +278,10 @@ index 0000000..ba0f93a
 +#undef APS_MAX_GROUPS
 +#define APS_MAX_GROUPS 1
 +
++// Increase NV pages to 3 to allow for bigger device tables
++#undef NVOCMP_NVPAGES
++#define NVOCMP_NVPAGES 3
++
 +// Disabling MULTICAST is required in order for proper group support.
 +// If MULTICAST is not disabled, the group adress is not included in the APS header
 +#define MULTICAST_ENABLED FALSE
@@ -251,20 +289,6 @@ index 0000000..ba0f93a
 +// Increase the max number of boardcasts, the default broadcast delivery time is 3 seconds
 +// with the value below this will allow for 1 broadcast every 0.15 second
 +#define MAX_BCAST 30
-+
-+/**
-+ * Memory calculation
-+ * Post: http://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/834603/3105789#3105789
-+ * Total amount of NV = 0x4000 bytes = 16384 bytes
-+ * NWK_MAX_DEVICE_LIST = 50 * 23 bytes = 1150 bytes
-+ * ZDSECMGR_TC_DEVICE_MAX = 200 * 27 bytes = 5400 bytes
-+ * NWK_MAX_ADDRESSES = 257 * 19 bytes = 4883 bytes ((NWK_MAX_DEVICE_LIST  1)  NWK_MAX_BINDING_ENTRIES  (ZDSECMGR_TC_DEVICE_MAX  5))
-+ * MAX_NEIGHBOR_ENTRIES = 20 * 20 bytes = 400 bytes
-+ * MAX_RTG_ENTRIES = 100 * 7 bytes = 700 bytes
-+ * MAX_RTG_SRC_ENTRIES = 200 * 6 bytes = 1200 bytes
-+ * Others = - 2300 bytes
-+ * Remaining = 351 bytes
-+ */
 +
 +/**
 + * Enable MTO routing
@@ -279,8 +303,7 @@ index 0000000..ba0f93a
 + * Scale other device tables appropriately
 + */
 +#define NWK_MAX_DEVICE_LIST 50
-+// Setting this from 100 to 200 causes NV issues; further investigation required
-+#define ZDSECMGR_TC_DEVICE_MAX 100
++#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -334,6 +357,47 @@ index 55dfb43..396f8b0 100644
  
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
+index e3fea91..b448752 100755
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
+@@ -70,9 +70,9 @@
+ /* must be located at the beginning of the application.                      */
+ 
+ #define FLASH_BASE              0x00000000
+-#define FLASH_SIZE              0x52000
+-#define FLASH_NV_BASE           0x52000
+-#define FLASH_NV_SIZE           0x4000
++#define FLASH_SIZE              0x50000
++#define FLASH_NV_BASE           0x50000
++#define FLASH_NV_SIZE           0x6000
+ #define FLASH_LAST_BASE         0x56000
+ #define FLASH_LAST_SIZE         0x2000
+ 
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
+index fdb806b..0a99bf9 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
+@@ -29,7 +29,7 @@
+  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-// @cliArgs --board /ti/boards/CC26X2R1_LAUNCHXL
++// @cliArgs --board /ti/boards/CC26X2R1_LAUNCHXL
+ 
+ /*
+  *  znp.syscfg
+@@ -124,8 +124,8 @@ Button2.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN2";
+ /* Internal NVS */
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.nvsType                  = "Internal";
+-NVS1.internalFlash.regionBase = 0x52000;
+-NVS1.internalFlash.regionSize = 0x4000;
++NVS1.internalFlash.regionBase = 0x50000;
++NVS1.internalFlash.regionSize = 0x6000;
+ 
+ 
+ /* External NVS */
 -- 
 2.21.0 (Apple Git-122)
 

@@ -1,3 +1,6 @@
+# 20191106
+- Increase max number of Zigbee 3.0 devices that can join to 200
+
 # 20191015
 - Increased group command buffer
 
