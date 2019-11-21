@@ -41,7 +41,7 @@ This repository contains various Z-Stack coordinator firmwares.
     <td>15</td>
     <td>40/0</td>
     <td>
-      - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">WIP (see #1445)</a>
+      - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">Discussion #1445</a>
       <br/>
       - Max 40 Zigbee 3.0 devices
     </td>
@@ -52,7 +52,7 @@ This repository contains various Z-Stack coordinator firmwares.
     <td>10</td>
     <td>40/0</td>
     <td>
-      - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">WIP (see #1445)</a>
+      - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1445">Discussion #1445</a>
       <br/>
       - Max 40 Zigbee 3.0 devices
     </td>
@@ -64,7 +64,7 @@ This repository contains various Z-Stack coordinator firmwares.
     <td>50</td>
     <td>100/200</td>
     <td>
-      - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1429">WIP (see #1429)</a>
+      - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1429">Discussion #1429</a>
       <br/>
       - Max 200 Zigbee 3.0 devices
     </td>
