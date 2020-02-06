@@ -2,7 +2,7 @@
 
 ## Setup development environment
 1. Download and install [Z-STACK-3.0.2](http://www.ti.com/tool/Z-STACK).
-2. Download and install [IAR Embedded Workbench for ARM](https://www.iar.com/iar-embedded-workbench/#!?architecture=ARM).
+2. Download and install [IAR Embedded Workbench for ARM](https://www.iar.com/iar-embedded-workbench/#!?architecture=Arm).
 
 *NOTE: For IAR Embedded Workbench for ARM you need either the full (paid) version or the 30-days evaluation version.*
 
