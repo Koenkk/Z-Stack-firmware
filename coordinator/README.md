@@ -60,8 +60,8 @@ This repository contains various Z-Stack coordinator firmwares.
     <tr>
     <td>CC2538 + CC2592</td>
     <td>3.0</td>
-    <td>15</td>
-    <td>40/0</td>
+    <td>80</td>
+    <td>40/400</td>
     <td>
       - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1568">Discussion #1568</a>
       <br/>
