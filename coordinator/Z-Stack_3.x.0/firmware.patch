@@ -1,35 +1,54 @@
-From b2b624316325f92056ab29e14f30affd5e2d3ae8 Mon Sep 17 00:00:00 2001
+From 7cc02f1836dbae0139a2cd983298c07f6a3fde06 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
-Date: Sat, 12 Oct 2019 14:29:02 +0200
-Subject: [PATCH] Patch
+Date: Fri, 28 Feb 2020 18:45:36 +0100
+Subject: [PATCH] Own changes.
 
 ---
+ .../Application/Services/nvocmp.c             |  2 +-
  .../Application/mt/mt_sys.c                   |  6 ++-
  .../Application/mt/mt_version.c               |  2 +-
  .../Application/mt/revision_info.h            |  4 ++
  .../Stack/Config/preinclude.h                 | 38 +++++++++++++++++++
  .../Stack/Config/znp_cnf.opts                 |  2 +
  .../Stack/af/af.c                             | 14 +++++--
- .../Stack/sys/zglobals.c                      |  4 +-
+ .../Stack/bdb/bdb.c                           |  5 ++-
+ .../Stack/sys/zglobals.c                      |  6 ++-
+ .../Stack/zdo/zd_app.c                        |  8 ++++
  .../cc13x2lp.cmd                              |  6 +--
  znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  |  6 +--
+ .../Application/Services/nvocmp.c             |  2 +-
  .../Application/mt/mt_sys.c                   |  6 ++-
  .../Application/mt/mt_version.c               |  2 +-
  .../Application/mt/revision_info.h            |  4 ++
  .../Stack/Config/preinclude.h                 | 38 +++++++++++++++++++
  .../Stack/Config/znp_cnf.opts                 |  2 +
  .../Stack/af/af.c                             | 14 +++++--
- .../Stack/sys/zglobals.c                      |  4 +-
+ .../Stack/bdb/bdb.c                           |  5 ++-
+ .../Stack/sys/zglobals.c                      |  6 ++-
+ .../Stack/zdo/zd_app.c                        |  8 ++++
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  6 +--
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |  6 +--
- 18 files changed, 138 insertions(+), 26 deletions(-)
+ 24 files changed, 164 insertions(+), 34 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
+index 418e9a9..bf3cafb 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
+@@ -3591,7 +3591,7 @@ static bool NVOCMP_findSignature(uint8_t pg, uint16_t *pSrcOff)
+       {
+         // Found possible header, resume normal operation
+         NVOCMP_ALERT(FALSE, "Found possible signature.")
+-        srcOff += (i - 1);
++        srcOff += (i);
+         *pSrcOff = srcOff;
+         return(true);
+       }
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-index e9ca64c..04873f9 100644
+index ee5ee10..ac31785 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 @@ -510,9 +510,10 @@ static void MT_SysVersion(void)
@@ -55,7 +74,7 @@ index e9ca64c..04873f9 100644
    }
  
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 64dd210..4deedea 100644
+index dbe48fb..854c4d6 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -69,7 +69,7 @@
@@ -69,13 +88,13 @@ index 64dd210..4deedea 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..90086ea
+index 0000000..73b94fe
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20191106
++#define CODE_REVISION_NUMBER 20200229
 +#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
@@ -122,7 +141,7 @@ index 0000000..733be1d
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-index 1be73a8..81f5f4e 100644
+index d809fb2..8290ef9 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 @@ -93,3 +93,5 @@
@@ -132,7 +151,7 @@ index 1be73a8..81f5f4e 100644
 +
 +--preinclude=preinclude.h
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index 60d4af4..0ed1c5d 100644
+index bacef22..e481eb8 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 @@ -406,10 +406,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
@@ -157,11 +176,50 @@ index 60d4af4..0ed1c5d 100644
      if ( epDesc == NULL )
        return;   // Endpoint descriptor not found
  
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
+index 17943a7..5d9bc0e 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
+@@ -1872,7 +1872,7 @@ void bdb_filterNwkDisc(void)
+ {
+   networkDesc_t* pNwkDesc;
+   uint8_t i = 0;
+-  uint8_t ResultCount = 0;
++  uint8_t ResultCount = 0, ResultTotal = 0;
+ 
+   pBDBListNwk  = nwk_getNwkDescList();
+   nwk_desc_list_release();
+@@ -1883,6 +1883,7 @@ void bdb_filterNwkDisc(void)
+     ResultCount++;
+     pNwkDesc = pNwkDesc->nextDesc;
+   }
++  ResultTotal = ResultCount;
+ 
+   if(pBDBListNwk)
+   {
+@@ -1890,7 +1891,7 @@ void bdb_filterNwkDisc(void)
+ 
+     if(pNwkDesc)
+     {
+-      for ( i = 0; i < ResultCount; i++, pNwkDesc = pNwkDesc->nextDesc )
++      for ( i = 0; i < ResultTotal; i++, pNwkDesc = pNwkDesc->nextDesc )
+       {
+         if ( nwk_ExtPANIDValid( ZDO_UseExtendedPANID ) == true )
+         {
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index 55dfb43..396f8b0 100644
+index 117be3d..2cd470c 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-@@ -197,7 +197,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
+@@ -110,7 +110,7 @@ uint8_t zgSecurePermitJoin = TRUE;
+ // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
+ // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
+ // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
+-uint8_t zgAllowRejoinsWithWellKnownKey = FALSE;
++uint8_t zgAllowRejoinsWithWellKnownKey = TRUE; // https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/882650/3265311#3265311
+ 
+ //allowInstallCodes
+ uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
+@@ -204,7 +204,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
  //
  // NOTICE:  Before enabling Child Aging make sure to review all the related
  // definitions in this file, especially zgNwkParentInformation.
@@ -172,8 +230,27 @@ index 55dfb43..396f8b0 100644
  
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
+index e07c06a..59acd49 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
+@@ -3209,6 +3209,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+     // Routing error for dstAddr, this is informational and a Route
+     // Request should happen automatically.
+   }
++
++  if ( (nwkDstAddr == NLME_GetShortAddr())
++        && (statusCode == NWKSTAT_SOURCE_ROUTE_FAILURE) )
++  {
++    // Received a source route failure, remove route and rediscover.
++    RTG_RemoveRtgEntry( dstAddr, 0 );
++    NLME_RouteDiscoveryRequest( dstAddr, 0x8, 30 );
++  }
+ }
+ 
+ /******************************************************************************
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
-index 2b5d2ae..c12e296 100755
+index 30e5847..542d89f 100755
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
 @@ -70,9 +70,9 @@
@@ -190,7 +267,7 @@ index 2b5d2ae..c12e296 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
-index 7e73711..b94e6c7 100644
+index 2c31a53..a9302a0 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -29,7 +29,7 @@
@@ -213,8 +290,21 @@ index 7e73711..b94e6c7 100644
  
  
  /* External NVS */
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
+index 418e9a9..bf3cafb 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
+@@ -3591,7 +3591,7 @@ static bool NVOCMP_findSignature(uint8_t pg, uint16_t *pSrcOff)
+       {
+         // Found possible header, resume normal operation
+         NVOCMP_ALERT(FALSE, "Found possible signature.")
+-        srcOff += (i - 1);
++        srcOff += (i);
+         *pSrcOff = srcOff;
+         return(true);
+       }
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-index e9ca64c..48746d6 100644
+index ee5ee10..c92f030 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 @@ -510,9 +510,10 @@ static void MT_SysVersion(void)
@@ -240,7 +330,7 @@ index e9ca64c..48746d6 100644
    }
  
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 64dd210..4deedea 100644
+index dbe48fb..854c4d6 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -69,7 +69,7 @@
@@ -254,13 +344,13 @@ index 64dd210..4deedea 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..90086ea
+index 0000000..73b94fe
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20191106
++#define CODE_REVISION_NUMBER 20200229
 +#endif
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
@@ -307,7 +397,7 @@ index 0000000..733be1d
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-index 1be73a8..81f5f4e 100644
+index d809fb2..8290ef9 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 @@ -93,3 +93,5 @@
@@ -317,7 +407,7 @@ index 1be73a8..81f5f4e 100644
 +
 +--preinclude=preinclude.h
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index 60d4af4..0ed1c5d 100644
+index bacef22..e481eb8 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 @@ -406,10 +406,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
@@ -342,11 +432,50 @@ index 60d4af4..0ed1c5d 100644
      if ( epDesc == NULL )
        return;   // Endpoint descriptor not found
  
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
+index 17943a7..5d9bc0e 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
+@@ -1872,7 +1872,7 @@ void bdb_filterNwkDisc(void)
+ {
+   networkDesc_t* pNwkDesc;
+   uint8_t i = 0;
+-  uint8_t ResultCount = 0;
++  uint8_t ResultCount = 0, ResultTotal = 0;
+ 
+   pBDBListNwk  = nwk_getNwkDescList();
+   nwk_desc_list_release();
+@@ -1883,6 +1883,7 @@ void bdb_filterNwkDisc(void)
+     ResultCount++;
+     pNwkDesc = pNwkDesc->nextDesc;
+   }
++  ResultTotal = ResultCount;
+ 
+   if(pBDBListNwk)
+   {
+@@ -1890,7 +1891,7 @@ void bdb_filterNwkDisc(void)
+ 
+     if(pNwkDesc)
+     {
+-      for ( i = 0; i < ResultCount; i++, pNwkDesc = pNwkDesc->nextDesc )
++      for ( i = 0; i < ResultTotal; i++, pNwkDesc = pNwkDesc->nextDesc )
+       {
+         if ( nwk_ExtPANIDValid( ZDO_UseExtendedPANID ) == true )
+         {
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index 55dfb43..396f8b0 100644
+index 117be3d..2cd470c 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-@@ -197,7 +197,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
+@@ -110,7 +110,7 @@ uint8_t zgSecurePermitJoin = TRUE;
+ // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
+ // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
+ // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
+-uint8_t zgAllowRejoinsWithWellKnownKey = FALSE;
++uint8_t zgAllowRejoinsWithWellKnownKey = TRUE; // https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/882650/3265311#3265311
+ 
+ //allowInstallCodes
+ uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
+@@ -204,7 +204,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
  //
  // NOTICE:  Before enabling Child Aging make sure to review all the related
  // definitions in this file, especially zgNwkParentInformation.
@@ -357,8 +486,27 @@ index 55dfb43..396f8b0 100644
  
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
+index e07c06a..59acd49 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
+@@ -3209,6 +3209,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+     // Routing error for dstAddr, this is informational and a Route
+     // Request should happen automatically.
+   }
++
++  if ( (nwkDstAddr == NLME_GetShortAddr())
++        && (statusCode == NWKSTAT_SOURCE_ROUTE_FAILURE) )
++  {
++    // Received a source route failure, remove route and rediscover.
++    RTG_RemoveRtgEntry( dstAddr, 0 );
++    NLME_RouteDiscoveryRequest( dstAddr, 0x8, 30 );
++  }
+ }
+ 
+ /******************************************************************************
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
-index e3fea91..b448752 100755
+index 464e39c..5358b7b 100755
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
 @@ -70,9 +70,9 @@
@@ -375,7 +523,7 @@ index e3fea91..b448752 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-index fdb806b..0a99bf9 100644
+index e836661..29a6dd2 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -29,7 +29,7 @@
@@ -399,5 +547,5 @@ index fdb806b..0a99bf9 100644
  
  /* External NVS */
 -- 
-2.21.0 (Apple Git-122)
+2.21.1 (Apple Git-122.3)
 
