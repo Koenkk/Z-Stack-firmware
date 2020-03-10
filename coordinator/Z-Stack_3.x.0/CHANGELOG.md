@@ -1,4 +1,4 @@
-# 20200229
+# 20200306
 - SimpleLink SDK 3.40.00.02 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/3.40.00.02/exports/changelog.html))
 - Don't re-use invalid routes (should fix issues with e.g. Hue enddevices dropping off) ([more info](https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/t/883629))
 - Fix devices not able to reconnect when attempt unsecured rejoin ([more info](https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/882650/3265311))

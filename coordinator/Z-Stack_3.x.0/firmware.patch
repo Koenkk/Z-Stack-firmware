@@ -1,4 +1,4 @@
-From 7cc02f1836dbae0139a2cd983298c07f6a3fde06 Mon Sep 17 00:00:00 2001
+From 519392115cb32a5b4b8d93118883c8df103063d3 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Fri, 28 Feb 2020 18:45:36 +0100
 Subject: [PATCH] Own changes.
@@ -13,7 +13,7 @@ Subject: [PATCH] Own changes.
  .../Stack/af/af.c                             | 14 +++++--
  .../Stack/bdb/bdb.c                           |  5 ++-
  .../Stack/sys/zglobals.c                      |  6 ++-
- .../Stack/zdo/zd_app.c                        |  8 ++++
+ .../Stack/zdo/zd_app.c                        |  7 ++++
  .../cc13x2lp.cmd                              |  6 +--
  znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  |  6 +--
  .../Application/Services/nvocmp.c             |  2 +-
@@ -25,10 +25,10 @@ Subject: [PATCH] Own changes.
  .../Stack/af/af.c                             | 14 +++++--
  .../Stack/bdb/bdb.c                           |  5 ++-
  .../Stack/sys/zglobals.c                      |  6 ++-
- .../Stack/zdo/zd_app.c                        |  8 ++++
+ .../Stack/zdo/zd_app.c                        |  7 ++++
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  6 +--
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |  6 +--
- 24 files changed, 164 insertions(+), 34 deletions(-)
+ 24 files changed, 162 insertions(+), 34 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
@@ -88,13 +88,13 @@ index dbe48fb..854c4d6 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..73b94fe
+index 0000000..e6ae533
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200229
++#define CODE_REVISION_NUMBER 20200306
 +#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
@@ -231,10 +231,10 @@ index 117be3d..2cd470c 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index e07c06a..59acd49 100644
+index e07c06a..c1a2e6e 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -3209,6 +3209,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3209,6 +3209,13 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -244,7 +244,6 @@ index e07c06a..59acd49 100644
 +  {
 +    // Received a source route failure, remove route and rediscover.
 +    RTG_RemoveRtgEntry( dstAddr, 0 );
-+    NLME_RouteDiscoveryRequest( dstAddr, 0x8, 30 );
 +  }
  }
  
@@ -344,13 +343,13 @@ index dbe48fb..854c4d6 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..73b94fe
+index 0000000..e6ae533
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200229
++#define CODE_REVISION_NUMBER 20200306
 +#endif
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
@@ -487,10 +486,10 @@ index 117be3d..2cd470c 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index e07c06a..59acd49 100644
+index e07c06a..c1a2e6e 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -3209,6 +3209,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3209,6 +3209,13 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -500,7 +499,6 @@ index e07c06a..59acd49 100644
 +  {
 +    // Received a source route failure, remove route and rediscover.
 +    RTG_RemoveRtgEntry( dstAddr, 0 );
-+    NLME_RouteDiscoveryRequest( dstAddr, 0x8, 30 );
 +  }
  }
  
