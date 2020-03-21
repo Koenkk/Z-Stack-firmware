@@ -1,4 +1,4 @@
-From 4ee5300d909f85732ac511b644787c157bcd20ac Mon Sep 17 00:00:00 2001
+From 2eb27bf2ca9a5b18cd472ed2b2012498c049b40e Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Fri, 28 Feb 2020 18:45:36 +0100
 Subject: [PATCH] Own changes.
@@ -938,7 +938,7 @@ index 2991774..1329f45 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-index 6d180b1..3534e55 100644
+index 6d180b1..d683a42 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -1,175 +1,228 @@
@@ -1262,9 +1262,9 @@ index 6d180b1..3534e55 100644
 +// Name
 +NVS1.internalFlash.$name = "ti_drivers_nvs_NVSCC26XX0";
 +// Region Base - Base address of the region. Must be aligned on an integer multiple of the sector size.
-+NVS1.internalFlash.regionBase = 0x52000;
++NVS1.internalFlash.regionBase = 0x50000;
 +// Region Size - Size of the region in bytes. Must be a non-zero multiple of the Sector Size
-+NVS1.internalFlash.regionSize = 0x4000;
++NVS1.internalFlash.regionSize = 0x6000;
 +// Name - The C/C++ identifier used in applications as the index parameter passed to NVS runtime APIs
 +NVS2.$name = "CONFIG_NVSEXTERNAL";
 +// NVS Type - Specifies the type of non-volatile storage used by the NVS region.
