@@ -60,12 +60,12 @@ This repository contains various Z-Stack coordinator firmwares.
     <tr>
     <td>CC2538 + CC2592</td>
     <td>3.0</td>
-    <td>80</td>
-    <td>40/400</td>
+    <td>100</td>
+    <td>200/400</td>
     <td>
       - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1568">Discussion #1568</a>
       <br/>
-      - Max 40 Zigbee 3.0 devices
+      - Max 200 Zigbee 3.0 devices
     </td>
   </tr>
   <tr>
