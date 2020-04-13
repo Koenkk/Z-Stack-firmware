@@ -1,4 +1,4 @@
-From 2eb27bf2ca9a5b18cd472ed2b2012498c049b40e Mon Sep 17 00:00:00 2001
+From a2611c211a235c910054811912d9074018239c50 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Fri, 28 Feb 2020 18:45:36 +0100
 Subject: [PATCH] Own changes.
@@ -13,7 +13,7 @@ Subject: [PATCH] Own changes.
  .../Stack/af/af.c                             |  14 +-
  .../Stack/bdb/bdb.c                           |   5 +-
  .../Stack/sys/zglobals.c                      |   6 +-
- .../Stack/zdo/zd_app.c                        |   7 +
+ .../Stack/zdo/zd_app.c                        |  30 +-
  .../cc13x2lp.cmd                              |   6 +-
  znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  | 415 ++++++++++--------
  .../Application/Services/nvocmp.c             |   2 +-
@@ -25,7 +25,7 @@ Subject: [PATCH] Own changes.
  .../Stack/af/af.c                             |  14 +-
  .../Stack/bdb/bdb.c                           |   5 +-
  .../Stack/sys/zglobals.c                      |   6 +-
- .../Stack/zdo/zd_app.c                        |   7 +
+ .../Stack/zdo/zd_app.c                        |  30 +-
  znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  12 +-
  znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   | 403 +++++++++--------
  .../Application/Services/nvocmp.c             |   2 +-
@@ -37,10 +37,10 @@ Subject: [PATCH] Own changes.
  .../Stack/af/af.c                             |  14 +-
  .../Stack/bdb/bdb.c                           |   5 +-
  .../Stack/sys/zglobals.c                      |   6 +-
- .../Stack/zdo/zd_app.c                        |   7 +
+ .../Stack/zdo/zd_app.c                        |  30 +-
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |   6 +-
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   | 401 +++++++++--------
- 36 files changed, 928 insertions(+), 573 deletions(-)
+ 36 files changed, 961 insertions(+), 609 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
@@ -102,13 +102,13 @@ index dbe48fb..854c4d6 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..397953e
+index 0000000..4605442
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200312
++#define CODE_REVISION_NUMBER 20200328
 +#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
@@ -245,10 +245,46 @@ index 117be3d..2cd470c 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index e07c06a..c1a2e6e 100644
+index e07c06a..9b99ab9 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -3209,6 +3209,13 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -422,12 +422,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
+           ZDApp_ChangeState( DEV_ROUTER );
+         }
+ 
+-        if ( zgChildAgingEnable == TRUE )
+-        {
+-          // Once the device has changed its state to a ROUTER set the timer to send
+-          // Parent annce
+-          ZDApp_SetParentAnnceTimer();
+-        }
++        // As we cannot enable child aging as Xiaomi devices will drop off
++        // but we stil want to have the parent announces we always enable it here.
++        // Otherwise some end devices could be unreachable when they changed parent
++        // while the coordinator was powered off.
++        ZDApp_SetParentAnnceTimer();
+       }
+       else
+       {
+@@ -905,12 +904,11 @@ void ZDApp_NetworkStartEvt( void )
+         bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
+       }
+ 
+-      if ( zgChildAgingEnable == TRUE )
+-      {
+-        // Once the device has changed its state to a COORDINATOR set the timer to send
+-        // Parent annce
+-        ZDApp_SetParentAnnceTimer();
+-      }
++      // As we cannot enable child aging as Xiaomi devices will drop off
++      // but we stil want to have the parent announces we always enable it here.
++      // Otherwise some end devices could be unreachable when they changed parent
++      // while the coordinator was powered off.
++      ZDApp_SetParentAnnceTimer();
+     }
+     else
+     {
+@@ -3209,6 +3207,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -258,6 +294,7 @@ index e07c06a..c1a2e6e 100644
 +  {
 +    // Received a source route failure, remove route and rediscover.
 +    RTG_RemoveRtgEntry( dstAddr, 0 );
++    NLME_RouteDiscoveryRequest( dstAddr, 0, 30 );
 +  }
  }
  
@@ -753,13 +790,13 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..397953e
+index 0000000..4605442
 --- /dev/null
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200312
++#define CODE_REVISION_NUMBER 20200328
 +#endif
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
@@ -897,10 +934,46 @@ index 117be3d..2cd470c 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index e07c06a..c1a2e6e 100644
+index e07c06a..9b99ab9 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -3209,6 +3209,13 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -422,12 +422,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
+           ZDApp_ChangeState( DEV_ROUTER );
+         }
+ 
+-        if ( zgChildAgingEnable == TRUE )
+-        {
+-          // Once the device has changed its state to a ROUTER set the timer to send
+-          // Parent annce
+-          ZDApp_SetParentAnnceTimer();
+-        }
++        // As we cannot enable child aging as Xiaomi devices will drop off
++        // but we stil want to have the parent announces we always enable it here.
++        // Otherwise some end devices could be unreachable when they changed parent
++        // while the coordinator was powered off.
++        ZDApp_SetParentAnnceTimer();
+       }
+       else
+       {
+@@ -905,12 +904,11 @@ void ZDApp_NetworkStartEvt( void )
+         bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
+       }
+ 
+-      if ( zgChildAgingEnable == TRUE )
+-      {
+-        // Once the device has changed its state to a COORDINATOR set the timer to send
+-        // Parent annce
+-        ZDApp_SetParentAnnceTimer();
+-      }
++      // As we cannot enable child aging as Xiaomi devices will drop off
++      // but we stil want to have the parent announces we always enable it here.
++      // Otherwise some end devices could be unreachable when they changed parent
++      // while the coordinator was powered off.
++      ZDApp_SetParentAnnceTimer();
+     }
+     else
+     {
+@@ -3209,6 +3207,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -910,6 +983,7 @@ index e07c06a..c1a2e6e 100644
 +  {
 +    // Received a source route failure, remove route and rediscover.
 +    RTG_RemoveRtgEntry( dstAddr, 0 );
++    NLME_RouteDiscoveryRequest( dstAddr, 0, 30 );
 +  }
  }
  
@@ -1399,13 +1473,13 @@ index dbe48fb..854c4d6 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..397953e
+index 0000000..4605442
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200312
++#define CODE_REVISION_NUMBER 20200328
 +#endif
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
@@ -1542,10 +1616,46 @@ index 117be3d..2cd470c 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index e07c06a..c1a2e6e 100644
+index e07c06a..9b99ab9 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -3209,6 +3209,13 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -422,12 +422,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
+           ZDApp_ChangeState( DEV_ROUTER );
+         }
+ 
+-        if ( zgChildAgingEnable == TRUE )
+-        {
+-          // Once the device has changed its state to a ROUTER set the timer to send
+-          // Parent annce
+-          ZDApp_SetParentAnnceTimer();
+-        }
++        // As we cannot enable child aging as Xiaomi devices will drop off
++        // but we stil want to have the parent announces we always enable it here.
++        // Otherwise some end devices could be unreachable when they changed parent
++        // while the coordinator was powered off.
++        ZDApp_SetParentAnnceTimer();
+       }
+       else
+       {
+@@ -905,12 +904,11 @@ void ZDApp_NetworkStartEvt( void )
+         bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
+       }
+ 
+-      if ( zgChildAgingEnable == TRUE )
+-      {
+-        // Once the device has changed its state to a COORDINATOR set the timer to send
+-        // Parent annce
+-        ZDApp_SetParentAnnceTimer();
+-      }
++      // As we cannot enable child aging as Xiaomi devices will drop off
++      // but we stil want to have the parent announces we always enable it here.
++      // Otherwise some end devices could be unreachable when they changed parent
++      // while the coordinator was powered off.
++      ZDApp_SetParentAnnceTimer();
+     }
+     else
+     {
+@@ -3209,6 +3207,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -1555,6 +1665,7 @@ index e07c06a..c1a2e6e 100644
 +  {
 +    // Received a source route failure, remove route and rediscover.
 +    RTG_RemoveRtgEntry( dstAddr, 0 );
++    NLME_RouteDiscoveryRequest( dstAddr, 0, 30 );
 +  }
  }
  
@@ -1983,5 +2094,5 @@ index e836661..af2f47f 100644
 +// Suggest solution
 +UART1.uart.rxPin.$suggestSolution = "7";
 -- 
-2.21.1 (Apple Git-122.3)
+2.24.1 (Apple Git-126)
 
