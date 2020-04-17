@@ -1,5 +1,5 @@
 # 20200328
-- SimpleLink SDK 3.40.00.02 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/3.40.00.02/exports/changelog.html))
+- SimpleLink SDK 4.10.00.78 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/4.10.00.78/exports/changelog.html)) (+ SimpleLink SDK 3.40.00.02 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/3.40.00.02/exports/changelog.html)))
 - Remove and rediscover route on source route failure (should fix issues with e.g. Hue enddevices dropping off) ([more info](https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/t/883629))
 - Fix devices not able to reconnect when attempt unsecured rejoin ([more info](https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/882650/3265311))
 - Enable parent announce, fixes devices not reachable when changing parents while coordinator is down.

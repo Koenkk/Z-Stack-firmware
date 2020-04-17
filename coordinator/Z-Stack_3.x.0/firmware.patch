@@ -1,46 +1,40 @@
-From a2611c211a235c910054811912d9074018239c50 Mon Sep 17 00:00:00 2001
+From a1a8f1f7c181b7f6368e82ca5fd448e6b5f01460 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
-Date: Fri, 28 Feb 2020 18:45:36 +0100
-Subject: [PATCH] Own changes.
+Date: Fri, 17 Apr 2020 17:50:22 +0200
+Subject: [PATCH] Own changes
 
 ---
- .../Application/Services/nvocmp.c             |   2 +-
- .../Application/mt/mt_sys.c                   |   6 +-
- .../Application/mt/mt_version.c               |   2 +-
- .../Application/mt/revision_info.h            |   4 +
- .../Stack/Config/preinclude.h                 |  38 ++
- .../Stack/Config/znp_cnf.opts                 |   2 +
- .../Stack/af/af.c                             |  14 +-
- .../Stack/bdb/bdb.c                           |   5 +-
- .../Stack/sys/zglobals.c                      |   6 +-
- .../Stack/zdo/zd_app.c                        |  30 +-
- .../cc13x2lp.cmd                              |   6 +-
- znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  | 415 ++++++++++--------
- .../Application/Services/nvocmp.c             |   2 +-
- .../Application/mt/mt_sys.c                   |   6 +-
- .../Application/mt/mt_version.c               |   2 +-
- .../Application/mt/revision_info.h            |   4 +
- .../Stack/Config/preinclude.h                 |  38 ++
- .../Stack/Config/znp_cnf.opts                 |   2 +
- .../Stack/af/af.c                             |  14 +-
- .../Stack/bdb/bdb.c                           |   5 +-
- .../Stack/sys/zglobals.c                      |   6 +-
- .../Stack/zdo/zd_app.c                        |  30 +-
- znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  12 +-
- znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   | 403 +++++++++--------
- .../Application/Services/nvocmp.c             |   2 +-
- .../Application/mt/mt_sys.c                   |   6 +-
- .../Application/mt/mt_version.c               |   2 +-
- .../Application/mt/revision_info.h            |   4 +
- .../Stack/Config/preinclude.h                 |  38 ++
- .../Stack/Config/znp_cnf.opts                 |   2 +
- .../Stack/af/af.c                             |  14 +-
- .../Stack/bdb/bdb.c                           |   5 +-
- .../Stack/sys/zglobals.c                      |   6 +-
- .../Stack/zdo/zd_app.c                        |  30 +-
- znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |   6 +-
- znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   | 401 +++++++++--------
- 36 files changed, 961 insertions(+), 609 deletions(-)
+ .../Application/mt/mt_sys.c                   |  4 +-
+ .../Application/mt/mt_version.c               |  2 +-
+ .../Application/mt/revision_info.h            |  4 ++
+ .../Stack/Config/preinclude.h                 | 38 +++++++++++++++++++
+ .../Stack/Config/znp_cnf.opts                 |  2 +
+ .../Stack/af/af.c                             | 14 +++++--
+ .../Stack/sys/zglobals.c                      |  6 ++-
+ .../Stack/zdo/zd_app.c                        | 30 +++++++++------
+ .../cc13x2lp.cmd                              |  6 +--
+ znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  |  5 ++-
+ .../Application/mt/mt_sys.c                   |  4 +-
+ .../Application/mt/mt_version.c               |  2 +-
+ .../Application/mt/revision_info.h            |  4 ++
+ .../Stack/Config/preinclude.h                 | 38 +++++++++++++++++++
+ .../Stack/Config/znp_cnf.opts                 |  2 +
+ .../Stack/af/af.c                             | 14 +++++--
+ .../Stack/sys/zglobals.c                      |  6 ++-
+ .../Stack/zdo/zd_app.c                        | 30 +++++++++------
+ znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd | 12 ++----
+ znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   |  5 ++-
+ .../Application/mt/mt_sys.c                   |  4 +-
+ .../Application/mt/mt_version.c               |  2 +-
+ .../Application/mt/revision_info.h            |  4 ++
+ .../Stack/Config/preinclude.h                 | 38 +++++++++++++++++++
+ .../Stack/Config/znp_cnf.opts                 |  2 +
+ .../Stack/af/af.c                             | 14 +++++--
+ .../Stack/sys/zglobals.c                      |  6 ++-
+ .../Stack/zdo/zd_app.c                        | 30 +++++++++------
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  6 +--
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |  5 ++-
+ 30 files changed, 258 insertions(+), 81 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
@@ -48,47 +42,31 @@ Subject: [PATCH] Own changes.
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
-index 418e9a9..bf3cafb 100644
---- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
-@@ -3591,7 +3591,7 @@ static bool NVOCMP_findSignature(uint8_t pg, uint16_t *pSrcOff)
-       {
-         // Found possible header, resume normal operation
-         NVOCMP_ALERT(FALSE, "Found possible signature.")
--        srcOff += (i - 1);
-+        srcOff += (i);
-         *pSrcOff = srcOff;
-         return(true);
-       }
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-index ee5ee10..ac31785 100644
+index ee5ee10..7d8d058 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-@@ -510,9 +510,10 @@ static void MT_SysVersion(void)
+@@ -510,8 +510,8 @@ static void MT_SysVersion(void)
    uint8_t *pBuf = &verStr[sizeof(MTVersionString)];
  #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
    uint32_t sblSig;
 -  uint32_t sblRev;
  #endif
- 
 +  uint32_t sblRev;
-+
+ 
    OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
  
- #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
-@@ -1327,7 +1328,8 @@ static void MT_SysNvWrite(uint8_t *pBuf)
+@@ -1327,7 +1327,7 @@ static void MT_SysNvWrite(uint8_t *pBuf)
      else
      {
        /* Attempt to write data (existing) to the specified item */
 -      error = pZStackCfg->nvFps.writeItemEx( nvId, dataOfs, dataLen, pBuf );
 +      error = pZStackCfg->nvFps.writeItem( nvId, dataLen, pBuf );
-+      // error = pZStackCfg->nvFps.writeItemEx( nvId, dataOfs, dataLen, pBuf );
      }
    }
  
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index dbe48fb..854c4d6 100644
+index dbe48fb..f8402cd 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -69,7 +69,7 @@
@@ -102,17 +80,18 @@ index dbe48fb..854c4d6 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..4605442
+index 0000000..04a07a3
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200328
++#define CODE_REVISION_NUMBER 20200417
 +#endif
+\ No newline at end of file
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..733be1d
+index 0000000..d81062f
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,38 @@
@@ -154,8 +133,9 @@ index 0000000..733be1d
 +#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
+\ No newline at end of file
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-index d809fb2..8290ef9 100644
+index d809fb2..abb769e 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 @@ -93,3 +93,5 @@
@@ -164,8 +144,9 @@ index d809fb2..8290ef9 100644
  -DMT_APP_CNF_FUNC
 +
 +--preinclude=preinclude.h
+\ No newline at end of file
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index bacef22..e481eb8 100644
+index bacef22..0193f78 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 @@ -406,10 +406,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
@@ -190,36 +171,6 @@ index bacef22..e481eb8 100644
      if ( epDesc == NULL )
        return;   // Endpoint descriptor not found
  
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
-index 17943a7..5d9bc0e 100644
---- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
-@@ -1872,7 +1872,7 @@ void bdb_filterNwkDisc(void)
- {
-   networkDesc_t* pNwkDesc;
-   uint8_t i = 0;
--  uint8_t ResultCount = 0;
-+  uint8_t ResultCount = 0, ResultTotal = 0;
- 
-   pBDBListNwk  = nwk_getNwkDescList();
-   nwk_desc_list_release();
-@@ -1883,6 +1883,7 @@ void bdb_filterNwkDisc(void)
-     ResultCount++;
-     pNwkDesc = pNwkDesc->nextDesc;
-   }
-+  ResultTotal = ResultCount;
- 
-   if(pBDBListNwk)
-   {
-@@ -1890,7 +1891,7 @@ void bdb_filterNwkDisc(void)
- 
-     if(pNwkDesc)
-     {
--      for ( i = 0; i < ResultCount; i++, pNwkDesc = pNwkDesc->nextDesc )
-+      for ( i = 0; i < ResultTotal; i++, pNwkDesc = pNwkDesc->nextDesc )
-       {
-         if ( nwk_ExtPANIDValid( ZDO_UseExtendedPANID ) == true )
-         {
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 index 117be3d..2cd470c 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
@@ -245,7 +196,7 @@ index 117be3d..2cd470c 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index e07c06a..9b99ab9 100644
+index 969c516..cfe9f56 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 @@ -422,12 +422,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
@@ -284,7 +235,7 @@ index e07c06a..9b99ab9 100644
      }
      else
      {
-@@ -3209,6 +3207,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3184,6 +3182,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -300,7 +251,7 @@ index e07c06a..9b99ab9 100644
  
  /******************************************************************************
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
-index 30e5847..542d89f 100755
+index 30e5847..016187a 100755
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
 @@ -70,9 +70,9 @@
@@ -317,461 +268,48 @@ index 30e5847..542d89f 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
-index 2c31a53..24f0870 100644
+index 925448d..c80d40b 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
-@@ -1,175 +1,240 @@
--/*
-- * Copyright (c) 2018, Texas Instruments Incorporated
-- * All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- *
-- * *  Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions and the following disclaimer.
-- *
-- * *  Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- *
-- * *  Neither the name of Texas Instruments Incorporated nor the names of
-- *    its contributors may be used to endorse or promote products derived
-- *    from this software without specific prior written permission.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
--// @cliArgs --board /ti/boards/CC1352P_2_LAUNCHXL
--
--/*
-- *  znp.syscfg
-- */
--
--/* Modules */
--var AESCBC  = scripting.addModule("/ti/drivers/AESCBC");
--var AESCCM  = scripting.addModule("/ti/drivers/AESCCM");
--var AESECB  = scripting.addModule("/ti/drivers/AESECB");
--var device  = scripting.addModule("/ti/devices/CCFG");
--var DMA     = scripting.addModule("/ti/drivers/DMA");
--var ECDH    = scripting.addModule("/ti/drivers/ECDH");
--var ECDSA   = scripting.addModule("/ti/drivers/ECDSA");
--var ECJPAKE = scripting.addModule("/ti/drivers/ECJPAKE");
--var Button  = scripting.addModule("/ti/drivers/apps/Button");
--var LED     = scripting.addModule("/ti/drivers/apps/LED");
--var NVS     = scripting.addModule("/ti/drivers/NVS");
--var Power   = scripting.addModule("/ti/drivers/Power");
--var RF      = scripting.addModule("/ti/drivers/RF");
--var SHA2    = scripting.addModule("/ti/drivers/SHA2");
--var TRNG    = scripting.addModule("/ti/drivers/TRNG");
--var UART    = scripting.addModule("/ti/drivers/UART");
--var zstack  = scripting.addModule("/ti/zstack/zstack");
--
--
--/* Instances */
--var AESCBC1  = AESCBC.addInstance();
--var AESCCM1  = AESCCM.addInstance();
--var AESECB1  = AESECB.addInstance();
--var ECDH1    = ECDH.addInstance();
--var ECDSA1   = ECDSA.addInstance();
--var ECJPAKE1 = ECJPAKE.addInstance();
--var Button1  = Button.addInstance();
--var Button2  = Button.addInstance();
--var LED1     = LED.addInstance();
--var LED2     = LED.addInstance();
--var NVS1     = NVS.addInstance();
--var NVS2     = NVS.addInstance();
--var SHA21    = SHA2.addInstance();
--var TRNG1    = TRNG.addInstance();
--var UART1    = UART.addInstance();
--
--
--/* AESCCM */
--AESCCM1.interruptPriority = "2";
--
--
--/* AESECB */
--AESECB1.interruptPriority = "1";
--
--/* CCFG */
--const ccfgSettings = system.getScript("/ti/common/lprf_ccfg_settings.js").ccfgSettings;
--for(var setting in ccfgSettings)
--{
--    device[setting] = ccfgSettings[setting];
--}
--
--
--/* Red LED */
--LED1.$name                      = "CONFIG_LED_RED";
--LED1.$hardware                  = system.deviceData.board.components.LED_RED;
--LED1.gpioPin.$name              = "CONFIG_GPIO_RLED";
--LED1.gpioPin.mode               = "Output";
--LED1.gpioPin.callbackFunction   = "";
--LED1.gpioPin.pinInstance.$name  = "CONFIG_PIN_RLED";
--
--/* Green LED */
--LED2.$name                      = "CONFIG_LED_GREEN";
--LED2.$hardware                  = system.deviceData.board.components.LED_GREEN;
--LED2.gpioPin.$name              = "CONFIG_GPIO_GLED";
--LED2.gpioPin.mode               = "Output";
--LED2.gpioPin.callbackFunction   = "";
--LED2.gpioPin.pinInstance.$name  = "CONFIG_PIN_GLED";
--
--/* Left Button */
--Button1.$name                       = "CONFIG_BTN_LEFT";
--Button1.$hardware                   = system.deviceData.board.components["BTN-1"];
--Button1.gpioPin.$name               = "CONFIG_GPIO_BTN1";
--Button1.gpioPin.pull                = "Pull Up";
--Button1.gpioPin.interruptTrigger    = "Falling Edge";
--Button1.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN1";
--
--/* Left Button */
--Button2.$name                       = "CONFIG_BTN_RIGHT";
--Button2.$hardware                   = system.deviceData.board.components["BTN-2"];
--Button2.gpioPin.$name               = "CONFIG_GPIO_BTN2";
--Button2.gpioPin.pull                = "Pull Up";
--Button2.gpioPin.interruptTrigger    = "Falling Edge";
--Button2.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN2";
--
--
--/* Internal NVS */
--NVS1.$name                    = "CONFIG_NVSINTERNAL";
--NVS1.nvsType                  = "Internal";
+@@ -52,6 +52,7 @@ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 15;
+ CCFG.levelBootloaderBackdoor  = "Active low";
+ CCFG.forceVddr                = true;
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
+ 
+ rfdesign.rfDesign = "LAUNCHXL-CC1352P-2";
+@@ -72,8 +73,8 @@ ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
 -NVS1.internalFlash.regionBase = 0x52000;
 -NVS1.internalFlash.regionSize = 0x4000;
--
--
--/* External NVS */
--NVS2.$name                          = "CONFIG_NVSEXTERNAL";
--NVS2.nvsType                        = "External";
--NVS2.$hardware                      = system.deviceData.board.components.MX25R8035F;
--NVS2.externalFlash.regionBase       = 0;
--NVS2.externalFlash.regionSize       = 0x256000;
--NVS2.externalFlash.sectorSize       = 0x1000;
--NVS2.externalFlash.verifyBufferSize = 64;
--
--
--/* External NVS SPI instance */
--var NVSSPI25XDevice1 = NVS2.externalFlash.spiFlashDevice;
--var SPI1                   = NVSSPI25XDevice1.sharedSpiInstance;
--SPI1.$name                 = "CONFIG_SPI_0";
--SPI1.sclkPinInstance.$name = "CONFIG_PIN_SPI_SCLK";
--SPI1.misoPinInstance.$name = "CONFIG_PIN_SPI_MISO";
--SPI1.mosiPinInstance.$name = "CONFIG_PIN_SPI_MOSI";
--
--
--/* RF */
--/* if an antenna component exists, assign it to the RF instance */
--if (system.deviceData.board && system.deviceData.board.components.RF) {
--    RF.$hardware = system.deviceData.board.components.RF;
--}
--
--/* Display (UART) */
--UART1.$hardware           = system.deviceData.board.components.XDS110UART;
--UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
--UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
--UART1.$name               = "CONFIG_DISPLAY_UART";
--
--
--/* Z-Stack */
--zstack.deviceType = "znp";
--zstack.deviceTypeReadOnly = true;
--
--/* ======== Do device specific settings ======== */
--const deviceName = system.getScript("/ti/ti154stack/ti154stack_common.js").getDeviceOrLaunchPadName(false);
--
--/* Update LF Clock Source for CC2652RB devices */ 
--if(deviceName.includes("RB"))
--{
--    device.srcClkLF = "Derived from HF XOSC";
--}
--
-+// These arguments were used when this file was generated. They will be automatically applied on subsequent loads 
-+// via the GUI or CLI invocations. Run CLI with '--help' for additional information on how to override these arguments.
-+// @cliArgs --board "/ti/boards/CC1352P_2_LAUNCHXL" --product "simplelink_cc13x2_26x2_sdk@3.40.00.02"
-+// @versions {"data":"2019103101","timestamp":"2019103101","tool":"1.3.1030","templates":"2019103101"}
-+
-+var AESCBC = scripting.addModule("/ti/drivers/AESCBC");
-+var AESCCM = scripting.addModule("/ti/drivers/AESCCM");
-+var AESECB = scripting.addModule("/ti/drivers/AESECB");
-+var CCFG = scripting.addModule("/ti/devices/CCFG");
-+var DMA = scripting.addModule("/ti/drivers/DMA");
-+var ECDH = scripting.addModule("/ti/drivers/ECDH");
-+var ECDSA = scripting.addModule("/ti/drivers/ECDSA");
-+var ECJPAKE = scripting.addModule("/ti/drivers/ECJPAKE");
-+var Button = scripting.addModule("/ti/drivers/apps/Button");
-+var LED = scripting.addModule("/ti/drivers/apps/LED");
-+var NVS = scripting.addModule("/ti/drivers/NVS");
-+var Power = scripting.addModule("/ti/drivers/Power");
-+var RF = scripting.addModule("/ti/drivers/RF");
-+var SHA2 = scripting.addModule("/ti/drivers/SHA2");
-+var TRNG = scripting.addModule("/ti/drivers/TRNG");
-+var UART = scripting.addModule("/ti/drivers/UART");
-+var zstack = scripting.addModule("/ti/zstack/zstack");
-+var AESCBC1 = AESCBC.addInstance();
-+var AESCCM1 = AESCCM.addInstance();
-+var AESECB1 = AESECB.addInstance();
-+var ECDH1 = ECDH.addInstance();
-+var ECDSA1 = ECDSA.addInstance();
-+var ECJPAKE1 = ECJPAKE.addInstance();
-+var Button1 = Button.addInstance();
-+var Button2 = Button.addInstance();
-+var LED1 = LED.addInstance();
-+var LED2 = LED.addInstance();
-+var NVS1 = NVS.addInstance();
-+var NVS2 = NVS.addInstance();
-+var SHA21 = SHA2.addInstance();
-+var TRNG1 = TRNG.addInstance();
-+var UART1 = UART.addInstance();
-+// Enable XOSC Cap array modification - Enable modification (delta) to XOSC cap-array
-+CCFG.xoscCapArray = true;
-+// XOSC Cap Array Delta - Modify the high frequency oscillator cap-array, changing the frequency offset
-+CCFG.xoscCapArrayDelta = 0xC1;
-+// Enable Bootloader - Enable ROM Bootloader, for flashing from external host
-+CCFG.enableBootloader = true;
-+// Enable Bootloader Backdoor - When enabling the Bootloader Backdoor, the Bootloader can be activated externally by pulling a pin, even when a valid flash image is present. Note, enabling the backdoor allows an external host to read back a flash image from the device
-+CCFG.enableBootloaderBackdoor = true;
-+// Bootloader Backdoor DIO - DIO (pin) to trigger Bootloader backdoor, this pin is only needed at boot
-+CCFG.dioBootloaderBackdoor = 15;
-+// Trigger Level of Bootloader Backdoor - Active high or low on selected DIO to open boot loader backdoor
-+CCFG.levelBootloaderBackdoor = "Active low";
-+// Force VDDR - Necessary for external load mode, or for maximum PA output power
-+CCFG.forceVddr = true;
-+// Enable DCDC - Enable or disable use of DCDC.
-+CCFG.enableDCDC = false;
-+// Name
-+CCFG.ccfgTemplate.$name = "ti_devices_CCFGTemplate0";
-+var Board = scripting.addModule("/ti/drivers/Board", {}, false);
-+var DriverLib = scripting.addModule("/ti/devices/DriverLib", {}, false);
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+RF.$hardware = system.deviceData.board.components["SKY13317-373LF"];
-+// Device Type - The logical device type for the ZigBee node.
-+zstack.deviceType = "znp";
-+// deviceTypeReadOnly
-+zstack.deviceTypeReadOnly = true;
-+// Name
-+zstack.rf.$name = "ti_zstack_rf_zstack_rf0";
-+// Name
-+zstack.rf.radioConfig.$name = "ti_devices_radioconfig_settings_ieee_15_40";
-+// Name
-+zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
-+var multi_stack_validate = scripting.addModule("/ti/easylink/multi_stack_validate", {}, false);
-+// Name
-+zstack.pm.$name = "ti_zstack_pm_zstack_pm0";
-+// Name
-+zstack.network.$name = "ti_zstack_network_zstack_network0";
-+// Name
-+zstack.advanced.$name = "ti_zstack_advanced_zstack_advanced0";
-+// Name
-+zstack.advanced.routing.$name = "ti_zstack_advanced_zstack_routing0";
-+// Name
-+zstack.advanced.packetSending.$name = "ti_zstack_advanced_zstack_packet_sending0";
-+// Name
-+zstack.advanced.tableSize.$name = "ti_zstack_advanced_zstack_table_size0";
-+// Name
-+AESCBC1.$name = "CONFIG_AESCBC_0";
-+// Name
-+AESCCM1.$name = "CONFIG_AESCCM_0";
-+// Interrupt Priority - Crypto peripheral interrupt priority
-+AESCCM1.interruptPriority = "2";
-+// Name
-+AESECB1.$name = "CONFIG_AESECB_0";
-+// Interrupt Priority - Crypto peripheral interrupt priority
-+AESECB1.interruptPriority = "1";
-+// Name
-+ECDH1.$name = "CONFIG_ECDH_0";
-+// Name
-+ECDSA1.$name = "CONFIG_ECDSA_0";
-+// Name
-+ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to Button runtime APIs
-+Button1.$name = "CONFIG_BTN_LEFT";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+Button1.$hardware = system.deviceData.board.components["BTN-1"];
-+// Pull - Specifies the internal pull-up or pull-down resistor configuration of this GPIO pin.
-+Button1.gpioPin.pull = "Pull Up";
-+// Interrupt Trigger - Specifies when or if interrupts are triggered
-+Button1.gpioPin.interruptTrigger = "Falling Edge";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+Button1.gpioPin.$name = "CONFIG_GPIO_BTN1";
-+// Name
-+Button1.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN1";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to Button runtime APIs
-+Button2.$name = "CONFIG_BTN_RIGHT";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+Button2.$hardware = system.deviceData.board.components["BTN-2"];
-+// Pull - Specifies the internal pull-up or pull-down resistor configuration of this GPIO pin.
-+Button2.gpioPin.pull = "Pull Up";
-+// Interrupt Trigger - Specifies when or if interrupts are triggered
-+Button2.gpioPin.interruptTrigger = "Falling Edge";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+Button2.gpioPin.$name = "CONFIG_GPIO_BTN2";
-+// Name
-+Button2.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN2";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to LED runtime APIs
-+LED1.$name = "CONFIG_LED_RED";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+LED1.$hardware = system.deviceData.board.components.LED_RED;
-+// Mode - Select the GPIO mode
-+LED1.gpioPin.mode = "Output";
-+// Callback Function - The name of the callback function called when this GPIO pin triggers an interrupt, or 'NULL' if it's specified at runtime
-+LED1.gpioPin.callbackFunction = "";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+LED1.gpioPin.$name = "CONFIG_GPIO_RLED";
-+// Name
-+LED1.gpioPin.pinInstance.$name = "CONFIG_PIN_RLED";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to LED runtime APIs
-+LED2.$name = "CONFIG_LED_GREEN";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+LED2.$hardware = system.deviceData.board.components.LED_GREEN;
-+// Mode - Select the GPIO mode
-+LED2.gpioPin.mode = "Output";
-+// Callback Function - The name of the callback function called when this GPIO pin triggers an interrupt, or 'NULL' if it's specified at runtime
-+LED2.gpioPin.callbackFunction = "";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+LED2.gpioPin.$name = "CONFIG_GPIO_GLED";
-+// Name
-+LED2.gpioPin.pinInstance.$name = "CONFIG_PIN_GLED";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to NVS runtime APIs
-+NVS1.$name = "CONFIG_NVSINTERNAL";
-+// Name
-+NVS1.internalFlash.$name = "ti_drivers_nvs_NVSCC26XX0";
-+// Region Base - Base address of the region. Must be aligned on an integer multiple of the sector size.
 +NVS1.internalFlash.regionBase = 0x50000;
-+// Region Size - Size of the region in bytes. Must be a non-zero multiple of the Sector Size
 +NVS1.internalFlash.regionSize = 0x6000;
-+// Name - The C/C++ identifier used in applications as the index parameter passed to NVS runtime APIs
-+NVS2.$name = "CONFIG_NVSEXTERNAL";
-+// NVS Type - Specifies the type of non-volatile storage used by the NVS region.
-+NVS2.nvsType = "External";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+NVS2.$hardware = system.deviceData.board.components.MX25R8035F;
-+// Name
-+NVS2.externalFlash.$name = "ti_drivers_nvs_NVSSPI25X0";
-+// Region Size - Size of the region in bytes. Must be a non-zero multiple of the Sector Size
-+NVS2.externalFlash.regionSize = 0x256000;
-+// Verify Buffer Size - Size of the write verification buffer in bytes.
-+NVS2.externalFlash.verifyBufferSize = 64;
-+var NVSSPI25XDevice = scripting.addModule("/ti/drivers/nvs/NVSSPI25XDevice", {}, false);
-+var NVSSPI25XDevice1 = NVSSPI25XDevice.addInstance({}, false);
-+NVS2.externalFlash.spiFlashDevice = NVSSPI25XDevice1; // Assign reference
-+// Name
-+NVSSPI25XDevice1.$name = "CONFIG_NVS_SPI_0";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+NVSSPI25XDevice1.slaveSelectGpioInstance.$name = "CONFIG_GPIO_0";
-+// Mode - Select the GPIO mode
-+NVSSPI25XDevice1.slaveSelectGpioInstance.mode = "Output";
-+// Callback Function - The name of the callback function called when this GPIO pin triggers an interrupt, or 'NULL' if it's specified at runtime
-+NVSSPI25XDevice1.slaveSelectGpioInstance.callbackFunction = "";
-+// Name
-+NVSSPI25XDevice1.slaveSelectGpioInstance.pinInstance.$name = "CONFIG_PIN_0";
-+var SPI = scripting.addModule("/ti/drivers/SPI", {}, false);
-+var SPI1 = SPI.addInstance({}, false);
-+NVSSPI25XDevice1.sharedSpiInstance = SPI1; // Assign reference
-+// Name - The C/C++ identifier used in applications as the index parameter passed to SPI runtime APIs
-+SPI1.$name = "CONFIG_SPI_0";
-+// Name
-+SPI1.sclkPinInstance.$name = "CONFIG_PIN_SPI_SCLK";
-+// Name
-+SPI1.misoPinInstance.$name = "CONFIG_PIN_SPI_MISO";
-+// Name
-+SPI1.mosiPinInstance.$name = "CONFIG_PIN_SPI_MOSI";
-+// Name
-+SPI1.spi.$name = "MySSI1";
-+// Name
-+SHA21.$name = "CONFIG_SHA2_0";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to TRNG runtime APIs
-+TRNG1.$name = "CONFIG_TRNG_0";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+UART1.$hardware = system.deviceData.board.components.XDS110UART;
-+// Name - The C/C++ identifier used in applications as the index parameter passed to UART runtime APIs
-+UART1.$name = "CONFIG_DISPLAY_UART";
-+// Name
-+UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
-+// Name
-+UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
-+// Name
-+UART1.uart.$name = "MyUART1";
-+// Suggest solution
-+RF.rfAntennaPin0.$suggestSolution = "43";
-+// Suggest solution
-+RF.rfAntennaPin1.$suggestSolution = "42";
-+// Suggest solution
-+RF.rfAntennaPin2.$suggestSolution = "41";
-+// Suggest solution
-+Button1.gpioPin.gpioPin.$suggestSolution = "21";
-+// Suggest solution
-+Button2.gpioPin.gpioPin.$suggestSolution = "20";
-+// Suggest solution
-+LED1.gpioPin.gpioPin.$suggestSolution = "11";
-+// Suggest solution
-+LED2.gpioPin.gpioPin.$suggestSolution = "12";
-+// Suggest solution
-+NVSSPI25XDevice1.slaveSelectGpioInstance.gpioPin.$suggestSolution = "30";
-+// Suggest solution
-+SPI1.spi.$suggestSolution = "SSI0";
-+// Suggest solution
-+SPI1.spi.sclkPin.$suggestSolution = "16";
-+// Suggest solution
-+SPI1.spi.misoPin.$suggestSolution = "14";
-+// Suggest solution
-+SPI1.spi.mosiPin.$suggestSolution = "15";
-+// Suggest solution
-+SPI1.spi.dmaRxChannel.$suggestSolution = "DMA_CH3";
-+// Suggest solution
-+SPI1.spi.dmaTxChannel.$suggestSolution = "DMA_CH4";
-+// Suggest solution
-+UART1.uart.$suggestSolution = "UART0";
-+// Suggest solution
-+UART1.uart.txPin.$suggestSolution = "19";
-+// Suggest solution
-+UART1.uart.rxPin.$suggestSolution = "18";
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
-index 418e9a9..bf3cafb 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
-@@ -3591,7 +3591,7 @@ static bool NVOCMP_findSignature(uint8_t pg, uint16_t *pSrcOff)
-       {
-         // Found possible header, resume normal operation
-         NVOCMP_ALERT(FALSE, "Found possible signature.")
--        srcOff += (i - 1);
-+        srcOff += (i);
-         *pSrcOff = srcOff;
-         return(true);
-       }
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-index ee5ee10..5850d5d 100644
+index ee5ee10..7d8d058 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-@@ -510,9 +510,10 @@ static void MT_SysVersion(void)
+@@ -510,8 +510,8 @@ static void MT_SysVersion(void)
    uint8_t *pBuf = &verStr[sizeof(MTVersionString)];
  #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
    uint32_t sblSig;
 -  uint32_t sblRev;
  #endif
- 
 +  uint32_t sblRev;
-+
+ 
    OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
  
- #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
-@@ -1327,7 +1328,8 @@ static void MT_SysNvWrite(uint8_t *pBuf)
+@@ -1327,7 +1327,7 @@ static void MT_SysNvWrite(uint8_t *pBuf)
      else
      {
        /* Attempt to write data (existing) to the specified item */
 -      error = pZStackCfg->nvFps.writeItemEx( nvId, dataOfs, dataLen, pBuf );
 +      error = pZStackCfg->nvFps.writeItem( nvId, dataLen, pBuf );
-+      //error = pZStackCfg->nvFps.writeItemEx( nvId, dataOfs, dataLen, pBuf );
      }
    }
  
@@ -790,17 +328,18 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..4605442
+index 0000000..04a07a3
 --- /dev/null
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200328
++#define CODE_REVISION_NUMBER 20200417
 +#endif
+\ No newline at end of file
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..733be1d
+index 0000000..d81062f
 --- /dev/null
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,38 @@
@@ -842,6 +381,7 @@ index 0000000..733be1d
 +#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
+\ No newline at end of file
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 index d809fb2..abb769e 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -879,36 +419,6 @@ index bacef22..0193f78 100644
      if ( epDesc == NULL )
        return;   // Endpoint descriptor not found
  
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
-index 17943a7..5d9bc0e 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
-@@ -1872,7 +1872,7 @@ void bdb_filterNwkDisc(void)
- {
-   networkDesc_t* pNwkDesc;
-   uint8_t i = 0;
--  uint8_t ResultCount = 0;
-+  uint8_t ResultCount = 0, ResultTotal = 0;
- 
-   pBDBListNwk  = nwk_getNwkDescList();
-   nwk_desc_list_release();
-@@ -1883,6 +1883,7 @@ void bdb_filterNwkDisc(void)
-     ResultCount++;
-     pNwkDesc = pNwkDesc->nextDesc;
-   }
-+  ResultTotal = ResultCount;
- 
-   if(pBDBListNwk)
-   {
-@@ -1890,7 +1891,7 @@ void bdb_filterNwkDisc(void)
- 
-     if(pNwkDesc)
-     {
--      for ( i = 0; i < ResultCount; i++, pNwkDesc = pNwkDesc->nextDesc )
-+      for ( i = 0; i < ResultTotal; i++, pNwkDesc = pNwkDesc->nextDesc )
-       {
-         if ( nwk_ExtPANIDValid( ZDO_UseExtendedPANID ) == true )
-         {
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 index 117be3d..2cd470c 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
@@ -934,7 +444,7 @@ index 117be3d..2cd470c 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index e07c06a..9b99ab9 100644
+index 969c516..cfe9f56 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 @@ -422,12 +422,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
@@ -973,7 +483,7 @@ index e07c06a..9b99ab9 100644
      }
      else
      {
-@@ -3209,6 +3207,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3184,6 +3182,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -1012,454 +522,53 @@ index 2991774..1329f45 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-index 6d180b1..d683a42 100644
+index d149bd9..2ec0b92 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-@@ -1,175 +1,228 @@
--/*
-- * Copyright (c) 2018, Texas Instruments Incorporated
-- * All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- *
-- * *  Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions and the following disclaimer.
-- *
-- * *  Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- *
-- * *  Neither the name of Texas Instruments Incorporated nor the names of
-- *    its contributors may be used to endorse or promote products derived
-- *    from this software without specific prior written permission.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
--// @cliArgs --board /ti/boards/CC2652RB_LAUNCHXL
--
--/*
-- *  znp.syscfg
-- */
--
--/* Modules */
--var AESCBC  = scripting.addModule("/ti/drivers/AESCBC");
--var AESCCM  = scripting.addModule("/ti/drivers/AESCCM");
--var AESECB  = scripting.addModule("/ti/drivers/AESECB");
--var device  = scripting.addModule("/ti/devices/CCFG");
--var DMA     = scripting.addModule("/ti/drivers/DMA");
--var ECDH    = scripting.addModule("/ti/drivers/ECDH");
--var ECDSA   = scripting.addModule("/ti/drivers/ECDSA");
--var ECJPAKE = scripting.addModule("/ti/drivers/ECJPAKE");
--var Button  = scripting.addModule("/ti/drivers/apps/Button");
--var LED     = scripting.addModule("/ti/drivers/apps/LED");
--var NVS     = scripting.addModule("/ti/drivers/NVS");
--var Power   = scripting.addModule("/ti/drivers/Power");
--var RF      = scripting.addModule("/ti/drivers/RF");
--var SHA2    = scripting.addModule("/ti/drivers/SHA2");
--var TRNG    = scripting.addModule("/ti/drivers/TRNG");
--var UART    = scripting.addModule("/ti/drivers/UART");
--var zstack  = scripting.addModule("/ti/zstack/zstack");
--
--
--/* Instances */
--var AESCBC1  = AESCBC.addInstance();
--var AESCCM1  = AESCCM.addInstance();
--var AESECB1  = AESECB.addInstance();
--var ECDH1    = ECDH.addInstance();
--var ECDSA1   = ECDSA.addInstance();
--var ECJPAKE1 = ECJPAKE.addInstance();
--var Button1  = Button.addInstance();
--var Button2  = Button.addInstance();
--var LED1     = LED.addInstance();
--var LED2     = LED.addInstance();
--var NVS1     = NVS.addInstance();
--var NVS2     = NVS.addInstance();
--var SHA21    = SHA2.addInstance();
--var TRNG1    = TRNG.addInstance();
--var UART1    = UART.addInstance();
--
--
--/* AESCCM */
--AESCCM1.interruptPriority = "2";
--
--
--/* AESECB */
--AESECB1.interruptPriority = "1";
--
--/* CCFG */
--const ccfgSettings = system.getScript("/ti/common/lprf_ccfg_settings.js").ccfgSettings;
--for(var setting in ccfgSettings)
--{
--    device[setting] = ccfgSettings[setting];
--}
--
--
--/* Red LED */
--LED1.$name                      = "CONFIG_LED_RED";
--LED1.$hardware                  = system.deviceData.board.components.LED_RED;
--LED1.gpioPin.$name              = "CONFIG_GPIO_RLED";
--LED1.gpioPin.mode               = "Output";
--LED1.gpioPin.callbackFunction   = "";
--LED1.gpioPin.pinInstance.$name  = "CONFIG_PIN_RLED";
--
--/* Green LED */
--LED2.$name                      = "CONFIG_LED_GREEN";
--LED2.$hardware                  = system.deviceData.board.components.LED_GREEN;
--LED2.gpioPin.$name              = "CONFIG_GPIO_GLED";
--LED2.gpioPin.mode               = "Output";
--LED2.gpioPin.callbackFunction   = "";
--LED2.gpioPin.pinInstance.$name  = "CONFIG_PIN_GLED";
--
--/* Left Button */
--Button1.$name                       = "CONFIG_BTN_LEFT";
--Button1.$hardware                   = system.deviceData.board.components["BTN-1"];
--Button1.gpioPin.$name               = "CONFIG_GPIO_BTN1";
--Button1.gpioPin.pull                = "Pull Up";
--Button1.gpioPin.interruptTrigger    = "Falling Edge";
--Button1.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN1";
--
--/* Left Button */
--Button2.$name                       = "CONFIG_BTN_RIGHT";
--Button2.$hardware                   = system.deviceData.board.components["BTN-2"];
--Button2.gpioPin.$name               = "CONFIG_GPIO_BTN2";
--Button2.gpioPin.pull                = "Pull Up";
--Button2.gpioPin.interruptTrigger    = "Falling Edge";
--Button2.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN2";
--
--
--/* Internal NVS */
--NVS1.$name                    = "CONFIG_NVSINTERNAL";
--NVS1.nvsType                  = "Internal";
+@@ -50,6 +50,7 @@ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 13;
+ CCFG.levelBootloaderBackdoor  = "Active low";
+ CCFG.srcClkLF                 = "Derived from HF XOSC";
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
+ 
+ AESCBC1.$name = "CONFIG_AESCBC_0";
+@@ -68,8 +69,8 @@ ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
 -NVS1.internalFlash.regionBase = 0x52000;
 -NVS1.internalFlash.regionSize = 0x4000;
--
--
--/* External NVS */
--NVS2.$name                          = "CONFIG_NVSEXTERNAL";
--NVS2.nvsType                        = "External";
--NVS2.$hardware                      = system.deviceData.board.components.MX25R8035F;
--NVS2.externalFlash.regionBase       = 0;
--NVS2.externalFlash.regionSize       = 0x256000;
--NVS2.externalFlash.sectorSize       = 0x1000;
--NVS2.externalFlash.verifyBufferSize = 64;
--
--
--/* External NVS SPI instance */
--var NVSSPI25XDevice1 = NVS2.externalFlash.spiFlashDevice;
--var SPI1                   = NVSSPI25XDevice1.sharedSpiInstance;
--SPI1.$name                 = "CONFIG_SPI_0";
--SPI1.sclkPinInstance.$name = "CONFIG_PIN_SPI_SCLK";
--SPI1.misoPinInstance.$name = "CONFIG_PIN_SPI_MISO";
--SPI1.mosiPinInstance.$name = "CONFIG_PIN_SPI_MOSI";
--
--
--/* RF */
--/* if an antenna component exists, assign it to the RF instance */
--if (system.deviceData.board && system.deviceData.board.components.RF) {
--    RF.$hardware = system.deviceData.board.components.RF;
--}
--
--/* Display (UART) */
--UART1.$hardware           = system.deviceData.board.components.XDS110UART;
--UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
--UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
--UART1.$name               = "CONFIG_DISPLAY_UART";
--
--
--/* Z-Stack */
--zstack.deviceType = "znp";
--zstack.deviceTypeReadOnly = true;
--
--/* ======== Do device specific settings ======== */
--const deviceName = system.getScript("/ti/ti154stack/ti154stack_common.js").getDeviceOrLaunchPadName(false);
--
--/* Update LF Clock Source for CC2652RB devices */ 
--if(deviceName.includes("RB"))
--{
--    device.srcClkLF = "Derived from HF XOSC";
--}
--
-+// These arguments were used when this file was generated. They will be automatically applied on subsequent loads 
-+// via the GUI or CLI invocations. Run CLI with '--help' for additional information on how to override these arguments.
-+// @cliArgs --board "/ti/boards/CC2652RB_LAUNCHXL" --product "simplelink_cc13x2_26x2_sdk@3.40.00.02"
-+// @versions {"data":"2019103101","timestamp":"2019103101","tool":"1.3.1030","templates":"2019103101"}
-+
-+var AESCBC = scripting.addModule("/ti/drivers/AESCBC");
-+var AESCCM = scripting.addModule("/ti/drivers/AESCCM");
-+var AESECB = scripting.addModule("/ti/drivers/AESECB");
-+var CCFG = scripting.addModule("/ti/devices/CCFG");
-+var DMA = scripting.addModule("/ti/drivers/DMA");
-+var ECDH = scripting.addModule("/ti/drivers/ECDH");
-+var ECDSA = scripting.addModule("/ti/drivers/ECDSA");
-+var ECJPAKE = scripting.addModule("/ti/drivers/ECJPAKE");
-+var Button = scripting.addModule("/ti/drivers/apps/Button");
-+var LED = scripting.addModule("/ti/drivers/apps/LED");
-+var NVS = scripting.addModule("/ti/drivers/NVS");
-+var Power = scripting.addModule("/ti/drivers/Power");
-+var RF = scripting.addModule("/ti/drivers/RF");
-+var SHA2 = scripting.addModule("/ti/drivers/SHA2");
-+var TRNG = scripting.addModule("/ti/drivers/TRNG");
-+var UART = scripting.addModule("/ti/drivers/UART");
-+var zstack = scripting.addModule("/ti/zstack/zstack");
-+var AESCBC1 = AESCBC.addInstance();
-+var AESCCM1 = AESCCM.addInstance();
-+var AESECB1 = AESECB.addInstance();
-+var ECDH1 = ECDH.addInstance();
-+var ECDSA1 = ECDSA.addInstance();
-+var ECJPAKE1 = ECJPAKE.addInstance();
-+var Button1 = Button.addInstance();
-+var Button2 = Button.addInstance();
-+var LED1 = LED.addInstance();
-+var LED2 = LED.addInstance();
-+var NVS1 = NVS.addInstance();
-+var NVS2 = NVS.addInstance();
-+var SHA21 = SHA2.addInstance();
-+var TRNG1 = TRNG.addInstance();
-+var UART1 = UART.addInstance();
-+// Enable Bootloader - Enable ROM Bootloader, for flashing from external host
-+CCFG.enableBootloader = true;
-+// Enable Bootloader Backdoor - When enabling the Bootloader Backdoor, the Bootloader can be activated externally by pulling a pin, even when a valid flash image is present. Note, enabling the backdoor allows an external host to read back a flash image from the device
-+CCFG.enableBootloaderBackdoor = true;
-+// Bootloader Backdoor DIO - DIO (pin) to trigger Bootloader backdoor, this pin is only needed at boot
-+CCFG.dioBootloaderBackdoor = 13;
-+// Trigger Level of Bootloader Backdoor - Active high or low on selected DIO to open boot loader backdoor
-+CCFG.levelBootloaderBackdoor = "Active low";
-+// LF Clock Source - Low frequency clock source
-+CCFG.srcClkLF = "Derived from HF XOSC";
-+// Enable DCDC - Enable or disable use of DCDC.
-+CCFG.enableDCDC = false;
-+// Name
-+CCFG.ccfgTemplate.$name = "ti_devices_CCFGTemplate0";
-+var Board = scripting.addModule("/ti/drivers/Board", {}, false);
-+var DriverLib = scripting.addModule("/ti/devices/DriverLib", {}, false);
-+// Device Type - The logical device type for the ZigBee node.
-+zstack.deviceType = "znp";
-+// deviceTypeReadOnly
-+zstack.deviceTypeReadOnly = true;
-+// Name
-+zstack.rf.$name = "ti_zstack_rf_zstack_rf0";
-+// Name
-+zstack.rf.radioConfig.$name = "ti_devices_radioconfig_settings_ieee_15_40";
-+// Name
-+zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
-+var multi_stack_validate = scripting.addModule("/ti/easylink/multi_stack_validate", {}, false);
-+// Name
-+zstack.pm.$name = "ti_zstack_pm_zstack_pm0";
-+// Name
-+zstack.network.$name = "ti_zstack_network_zstack_network0";
-+// Name
-+zstack.advanced.$name = "ti_zstack_advanced_zstack_advanced0";
-+// Name
-+zstack.advanced.routing.$name = "ti_zstack_advanced_zstack_routing0";
-+// Name
-+zstack.advanced.packetSending.$name = "ti_zstack_advanced_zstack_packet_sending0";
-+// Name
-+zstack.advanced.tableSize.$name = "ti_zstack_advanced_zstack_table_size0";
-+// Name
-+AESCBC1.$name = "CONFIG_AESCBC_0";
-+// Name
-+AESCCM1.$name = "CONFIG_AESCCM_0";
-+// Interrupt Priority - Crypto peripheral interrupt priority
-+AESCCM1.interruptPriority = "2";
-+// Name
-+AESECB1.$name = "CONFIG_AESECB_0";
-+// Interrupt Priority - Crypto peripheral interrupt priority
-+AESECB1.interruptPriority = "1";
-+// Name
-+ECDH1.$name = "CONFIG_ECDH_0";
-+// Name
-+ECDSA1.$name = "CONFIG_ECDSA_0";
-+// Name
-+ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to Button runtime APIs
-+Button1.$name = "CONFIG_BTN_LEFT";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+Button1.$hardware = system.deviceData.board.components["BTN-1"];
-+// Pull - Specifies the internal pull-up or pull-down resistor configuration of this GPIO pin.
-+Button1.gpioPin.pull = "Pull Up";
-+// Interrupt Trigger - Specifies when or if interrupts are triggered
-+Button1.gpioPin.interruptTrigger = "Falling Edge";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+Button1.gpioPin.$name = "CONFIG_GPIO_BTN1";
-+// Name
-+Button1.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN1";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to Button runtime APIs
-+Button2.$name = "CONFIG_BTN_RIGHT";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+Button2.$hardware = system.deviceData.board.components["BTN-2"];
-+// Pull - Specifies the internal pull-up or pull-down resistor configuration of this GPIO pin.
-+Button2.gpioPin.pull = "Pull Up";
-+// Interrupt Trigger - Specifies when or if interrupts are triggered
-+Button2.gpioPin.interruptTrigger = "Falling Edge";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+Button2.gpioPin.$name = "CONFIG_GPIO_BTN2";
-+// Name
-+Button2.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN2";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to LED runtime APIs
-+LED1.$name = "CONFIG_LED_RED";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+LED1.$hardware = system.deviceData.board.components.LED_RED;
-+// Mode - Select the GPIO mode
-+LED1.gpioPin.mode = "Output";
-+// Callback Function - The name of the callback function called when this GPIO pin triggers an interrupt, or 'NULL' if it's specified at runtime
-+LED1.gpioPin.callbackFunction = "";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+LED1.gpioPin.$name = "CONFIG_GPIO_RLED";
-+// Name
-+LED1.gpioPin.pinInstance.$name = "CONFIG_PIN_RLED";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to LED runtime APIs
-+LED2.$name = "CONFIG_LED_GREEN";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+LED2.$hardware = system.deviceData.board.components.LED_GREEN;
-+// Mode - Select the GPIO mode
-+LED2.gpioPin.mode = "Output";
-+// Callback Function - The name of the callback function called when this GPIO pin triggers an interrupt, or 'NULL' if it's specified at runtime
-+LED2.gpioPin.callbackFunction = "";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+LED2.gpioPin.$name = "CONFIG_GPIO_GLED";
-+// Name
-+LED2.gpioPin.pinInstance.$name = "CONFIG_PIN_GLED";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to NVS runtime APIs
-+NVS1.$name = "CONFIG_NVSINTERNAL";
-+// Name
-+NVS1.internalFlash.$name = "ti_drivers_nvs_NVSCC26XX0";
-+// Region Base - Base address of the region. Must be aligned on an integer multiple of the sector size.
 +NVS1.internalFlash.regionBase = 0x50000;
-+// Region Size - Size of the region in bytes. Must be a non-zero multiple of the Sector Size
 +NVS1.internalFlash.regionSize = 0x6000;
-+// Name - The C/C++ identifier used in applications as the index parameter passed to NVS runtime APIs
-+NVS2.$name = "CONFIG_NVSEXTERNAL";
-+// NVS Type - Specifies the type of non-volatile storage used by the NVS region.
-+NVS2.nvsType = "External";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+NVS2.$hardware = system.deviceData.board.components.MX25R8035F;
-+// Name
-+NVS2.externalFlash.$name = "ti_drivers_nvs_NVSSPI25X0";
-+// Region Size - Size of the region in bytes. Must be a non-zero multiple of the Sector Size
-+NVS2.externalFlash.regionSize = 0x256000;
-+// Verify Buffer Size - Size of the write verification buffer in bytes.
-+NVS2.externalFlash.verifyBufferSize = 64;
-+var NVSSPI25XDevice = scripting.addModule("/ti/drivers/nvs/NVSSPI25XDevice", {}, false);
-+var NVSSPI25XDevice1 = NVSSPI25XDevice.addInstance({}, false);
-+NVS2.externalFlash.spiFlashDevice = NVSSPI25XDevice1; // Assign reference
-+// Name
-+NVSSPI25XDevice1.$name = "CONFIG_NVS_SPI_0";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+NVSSPI25XDevice1.slaveSelectGpioInstance.$name = "CONFIG_GPIO_0";
-+// Mode - Select the GPIO mode
-+NVSSPI25XDevice1.slaveSelectGpioInstance.mode = "Output";
-+// Callback Function - The name of the callback function called when this GPIO pin triggers an interrupt, or 'NULL' if it's specified at runtime
-+NVSSPI25XDevice1.slaveSelectGpioInstance.callbackFunction = "";
-+// Name
-+NVSSPI25XDevice1.slaveSelectGpioInstance.pinInstance.$name = "CONFIG_PIN_0";
-+var SPI = scripting.addModule("/ti/drivers/SPI", {}, false);
-+var SPI1 = SPI.addInstance({}, false);
-+NVSSPI25XDevice1.sharedSpiInstance = SPI1; // Assign reference
-+// Name - The C/C++ identifier used in applications as the index parameter passed to SPI runtime APIs
-+SPI1.$name = "CONFIG_SPI_0";
-+// Name
-+SPI1.sclkPinInstance.$name = "CONFIG_PIN_SPI_SCLK";
-+// Name
-+SPI1.misoPinInstance.$name = "CONFIG_PIN_SPI_MISO";
-+// Name
-+SPI1.mosiPinInstance.$name = "CONFIG_PIN_SPI_MOSI";
-+// Name
-+SPI1.spi.$name = "MySSI1";
-+// Name
-+SHA21.$name = "CONFIG_SHA2_0";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to TRNG runtime APIs
-+TRNG1.$name = "CONFIG_TRNG_0";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+UART1.$hardware = system.deviceData.board.components.XDS110UART;
-+// Name - The C/C++ identifier used in applications as the index parameter passed to UART runtime APIs
-+UART1.$name = "CONFIG_DISPLAY_UART";
-+// Name
-+UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
-+// Name
-+UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
-+// Name
-+UART1.uart.$name = "MyUART1";
-+// Suggest solution
-+Button1.gpioPin.gpioPin.$suggestSolution = "19";
-+// Suggest solution
-+Button2.gpioPin.gpioPin.$suggestSolution = "20";
-+// Suggest solution
-+LED1.gpioPin.gpioPin.$suggestSolution = "11";
-+// Suggest solution
-+LED2.gpioPin.gpioPin.$suggestSolution = "12";
-+// Suggest solution
-+NVSSPI25XDevice1.slaveSelectGpioInstance.gpioPin.$suggestSolution = "30";
-+// Suggest solution
-+SPI1.spi.$suggestSolution = "SSI0";
-+// Suggest solution
-+SPI1.spi.sclkPin.$suggestSolution = "16";
-+// Suggest solution
-+SPI1.spi.misoPin.$suggestSolution = "14";
-+// Suggest solution
-+SPI1.spi.mosiPin.$suggestSolution = "15";
-+// Suggest solution
-+SPI1.spi.dmaRxChannel.$suggestSolution = "DMA_CH3";
-+// Suggest solution
-+SPI1.spi.dmaTxChannel.$suggestSolution = "DMA_CH4";
-+// Suggest solution
-+UART1.uart.$suggestSolution = "UART1";
-+// Suggest solution
-+UART1.uart.txPin.$suggestSolution = "8";
-+// Suggest solution
-+UART1.uart.rxPin.$suggestSolution = "7";
-diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
-index 418e9a9..bf3cafb 100644
---- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
-+++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/Services/nvocmp.c
-@@ -3591,7 +3591,7 @@ static bool NVOCMP_findSignature(uint8_t pg, uint16_t *pSrcOff)
-       {
-         // Found possible header, resume normal operation
-         NVOCMP_ALERT(FALSE, "Found possible signature.")
--        srcOff += (i - 1);
-+        srcOff += (i);
-         *pSrcOff = srcOff;
-         return(true);
-       }
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-index ee5ee10..c92f030 100644
+index ee5ee10..7d8d058 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-@@ -510,9 +510,10 @@ static void MT_SysVersion(void)
+@@ -510,8 +510,8 @@ static void MT_SysVersion(void)
    uint8_t *pBuf = &verStr[sizeof(MTVersionString)];
  #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
    uint32_t sblSig;
 -  uint32_t sblRev;
  #endif
- 
 +  uint32_t sblRev;
-+
+ 
    OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
  
- #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
-@@ -1327,7 +1328,8 @@ static void MT_SysNvWrite(uint8_t *pBuf)
+@@ -1327,7 +1327,7 @@ static void MT_SysNvWrite(uint8_t *pBuf)
      else
      {
        /* Attempt to write data (existing) to the specified item */
 -      error = pZStackCfg->nvFps.writeItemEx( nvId, dataOfs, dataLen, pBuf );
 +      error = pZStackCfg->nvFps.writeItem( nvId, dataLen, pBuf );
-+      //error = pZStackCfg->nvFps.writeItemEx( nvId, dataOfs, dataLen, pBuf );
      }
    }
  
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index dbe48fb..854c4d6 100644
+index dbe48fb..f8402cd 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -69,7 +69,7 @@
@@ -1473,17 +582,18 @@ index dbe48fb..854c4d6 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..4605442
+index 0000000..04a07a3
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200328
++#define CODE_REVISION_NUMBER 20200417
 +#endif
+\ No newline at end of file
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..733be1d
+index 0000000..d81062f
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,38 @@
@@ -1525,8 +635,9 @@ index 0000000..733be1d
 +#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
+\ No newline at end of file
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-index d809fb2..8290ef9 100644
+index d809fb2..abb769e 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 @@ -93,3 +93,5 @@
@@ -1535,8 +646,9 @@ index d809fb2..8290ef9 100644
  -DMT_APP_CNF_FUNC
 +
 +--preinclude=preinclude.h
+\ No newline at end of file
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index bacef22..e481eb8 100644
+index bacef22..0193f78 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 @@ -406,10 +406,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
@@ -1561,36 +673,6 @@ index bacef22..e481eb8 100644
      if ( epDesc == NULL )
        return;   // Endpoint descriptor not found
  
-diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
-index 17943a7..5d9bc0e 100644
---- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
-+++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/bdb/bdb.c
-@@ -1872,7 +1872,7 @@ void bdb_filterNwkDisc(void)
- {
-   networkDesc_t* pNwkDesc;
-   uint8_t i = 0;
--  uint8_t ResultCount = 0;
-+  uint8_t ResultCount = 0, ResultTotal = 0;
- 
-   pBDBListNwk  = nwk_getNwkDescList();
-   nwk_desc_list_release();
-@@ -1883,6 +1883,7 @@ void bdb_filterNwkDisc(void)
-     ResultCount++;
-     pNwkDesc = pNwkDesc->nextDesc;
-   }
-+  ResultTotal = ResultCount;
- 
-   if(pBDBListNwk)
-   {
-@@ -1890,7 +1891,7 @@ void bdb_filterNwkDisc(void)
- 
-     if(pNwkDesc)
-     {
--      for ( i = 0; i < ResultCount; i++, pNwkDesc = pNwkDesc->nextDesc )
-+      for ( i = 0; i < ResultTotal; i++, pNwkDesc = pNwkDesc->nextDesc )
-       {
-         if ( nwk_ExtPANIDValid( ZDO_UseExtendedPANID ) == true )
-         {
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 index 117be3d..2cd470c 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
@@ -1616,7 +698,7 @@ index 117be3d..2cd470c 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index e07c06a..9b99ab9 100644
+index 969c516..cfe9f56 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 @@ -422,12 +422,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
@@ -1655,7 +737,7 @@ index e07c06a..9b99ab9 100644
      }
      else
      {
-@@ -3209,6 +3207,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3184,6 +3182,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -1671,7 +753,7 @@ index e07c06a..9b99ab9 100644
  
  /******************************************************************************
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
-index 464e39c..5358b7b 100755
+index 464e39c..1329f45 100755
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
 @@ -70,9 +70,9 @@
@@ -1688,411 +770,28 @@ index 464e39c..5358b7b 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-index e836661..af2f47f 100644
+index 86c093b..d007d4c 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-@@ -1,175 +1,226 @@
--/*
-- * Copyright (c) 2018, Texas Instruments Incorporated
-- * All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- *
-- * *  Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions and the following disclaimer.
-- *
-- * *  Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- *
-- * *  Neither the name of Texas Instruments Incorporated nor the names of
-- *    its contributors may be used to endorse or promote products derived
-- *    from this software without specific prior written permission.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
--// @cliArgs --board /ti/boards/CC26X2R1_LAUNCHXL
--
--/*
-- *  znp.syscfg
-- */
--
--/* Modules */
--var AESCBC  = scripting.addModule("/ti/drivers/AESCBC");
--var AESCCM  = scripting.addModule("/ti/drivers/AESCCM");
--var AESECB  = scripting.addModule("/ti/drivers/AESECB");
--var device  = scripting.addModule("/ti/devices/CCFG");
--var DMA     = scripting.addModule("/ti/drivers/DMA");
--var ECDH    = scripting.addModule("/ti/drivers/ECDH");
--var ECDSA   = scripting.addModule("/ti/drivers/ECDSA");
--var ECJPAKE = scripting.addModule("/ti/drivers/ECJPAKE");
--var Button  = scripting.addModule("/ti/drivers/apps/Button");
--var LED     = scripting.addModule("/ti/drivers/apps/LED");
--var NVS     = scripting.addModule("/ti/drivers/NVS");
--var Power   = scripting.addModule("/ti/drivers/Power");
--var RF      = scripting.addModule("/ti/drivers/RF");
--var SHA2    = scripting.addModule("/ti/drivers/SHA2");
--var TRNG    = scripting.addModule("/ti/drivers/TRNG");
--var UART    = scripting.addModule("/ti/drivers/UART");
--var zstack  = scripting.addModule("/ti/zstack/zstack");
--
--
--/* Instances */
--var AESCBC1  = AESCBC.addInstance();
--var AESCCM1  = AESCCM.addInstance();
--var AESECB1  = AESECB.addInstance();
--var ECDH1    = ECDH.addInstance();
--var ECDSA1   = ECDSA.addInstance();
--var ECJPAKE1 = ECJPAKE.addInstance();
--var Button1  = Button.addInstance();
--var Button2  = Button.addInstance();
--var LED1     = LED.addInstance();
--var LED2     = LED.addInstance();
--var NVS1     = NVS.addInstance();
--var NVS2     = NVS.addInstance();
--var SHA21    = SHA2.addInstance();
--var TRNG1    = TRNG.addInstance();
--var UART1    = UART.addInstance();
--
--
--/* AESCCM */
--AESCCM1.interruptPriority = "2";
--
--
--/* AESECB */
--AESECB1.interruptPriority = "1";
--
--/* CCFG */
--const ccfgSettings = system.getScript("/ti/common/lprf_ccfg_settings.js").ccfgSettings;
--for(var setting in ccfgSettings)
--{
--    device[setting] = ccfgSettings[setting];
--}
--
--
--/* Red LED */
--LED1.$name                      = "CONFIG_LED_RED";
--LED1.$hardware                  = system.deviceData.board.components.LED_RED;
--LED1.gpioPin.$name              = "CONFIG_GPIO_RLED";
--LED1.gpioPin.mode               = "Output";
--LED1.gpioPin.callbackFunction   = "";
--LED1.gpioPin.pinInstance.$name  = "CONFIG_PIN_RLED";
--
--/* Green LED */
--LED2.$name                      = "CONFIG_LED_GREEN";
--LED2.$hardware                  = system.deviceData.board.components.LED_GREEN;
--LED2.gpioPin.$name              = "CONFIG_GPIO_GLED";
--LED2.gpioPin.mode               = "Output";
--LED2.gpioPin.callbackFunction   = "";
--LED2.gpioPin.pinInstance.$name  = "CONFIG_PIN_GLED";
--
--/* Left Button */
--Button1.$name                       = "CONFIG_BTN_LEFT";
--Button1.$hardware                   = system.deviceData.board.components["BTN-1"];
--Button1.gpioPin.$name               = "CONFIG_GPIO_BTN1";
--Button1.gpioPin.pull                = "Pull Up";
--Button1.gpioPin.interruptTrigger    = "Falling Edge";
--Button1.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN1";
--
--/* Left Button */
--Button2.$name                       = "CONFIG_BTN_RIGHT";
--Button2.$hardware                   = system.deviceData.board.components["BTN-2"];
--Button2.gpioPin.$name               = "CONFIG_GPIO_BTN2";
--Button2.gpioPin.pull                = "Pull Up";
--Button2.gpioPin.interruptTrigger    = "Falling Edge";
--Button2.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN2";
--
--
--/* Internal NVS */
--NVS1.$name                    = "CONFIG_NVSINTERNAL";
--NVS1.nvsType                  = "Internal";
+@@ -49,6 +49,7 @@ CCFG.enableBootloader         = true;
+ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 13;
+ CCFG.levelBootloaderBackdoor  = "Active low";
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
+ 
+ AESCBC1.$name = "CONFIG_AESCBC_0";
+@@ -67,8 +68,8 @@ ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
 -NVS1.internalFlash.regionBase = 0x52000;
 -NVS1.internalFlash.regionSize = 0x4000;
--
--
--/* External NVS */
--NVS2.$name                          = "CONFIG_NVSEXTERNAL";
--NVS2.nvsType                        = "External";
--NVS2.$hardware                      = system.deviceData.board.components.MX25R8035F;
--NVS2.externalFlash.regionBase       = 0;
--NVS2.externalFlash.regionSize       = 0x256000;
--NVS2.externalFlash.sectorSize       = 0x1000;
--NVS2.externalFlash.verifyBufferSize = 64;
--
--
--/* External NVS SPI instance */
--var NVSSPI25XDevice1 = NVS2.externalFlash.spiFlashDevice;
--var SPI1                   = NVSSPI25XDevice1.sharedSpiInstance;
--SPI1.$name                 = "CONFIG_SPI_0";
--SPI1.sclkPinInstance.$name = "CONFIG_PIN_SPI_SCLK";
--SPI1.misoPinInstance.$name = "CONFIG_PIN_SPI_MISO";
--SPI1.mosiPinInstance.$name = "CONFIG_PIN_SPI_MOSI";
--
--
--/* RF */
--/* if an antenna component exists, assign it to the RF instance */
--if (system.deviceData.board && system.deviceData.board.components.RF) {
--    RF.$hardware = system.deviceData.board.components.RF;
--}
--
--/* Display (UART) */
--UART1.$hardware           = system.deviceData.board.components.XDS110UART;
--UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
--UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
--UART1.$name               = "CONFIG_DISPLAY_UART";
--
--
--/* Z-Stack */
--zstack.deviceType = "znp";
--zstack.deviceTypeReadOnly = true;
--
--/* ======== Do device specific settings ======== */
--const deviceName = system.getScript("/ti/ti154stack/ti154stack_common.js").getDeviceOrLaunchPadName(false);
--
--/* Update LF Clock Source for CC2652RB devices */ 
--if(deviceName.includes("RB"))
--{
--    device.srcClkLF = "Derived from HF XOSC";
--}
--
-+// These arguments were used when this file was generated. They will be automatically applied on subsequent loads 
-+// via the GUI or CLI invocations. Run CLI with '--help' for additional information on how to override these arguments.
-+// @cliArgs --board "/ti/boards/CC26X2R1_LAUNCHXL" --product "simplelink_cc13x2_26x2_sdk@3.40.00.02"
-+// @versions {"data":"2019103101","timestamp":"2019103101","tool":"1.3.1030","templates":"2019103101"}
-+
-+var AESCBC = scripting.addModule("/ti/drivers/AESCBC");
-+var AESCCM = scripting.addModule("/ti/drivers/AESCCM");
-+var AESECB = scripting.addModule("/ti/drivers/AESECB");
-+var CCFG = scripting.addModule("/ti/devices/CCFG");
-+var DMA = scripting.addModule("/ti/drivers/DMA");
-+var ECDH = scripting.addModule("/ti/drivers/ECDH");
-+var ECDSA = scripting.addModule("/ti/drivers/ECDSA");
-+var ECJPAKE = scripting.addModule("/ti/drivers/ECJPAKE");
-+var Button = scripting.addModule("/ti/drivers/apps/Button");
-+var LED = scripting.addModule("/ti/drivers/apps/LED");
-+var NVS = scripting.addModule("/ti/drivers/NVS");
-+var Power = scripting.addModule("/ti/drivers/Power");
-+var RF = scripting.addModule("/ti/drivers/RF");
-+var SHA2 = scripting.addModule("/ti/drivers/SHA2");
-+var TRNG = scripting.addModule("/ti/drivers/TRNG");
-+var UART = scripting.addModule("/ti/drivers/UART");
-+var zstack = scripting.addModule("/ti/zstack/zstack");
-+var AESCBC1 = AESCBC.addInstance();
-+var AESCCM1 = AESCCM.addInstance();
-+var AESECB1 = AESECB.addInstance();
-+var ECDH1 = ECDH.addInstance();
-+var ECDSA1 = ECDSA.addInstance();
-+var ECJPAKE1 = ECJPAKE.addInstance();
-+var Button1 = Button.addInstance();
-+var Button2 = Button.addInstance();
-+var LED1 = LED.addInstance();
-+var LED2 = LED.addInstance();
-+var NVS1 = NVS.addInstance();
-+var NVS2 = NVS.addInstance();
-+var SHA21 = SHA2.addInstance();
-+var TRNG1 = TRNG.addInstance();
-+var UART1 = UART.addInstance();
-+// Enable Bootloader - Enable ROM Bootloader, for flashing from external host
-+CCFG.enableBootloader = true;
-+// Enable Bootloader Backdoor - When enabling the Bootloader Backdoor, the Bootloader can be activated externally by pulling a pin, even when a valid flash image is present. Note, enabling the backdoor allows an external host to read back a flash image from the device
-+CCFG.enableBootloaderBackdoor = true;
-+// Bootloader Backdoor DIO - DIO (pin) to trigger Bootloader backdoor, this pin is only needed at boot
-+CCFG.dioBootloaderBackdoor = 13;
-+// Trigger Level of Bootloader Backdoor - Active high or low on selected DIO to open boot loader backdoor
-+CCFG.levelBootloaderBackdoor = "Active low";
-+// Enable DCDC - Enable or disable use of DCDC.
-+CCFG.enableDCDC = false;
-+// Name
-+CCFG.ccfgTemplate.$name = "ti_devices_CCFGTemplate0";
-+var Board = scripting.addModule("/ti/drivers/Board", {}, false);
-+var DriverLib = scripting.addModule("/ti/devices/DriverLib", {}, false);
-+// Device Type - The logical device type for the ZigBee node.
-+zstack.deviceType = "znp";
-+// deviceTypeReadOnly
-+zstack.deviceTypeReadOnly = true;
-+// Name
-+zstack.rf.$name = "ti_zstack_rf_zstack_rf0";
-+// Name
-+zstack.rf.radioConfig.$name = "ti_devices_radioconfig_settings_ieee_15_40";
-+// Name
-+zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
-+var multi_stack_validate = scripting.addModule("/ti/easylink/multi_stack_validate", {}, false);
-+// Name
-+zstack.pm.$name = "ti_zstack_pm_zstack_pm0";
-+// Name
-+zstack.network.$name = "ti_zstack_network_zstack_network0";
-+// Name
-+zstack.advanced.$name = "ti_zstack_advanced_zstack_advanced0";
-+// Name
-+zstack.advanced.routing.$name = "ti_zstack_advanced_zstack_routing0";
-+// Name
-+zstack.advanced.packetSending.$name = "ti_zstack_advanced_zstack_packet_sending0";
-+// Name
-+zstack.advanced.tableSize.$name = "ti_zstack_advanced_zstack_table_size0";
-+// Name
-+AESCBC1.$name = "CONFIG_AESCBC_0";
-+// Name
-+AESCCM1.$name = "CONFIG_AESCCM_0";
-+// Interrupt Priority - Crypto peripheral interrupt priority
-+AESCCM1.interruptPriority = "2";
-+// Name
-+AESECB1.$name = "CONFIG_AESECB_0";
-+// Interrupt Priority - Crypto peripheral interrupt priority
-+AESECB1.interruptPriority = "1";
-+// Name
-+ECDH1.$name = "CONFIG_ECDH_0";
-+// Name
-+ECDSA1.$name = "CONFIG_ECDSA_0";
-+// Name
-+ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to Button runtime APIs
-+Button1.$name = "CONFIG_BTN_LEFT";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+Button1.$hardware = system.deviceData.board.components["BTN-1"];
-+// Pull - Specifies the internal pull-up or pull-down resistor configuration of this GPIO pin.
-+Button1.gpioPin.pull = "Pull Up";
-+// Interrupt Trigger - Specifies when or if interrupts are triggered
-+Button1.gpioPin.interruptTrigger = "Falling Edge";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+Button1.gpioPin.$name = "CONFIG_GPIO_BTN1";
-+// Name
-+Button1.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN1";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to Button runtime APIs
-+Button2.$name = "CONFIG_BTN_RIGHT";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+Button2.$hardware = system.deviceData.board.components["BTN-2"];
-+// Pull - Specifies the internal pull-up or pull-down resistor configuration of this GPIO pin.
-+Button2.gpioPin.pull = "Pull Up";
-+// Interrupt Trigger - Specifies when or if interrupts are triggered
-+Button2.gpioPin.interruptTrigger = "Falling Edge";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+Button2.gpioPin.$name = "CONFIG_GPIO_BTN2";
-+// Name
-+Button2.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN2";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to LED runtime APIs
-+LED1.$name = "CONFIG_LED_RED";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+LED1.$hardware = system.deviceData.board.components.LED_RED;
-+// Mode - Select the GPIO mode
-+LED1.gpioPin.mode = "Output";
-+// Callback Function - The name of the callback function called when this GPIO pin triggers an interrupt, or 'NULL' if it's specified at runtime
-+LED1.gpioPin.callbackFunction = "";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+LED1.gpioPin.$name = "CONFIG_GPIO_RLED";
-+// Name
-+LED1.gpioPin.pinInstance.$name = "CONFIG_PIN_RLED";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to LED runtime APIs
-+LED2.$name = "CONFIG_LED_GREEN";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+LED2.$hardware = system.deviceData.board.components.LED_GREEN;
-+// Mode - Select the GPIO mode
-+LED2.gpioPin.mode = "Output";
-+// Callback Function - The name of the callback function called when this GPIO pin triggers an interrupt, or 'NULL' if it's specified at runtime
-+LED2.gpioPin.callbackFunction = "";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+LED2.gpioPin.$name = "CONFIG_GPIO_GLED";
-+// Name
-+LED2.gpioPin.pinInstance.$name = "CONFIG_PIN_GLED";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to NVS runtime APIs
-+NVS1.$name = "CONFIG_NVSINTERNAL";
-+// Name
-+NVS1.internalFlash.$name = "ti_drivers_nvs_NVSCC26XX0";
-+// Region Base - Base address of the region. Must be aligned on an integer multiple of the sector size.
 +NVS1.internalFlash.regionBase = 0x50000;
-+// Region Size - Size of the region in bytes. Must be a non-zero multiple of the Sector Size
 +NVS1.internalFlash.regionSize = 0x6000;
-+// Name - The C/C++ identifier used in applications as the index parameter passed to NVS runtime APIs
-+NVS2.$name = "CONFIG_NVSEXTERNAL";
-+// NVS Type - Specifies the type of non-volatile storage used by the NVS region.
-+NVS2.nvsType = "External";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+NVS2.$hardware = system.deviceData.board.components.MX25R8035F;
-+// Name
-+NVS2.externalFlash.$name = "ti_drivers_nvs_NVSSPI25X0";
-+// Region Size - Size of the region in bytes. Must be a non-zero multiple of the Sector Size
-+NVS2.externalFlash.regionSize = 0x256000;
-+// Verify Buffer Size - Size of the write verification buffer in bytes.
-+NVS2.externalFlash.verifyBufferSize = 64;
-+var NVSSPI25XDevice = scripting.addModule("/ti/drivers/nvs/NVSSPI25XDevice", {}, false);
-+var NVSSPI25XDevice1 = NVSSPI25XDevice.addInstance({}, false);
-+NVS2.externalFlash.spiFlashDevice = NVSSPI25XDevice1; // Assign reference
-+// Name
-+NVSSPI25XDevice1.$name = "CONFIG_NVS_SPI_0";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
-+NVSSPI25XDevice1.slaveSelectGpioInstance.$name = "CONFIG_GPIO_0";
-+// Mode - Select the GPIO mode
-+NVSSPI25XDevice1.slaveSelectGpioInstance.mode = "Output";
-+// Callback Function - The name of the callback function called when this GPIO pin triggers an interrupt, or 'NULL' if it's specified at runtime
-+NVSSPI25XDevice1.slaveSelectGpioInstance.callbackFunction = "";
-+// Name
-+NVSSPI25XDevice1.slaveSelectGpioInstance.pinInstance.$name = "CONFIG_PIN_0";
-+var SPI = scripting.addModule("/ti/drivers/SPI", {}, false);
-+var SPI1 = SPI.addInstance({}, false);
-+NVSSPI25XDevice1.sharedSpiInstance = SPI1; // Assign reference
-+// Name - The C/C++ identifier used in applications as the index parameter passed to SPI runtime APIs
-+SPI1.$name = "CONFIG_SPI_0";
-+// Name
-+SPI1.sclkPinInstance.$name = "CONFIG_PIN_SPI_SCLK";
-+// Name
-+SPI1.misoPinInstance.$name = "CONFIG_PIN_SPI_MISO";
-+// Name
-+SPI1.mosiPinInstance.$name = "CONFIG_PIN_SPI_MOSI";
-+// Name
-+SPI1.spi.$name = "MySSI1";
-+// Name
-+SHA21.$name = "CONFIG_SHA2_0";
-+// Name - The C/C++ identifier used in applications as the index parameter passed to TRNG runtime APIs
-+TRNG1.$name = "CONFIG_TRNG_0";
-+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
-+UART1.$hardware = system.deviceData.board.components.XDS110UART;
-+// Name - The C/C++ identifier used in applications as the index parameter passed to UART runtime APIs
-+UART1.$name = "CONFIG_DISPLAY_UART";
-+// Name
-+UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
-+// Name
-+UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
-+// Name
-+UART1.uart.$name = "MyUART1";
-+// Suggest solution
-+Button1.gpioPin.gpioPin.$suggestSolution = "19";
-+// Suggest solution
-+Button2.gpioPin.gpioPin.$suggestSolution = "20";
-+// Suggest solution
-+LED1.gpioPin.gpioPin.$suggestSolution = "11";
-+// Suggest solution
-+LED2.gpioPin.gpioPin.$suggestSolution = "12";
-+// Suggest solution
-+NVSSPI25XDevice1.slaveSelectGpioInstance.gpioPin.$suggestSolution = "30";
-+// Suggest solution
-+SPI1.spi.$suggestSolution = "SSI0";
-+// Suggest solution
-+SPI1.spi.sclkPin.$suggestSolution = "16";
-+// Suggest solution
-+SPI1.spi.misoPin.$suggestSolution = "14";
-+// Suggest solution
-+SPI1.spi.mosiPin.$suggestSolution = "15";
-+// Suggest solution
-+SPI1.spi.dmaRxChannel.$suggestSolution = "DMA_CH3";
-+// Suggest solution
-+SPI1.spi.dmaTxChannel.$suggestSolution = "DMA_CH4";
-+// Suggest solution
-+UART1.uart.$suggestSolution = "UART1";
-+// Suggest solution
-+UART1.uart.txPin.$suggestSolution = "8";
-+// Suggest solution
-+UART1.uart.rxPin.$suggestSolution = "7";
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
 -- 
 2.24.1 (Apple Git-126)
 
