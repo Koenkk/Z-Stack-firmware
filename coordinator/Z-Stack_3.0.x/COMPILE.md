@@ -14,7 +14,7 @@
   - For CC2531 select *CC2531 - ZNP-with-SBL*
   - For CC2530, CC2530_CC2591, CC2530_CC2592 select *CC2530 - ZNP-with-SBL*
   - If you want to compile the `.bin` firmware, select *ZNP-without-SBL*
-5. Right-click on your target and press options. Go to C/C++ compiler -> preprocessor. Depending on what you want to compile, add one of the following symbols to *Defined symbols*:
+5. Right-click on your target and press options. Go to C/C++ compiler -> preprocessor. First remove all *Defined symbols* and depending on what you want to compile add one of the following:
 - Device type: `FIRMWARE_CC2530`, `FIRMWARE_CC2530_CC2591`, `FIRMWARE_CC2531` or `FIRMWARE_CC2530_CC2592`
 - If you chose for *ZNP-without-SBL* add `FIRMWARE_SBL`.
 6. Go to General Options -> Stack/Heap -> Stack sizes -> and change `XDATA` to `0x400`.
