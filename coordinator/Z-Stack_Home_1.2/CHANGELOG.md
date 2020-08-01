@@ -38,8 +38,8 @@
 - Disabled route expiry
 
 # 20190222
-- Decreased binding and group table size to 1, allows for more memory allocated to the heap. It's not used by Zigbee2mqtt anyway.
-- Reverted size of data buffers to default, a buffer full error is now properly handled by Zigbee2mqtt.
+- Decreased binding and group table size to 1, allows for more memory allocated to the heap. It's not used by Zigbee2MQTT anyway.
+- Reverted size of data buffers to default, a buffer full error is now properly handled by Zigbee2MQTT.
 
 # 20190218
 - Fixed `MAXMEMHEAP`

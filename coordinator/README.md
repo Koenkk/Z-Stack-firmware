@@ -82,7 +82,7 @@ This repository contains various Z-Stack coordinator firmwares.
   </tr>
 </table>
 
-### I'm a Zigbee2mqtt user, which one should I use?
+### I'm a Zigbee2MQTT user, which one should I use?
 This depends:
 - Zigbee 3.0 coordinators are only recommended for CC26X2R1 and CC1352P_2 (other devices might not be powerful enough)
 - If you have a network of 1 - 30 devices, the Z-Stack_Home_1.2 **default** firmware is recommended.
@@ -93,7 +93,7 @@ This depends:
 - *Z-Stack:* Z-Stack is the Zigbee stack for Texas Instruments Zigbee devices
 - *Device:* The Zigbee hardware
 - *Zigbee:* Zigbee version, for more information read [What's New in Zigbee 3.0](http://www.ti.com/lit/an/swra615a/swra615a.pdf)
-- *Direct children:* Number of children that directly can join the coordinator. Note that this is **not** the maximum network size. For more information, read [the Zigbee2mqtt FAQ about device limit](http://www.zigbee2mqtt.io/information/FAQ.html#i-read-that-zigbee2mqtt-has-a-limit-of-15-devices-is-this-true)
+- *Direct children:* Number of children that directly can join the coordinator. Note that this is **not** the maximum network size. For more information, read [the Zigbee2MQTT FAQ about device limit](http://www.zigbee2mqtt.io/information/FAQ.html#i-read-that-zigbee2mqtt-has-a-limit-of-15-devices-is-this-true)
 - *Routes:* This indicates how many routes the coordinator can keep in memory. For example 100/200 would mean that: 100 normal routes and 200 source routes can be kept in memory. 0 source routes mean that source routing is disabled. Source routes improve the performance for larger (40+ nodes) networks. For more information read [Large ZigBee Networks and Source Routing
 ](http://cms.digi.com/resources/documentation/digidocs/90001537/references/r_large_zigbee_networks-source_routing.htm?TocPath=Working%20with%20Zigbee%7C_____14).
 
