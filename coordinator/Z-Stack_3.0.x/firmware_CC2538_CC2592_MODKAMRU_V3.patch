@@ -1,8 +1,8 @@
 diff --git a/Components/bsp/srf06eb_cc2538/drivers/source/bsp.h b/Components/bsp/srf06eb_cc2538/drivers/source/bsp.h
-index 38ac3d9..44c0d5b 100644
+index 38ac3d9..367699d 100644
 --- a/Components/bsp/srf06eb_cc2538/drivers/source/bsp.h
 +++ b/Components/bsp/srf06eb_cc2538/drivers/source/bsp.h
-@@ -81,15 +81,21 @@ extern "C"
+@@ -81,16 +81,22 @@ extern "C"
  #define BSP_3V3_EN              GPIO_PIN_4      //!< PB4
  
  // Board LED defines
@@ -15,6 +15,7 @@ index 38ac3d9..44c0d5b 100644
 -                                 BSP_LED_2 | \
 -                                 BSP_LED_3 | \
 -                                 BSP_LED_4)     //!< Bitmask of all LEDs
+-
 +#ifdef MODKAMRU_V3 // Redefine board LEDs
 +  #define BSP_LED_BASE            GPIO_B_BASE
 +  #define BSP_LED_1               GPIO_PIN_1
@@ -30,22 +31,24 @@ index 38ac3d9..44c0d5b 100644
 +  #define BSP_LED_4               GPIO_PIN_3      //!< PC3
 +  #define BSP_LED_ALL             (BSP_LED_1 | BSP_LED_2 | BSP_LED_3 | BSP_LED_4)     //!< Bitmask of all LEDs
 +#endif
- 
++  
  // Board key defines
  #define BSP_KEY_DIR_BASE        GPIO_C_BASE     //!< Base for left/right/up/down
+ #define BSP_KEY_SEL_BASE        GPIO_A_BASE     //!< Base for Select
 diff --git a/Components/hal/include/hal_led.h b/Components/hal/include/hal_led.h
-index bb327f1..846dea2 100644
+index bb327f1..f8a88b2 100644
 --- a/Components/hal/include/hal_led.h
 +++ b/Components/hal/include/hal_led.h
-@@ -87,6 +87,19 @@ extern "C"
+@@ -86,6 +86,19 @@ extern "C"
+ /*********************************************************************
   * GLOBAL VARIABLES
   */
- 
++  
 +#ifdef MODKAMRU_V3 //LED control helpers
 +  /* Dynamically enable/disable LEDs */
 +  extern bool gbModkamUseLeds;
 +  extern void modkamUseLeds(bool);
-+
++  
 +  /* LED control macros */
 +#define MODKAM_LED_ON(leds) {if(gbModkamUseLeds)HalLedSet(leds,HAL_LED_MODE_ON);}
 +#define MODKAM_LED_OFF(leds) {if(gbModkamUseLeds)HalLedSet(leds,HAL_LED_MODE_OFF);}
@@ -53,10 +56,9 @@ index bb327f1..846dea2 100644
 +#define MODKAM_LED_BLINK_LONG(leds) MODKAM_LED_BLINK(leds,1,90,1000)
 +#define MODKAM_LED_BLINK_SHORT(leds) MODKAM_LED_BLINK(leds,1,50,100)
 +#endif
-+
+ 
  /*
   * Initialize LED Service.
-  */
 diff --git a/Components/hal/target/CC2538ZNP/hal_board_cfg.h b/Components/hal/target/CC2538ZNP/hal_board_cfg.h
 index 0bc45b5..9f28629 100644
 --- a/Components/hal/target/CC2538ZNP/hal_board_cfg.h
@@ -201,7 +203,7 @@ index 1a6e636..cf560e9 100644
   * @fn      HalLedInit
   *
 diff --git a/Components/hal/target/CC2538ZNP/hal_uart_isr.c b/Components/hal/target/CC2538ZNP/hal_uart_isr.c
-index a6ce62b..8d500af 100644
+index a6ce62b..0e34aec 100644
 --- a/Components/hal/target/CC2538ZNP/hal_uart_isr.c
 +++ b/Components/hal/target/CC2538ZNP/hal_uart_isr.c
 @@ -160,10 +160,17 @@ uint8 HalUARTOpenIsr(uint8 port, halUARTCfg_t *config)
@@ -222,6 +224,21 @@ index a6ce62b..8d500af 100644
    }
    
    IntEnable(HAL_UART_INT_CTRL);
+@@ -364,11 +371,14 @@ uint16 HalUARTWriteIsr(uint8 port, uint8 *pBuffer, uint16 length)
+     cnt = idx - cnt;
+   }
+ 
++#ifdef MODKAMRU_V3
++#else
+   /* Accept "all-or-none" on write request. */
+   if (cnt < length)
+   {
+     return 0;
+   }
++#endif
+ 
+   txMT = false;
+   idx = uartRecord.tx.bufferTail;
 diff --git a/Components/mt/MT_SYS.c b/Components/mt/MT_SYS.c
 index aa57766..9b3cb3d 100644
 --- a/Components/mt/MT_SYS.c
@@ -254,22 +271,22 @@ index aa57766..9b3cb3d 100644
    // Plug the SBL revision indication
    UINT32_TO_BUF_LITTLE_ENDIAN(pBuf,sblRev);
 diff --git a/Components/mt/MT_UTIL.c b/Components/mt/MT_UTIL.c
-index b4a24d8..d9e461d 100644
+index b4a24d8..68d7ceb 100644
 --- a/Components/mt/MT_UTIL.c
 +++ b/Components/mt/MT_UTIL.c
-@@ -922,6 +922,12 @@ static void MT_UtilLedControl(uint8 *pBuf)
+@@ -921,6 +921,12 @@ static void MT_UtilLedControl(uint8 *pBuf)
+   /* LED and Mode */
    iLed = *pBuf++;
    iMode = *pBuf;
- 
++  
 +#ifdef MODKAMRU_V3
 +  if(iMode==0)
 +    modkamUseLeds(false);
 +  else modkamUseLeds(true);
 +#endif
-+
+ 
    if ( iLed == 1 )
      Led = HAL_LED_1;
-   else if ( iLed == 2 )
 diff --git a/Components/mt/MT_VERSION.c b/Components/mt/MT_VERSION.c
 index f374554..f2e3de9 100644
 --- a/Components/mt/MT_VERSION.c
@@ -285,11 +302,11 @@ index f374554..f2e3de9 100644
                                     2,  /* Software maintenance release number */
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..4e4e676
+index 0000000..636ccc8
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20200327
++#define CODE_REVISION_NUMBER 20200211
 \ No newline at end of file
 diff --git a/Components/osal/mcu/cc2538/osal_nv.c b/Components/osal/mcu/cc2538/osal_nv.c
 index 9275e64..7e2fee5 100644
@@ -358,7 +375,7 @@ index 1b4f72c..7695d9f 100644
      }
      (void)extAddr;  //dummy
 diff --git a/Components/stack/nwk/nwk_globals.c b/Components/stack/nwk/nwk_globals.c
-index eb436ae..7d2281c 100644
+index eb436ae..8b43ae5 100644
 --- a/Components/stack/nwk/nwk_globals.c
 +++ b/Components/stack/nwk/nwk_globals.c
 @@ -71,10 +71,17 @@
@@ -366,9 +383,9 @@ index eb436ae..7d2281c 100644
   */
  // Maximums for the data buffer queue
 +#ifdef MODKAMRU_V3
-+#define NWK_MAX_DATABUFS_WAITING    180     // Waiting to be sent to MAC
-+#define NWK_MAX_DATABUFS_SCHEDULED  150     // Timed messages to be sent
-+#define NWK_MAX_DATABUFS_CONFIRMED  150     // Held after MAC confirms
++#define NWK_MAX_DATABUFS_WAITING    80     // Waiting to be sent to MAC
++#define NWK_MAX_DATABUFS_SCHEDULED  50     // Timed messages to be sent
++#define NWK_MAX_DATABUFS_CONFIRMED  50     // Held after MAC confirms
 +#define NWK_MAX_DATABUFS_TOTAL      255    // Total number of buffers
 +#else
  #define NWK_MAX_DATABUFS_WAITING    8     // Waiting to be sent to MAC
@@ -396,7 +413,7 @@ index d170283..e251f15 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/Components/stack/zdo/ZDObject.c b/Components/stack/zdo/ZDObject.c
-index dcb6efa..4bbb646 100644
+index dcb6efa..29c8adc 100644
 --- a/Components/stack/zdo/ZDObject.c
 +++ b/Components/stack/zdo/ZDObject.c
 @@ -76,6 +76,10 @@
@@ -414,7 +431,7 @@ index dcb6efa..4bbb646 100644
  #endif
    
    duration = inMsg->asdu[ZDP_MGMT_PERMIT_JOIN_REQ_DURATION];
-+
++  
 +#ifdef MODKAMRU_V3
 +  if(duration==0)
 +    MODKAM_LED_OFF(HAL_LED_3)
@@ -484,7 +501,7 @@ index 9d2c1bf..328cbbb 100644
  /* The maximum number of groups in the groups table */
  -DAPS_MAX_GROUPS=16
 diff --git a/Projects/zstack/ZMain/TI2538ZNP/OnBoard.h b/Projects/zstack/ZMain/TI2538ZNP/OnBoard.h
-index 02bce67..11ebfb6 100644
+index 02bce67..3271563 100644
 --- a/Projects/zstack/ZMain/TI2538ZNP/OnBoard.h
 +++ b/Projects/zstack/ZMain/TI2538ZNP/OnBoard.h
 @@ -120,10 +120,17 @@ extern uint8 aExtendedAddress[8];
@@ -496,10 +513,10 @@ index 02bce67..11ebfb6 100644
 -#define HAL_UART_TX_BUF_SIZE       120
 -#define HAL_UART_IDLE_TIMEOUT      5
 +#ifdef MODKAMRU_V3
-+  #define HAL_UART_FLOW_THRESHOLD    5
-+  #define HAL_UART_RX_BUF_SIZE       1024
-+  #define HAL_UART_TX_BUF_SIZE       1024
-+  #define HAL_UART_IDLE_TIMEOUT      5
++  #define HAL_UART_FLOW_THRESHOLD    10
++  #define HAL_UART_RX_BUF_SIZE       340
++  #define HAL_UART_TX_BUF_SIZE       240
++  #define HAL_UART_IDLE_TIMEOUT      10
 +#else
 +  #define HAL_UART_FLOW_THRESHOLD    5
 +  #define HAL_UART_RX_BUF_SIZE       170
@@ -510,7 +527,7 @@ index 02bce67..11ebfb6 100644
  /* Restart system from absolute beginning
   * Disables interrupts, forces WatchDog reset
 diff --git a/Projects/zstack/ZMain/TI2538ZNP/ZMain.c b/Projects/zstack/ZMain/TI2538ZNP/ZMain.c
-index 5febd92..b2d54d3 100644
+index 5febd92..0d3a44f 100644
 --- a/Projects/zstack/ZMain/TI2538ZNP/ZMain.c
 +++ b/Projects/zstack/ZMain/TI2538ZNP/ZMain.c
 @@ -48,6 +48,10 @@
@@ -524,25 +541,25 @@ index 5febd92..b2d54d3 100644
  #ifndef NONWK
    #include "AF.h"
  #endif
-@@ -161,6 +165,13 @@ int main( void )
+@@ -160,6 +164,13 @@ int main( void )
+   /* If WDT is used, this is a good place to enable it. */
    WatchDogEnable( WDTIMX );
  #endif
- 
++  
 +#ifdef MODKAMRU_V3
 +  // Test all LEDs
 +  MODKAM_LED_BLINK_LONG(HAL_LED_ALL);
 +  // Power LED on
 +  MODKAM_LED_ON(HAL_LED_1);
 +#endif
-+
+ 
    osal_start_system(); /* No Return from here */
  
-   return 0;  /* Shouldn't get here. */
 diff --git a/Projects/zstack/ZNP/Source/znp.cfg b/Projects/zstack/ZNP/Source/znp.cfg
-index 2b8d56d..36b3a2c 100644
+index 2b8d56d..b7fc48a 100644
 --- a/Projects/zstack/ZNP/Source/znp.cfg
 +++ b/Projects/zstack/ZNP/Source/znp.cfg
-@@ -107,3 +107,39 @@
+@@ -107,3 +107,38 @@
  -DMT_APP_FUNC
  -DMT_APP_CNF_FUNC
  
@@ -563,8 +580,7 @@ index 2b8d56d..36b3a2c 100644
 +
 +/* Large netrowk optimizations (MTO, Source Routing) */
 +-DINT_HEAP_LEN=12288
-+-DZDSECMGR_TC_DEVICE_MAX=200
-+-DNWK_MAX_DEVICE_LIST=100
++-DNWK_MAX_DEVICE_LIST=80
 +-DCONCENTRATOR_ENABLE=TRUE
 +-DCONCENTRATOR_DISCOVERY_TIME=120
 +-DMAX_RTG_SRC_ENTRIES=400
@@ -583,7 +599,7 @@ index 2b8d56d..36b3a2c 100644
 +//-DZDNWKMGR_MIN_TRANSMISSIONS=0
 +-DNWK_LINK_STATUS_PERIOD=60
 diff --git a/Projects/zstack/ZNP/Source/znp_app.c b/Projects/zstack/ZNP/Source/znp_app.c
-index 31b115e..ad68b55 100644
+index 31b115e..f7ada93 100644
 --- a/Projects/zstack/ZNP/Source/znp_app.c
 +++ b/Projects/zstack/ZNP/Source/znp_app.c
 @@ -67,6 +67,10 @@
@@ -604,7 +620,7 @@ index 31b115e..ad68b55 100644
 +#ifdef MODKAMRU_V3
 +  MODKAM_LED_BLINK_SHORT(HAL_LED_4);
 +#endif
-+
++  
    osal_event_hdr_t *pMsg;
  #if !defined CC2531ZNP
    uint8 *pBuf;
@@ -626,7 +642,7 @@ index 31b115e..ad68b55 100644
 +  if(
 +     (event & HAL_UART_RX_FULL) ||
 +     (event & HAL_UART_RX_ABOUT_FULL) ||
-+     (event & HAL_UART_RX_TIMEOUT)
++     (event & HAL_UART_RX_TIMEOUT) 
 +     ){
 +    MT_UartProcessZToolData(port, znpTaskId);
 +  }else if(event & HAL_UART_TX_EMPTY){
@@ -646,20 +662,22 @@ index 31b115e..ad68b55 100644
  /**************************************************************************************************
 diff --git a/note.txt b/note.txt
 new file mode 100644
-index 0000000..c6c23c4
+index 0000000..91122c7
 --- /dev/null
 +++ b/note.txt
-@@ -0,0 +1,13 @@
+@@ -0,0 +1,15 @@
 +Preprocessor:
 +  USB:
 +	- HAL_UART_USB
 +	- xHAL_UART=TRUE
 +	- xZNP_ALT
 +  UART FC:
-+	- xHAL_UART_USB
++  	- xHAL_UART_USB
 +	- HAL_UART=TRUE
 +	- xZNP_ALT
 +  UART no FC:
-+	- xHAL_UART_USB
++  	- xHAL_UART_USB
 +	- HAL_UART=TRUE
 +	- ZNP_ALT
++
++
