@@ -1,10 +1,12 @@
-From 35c07f6fb32030dca9736a57f67a90269b5ed202 Mon Sep 17 00:00:00 2001
+From 6dc2a8d7917f8a5d6935ae9b29ea7fe16e4ba9fe Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Mon, 20 Jul 2020 21:52:22 +0200
 Subject: [PATCH] Own changes
 
 ---
+ .../Application/mt/mt.h                       |  1 +
  .../Application/mt/mt_sys.c                   |  2 +-
+ .../Application/mt/mt_util.c                  | 32 ++++++++++++++++
  .../Application/mt/mt_version.c               |  2 +-
  .../Application/mt/revision_info.h            |  4 ++
  .../Stack/Config/preinclude.h                 | 38 +++++++++++++++++++
@@ -14,7 +16,9 @@ Subject: [PATCH] Own changes
  .../Stack/zdo/zd_app.c                        | 22 +++++------
  .../cc13x2lp.cmd                              |  6 +--
  znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  |  5 ++-
+ .../Application/mt/mt.h                       |  1 +
  .../Application/mt/mt_sys.c                   |  2 +-
+ .../Application/mt/mt_util.c                  | 32 ++++++++++++++++
  .../Application/mt/mt_version.c               |  2 +-
  .../Application/mt/revision_info.h            |  4 ++
  .../Stack/Config/preinclude.h                 | 38 +++++++++++++++++++
@@ -24,7 +28,9 @@ Subject: [PATCH] Own changes
  .../Stack/zdo/zd_app.c                        | 22 +++++------
  znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd | 12 ++----
  znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   |  5 ++-
+ .../Application/mt/mt.h                       |  1 +
  .../Application/mt/mt_sys.c                   |  2 +-
+ .../Application/mt/mt_util.c                  | 32 ++++++++++++++++
  .../Application/mt/mt_version.c               |  2 +-
  .../Application/mt/revision_info.h            |  4 ++
  .../Stack/Config/preinclude.h                 | 38 +++++++++++++++++++
@@ -34,7 +40,7 @@ Subject: [PATCH] Own changes
  .../Stack/zdo/zd_app.c                        | 22 +++++------
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  6 +--
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |  5 ++-
- 30 files changed, 231 insertions(+), 78 deletions(-)
+ 36 files changed, 330 insertions(+), 78 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
@@ -42,6 +48,18 @@ Subject: [PATCH] Own changes
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
+index e4c8212..8efa00a 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
+@@ -443,6 +443,7 @@ extern "C"
+ #define MT_UTIL_SRNG_GENERATE                0x4C
+ #endif
+ #define MT_UTIL_BIND_ADD_ENTRY               0x4D
++#define MT_UTIL_ASSOC_REMOVE                 0x63 // Custom command
+ 
+ #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
+ #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 index f3d45f6..d709df7 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
@@ -56,6 +74,63 @@ index f3d45f6..d709df7 100644
  
    OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
  
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
+index b7ed73b..661e027 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
+@@ -151,6 +151,7 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+ #endif //MT_SYS_KEY_MANAGEMENT
+ static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
+ static void MT_UtilAssocCount(uint8_t *pBuf);
++static void MT_UtilAssocRemove(uint8_t *pBuf);
+ static void MT_UtilAssocFindDevice(uint8_t *pBuf);
+ static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
+ static void MT_UtilBindAddEntry(uint8_t *pBuf);
+@@ -317,6 +318,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+     MT_UtilBindAddEntry(pBuf);
+     break;
+ 
++  case MT_UTIL_ASSOC_REMOVE:
++    MT_UtilAssocRemove(pBuf);
++    break;
++
+ #if defined ZCL_KEY_ESTABLISH
+   case MT_UTIL_ZCL_KEY_EST_INIT_EST:
+     MT_UtilzclGeneral_KeyEstablish_InitiateKeyEstablishment(pBuf);
+@@ -1584,6 +1589,33 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
+ }
+ 
++/***************************************************************************************************
++ * @fn      MT_UtilAssocRemove
++ *
++ * @brief   Proxy the AssocRemove() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilAssocRemove(uint8_t *pBuf)
++{
++  uint8_t cmdId;
++  uint8_t ieeeAddr[Z_EXTADDR_LEN];
++  uint8_t retValue = 0;
++
++  // parse header
++  cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  /* IeeAddress */
++  OsalPort_memcpy(ieeeAddr, pBuf, Z_EXTADDR_LEN);
++
++  AssocRemove(ieeeAddr);
++
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
+ /***************************************************************************************************
+  * @fn      MT_UtilAssocFindDevice
+  *
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 index dbe48fb..f8402cd 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
@@ -71,13 +146,13 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..5594a9d
+index 0000000..5fb07f3
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200721
++#define CODE_REVISION_NUMBER 20200805
 +#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
@@ -264,6 +339,18 @@ index a1eef12..1794099 100644
  
  NVS2.$name                          = "CONFIG_NVSEXTERNAL";
  NVS2.nvsType                        = "External";
+diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
+index e4c8212..8efa00a 100644
+--- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
++++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
+@@ -443,6 +443,7 @@ extern "C"
+ #define MT_UTIL_SRNG_GENERATE                0x4C
+ #endif
+ #define MT_UTIL_BIND_ADD_ENTRY               0x4D
++#define MT_UTIL_ASSOC_REMOVE                 0x63 // Custom command
+ 
+ #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
+ #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 index f3d45f6..d709df7 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
@@ -278,6 +365,63 @@ index f3d45f6..d709df7 100644
  
    OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
  
+diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
+index b7ed73b..661e027 100644
+--- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
++++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
+@@ -151,6 +151,7 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+ #endif //MT_SYS_KEY_MANAGEMENT
+ static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
+ static void MT_UtilAssocCount(uint8_t *pBuf);
++static void MT_UtilAssocRemove(uint8_t *pBuf);
+ static void MT_UtilAssocFindDevice(uint8_t *pBuf);
+ static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
+ static void MT_UtilBindAddEntry(uint8_t *pBuf);
+@@ -317,6 +318,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+     MT_UtilBindAddEntry(pBuf);
+     break;
+ 
++  case MT_UTIL_ASSOC_REMOVE:
++    MT_UtilAssocRemove(pBuf);
++    break;
++
+ #if defined ZCL_KEY_ESTABLISH
+   case MT_UTIL_ZCL_KEY_EST_INIT_EST:
+     MT_UtilzclGeneral_KeyEstablish_InitiateKeyEstablishment(pBuf);
+@@ -1584,6 +1589,33 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
+ }
+ 
++/***************************************************************************************************
++ * @fn      MT_UtilAssocRemove
++ *
++ * @brief   Proxy the AssocRemove() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilAssocRemove(uint8_t *pBuf)
++{
++  uint8_t cmdId;
++  uint8_t ieeeAddr[Z_EXTADDR_LEN];
++  uint8_t retValue = 0;
++
++  // parse header
++  cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  /* IeeAddress */
++  OsalPort_memcpy(ieeeAddr, pBuf, Z_EXTADDR_LEN);
++
++  AssocRemove(ieeeAddr);
++
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
+ /***************************************************************************************************
+  * @fn      MT_UtilAssocFindDevice
+  *
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 index dbe48fb..f8402cd 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
@@ -293,13 +437,13 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..5594a9d
+index 0000000..5fb07f3
 --- /dev/null
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200721
++#define CODE_REVISION_NUMBER 20200805
 +#endif
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
@@ -492,6 +636,18 @@ index 55f270e..44ca0e7 100644
  
  NVS2.$name                          = "CONFIG_NVSEXTERNAL";
  NVS2.nvsType                        = "External";
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
+index e4c8212..8efa00a 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
+@@ -443,6 +443,7 @@ extern "C"
+ #define MT_UTIL_SRNG_GENERATE                0x4C
+ #endif
+ #define MT_UTIL_BIND_ADD_ENTRY               0x4D
++#define MT_UTIL_ASSOC_REMOVE                 0x63 // Custom command
+ 
+ #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
+ #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
 index f3d45f6..d709df7 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
@@ -506,6 +662,63 @@ index f3d45f6..d709df7 100644
  
    OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
  
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
+index b7ed73b..661e027 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
+@@ -151,6 +151,7 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+ #endif //MT_SYS_KEY_MANAGEMENT
+ static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
+ static void MT_UtilAssocCount(uint8_t *pBuf);
++static void MT_UtilAssocRemove(uint8_t *pBuf);
+ static void MT_UtilAssocFindDevice(uint8_t *pBuf);
+ static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
+ static void MT_UtilBindAddEntry(uint8_t *pBuf);
+@@ -317,6 +318,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+     MT_UtilBindAddEntry(pBuf);
+     break;
+ 
++  case MT_UTIL_ASSOC_REMOVE:
++    MT_UtilAssocRemove(pBuf);
++    break;
++
+ #if defined ZCL_KEY_ESTABLISH
+   case MT_UTIL_ZCL_KEY_EST_INIT_EST:
+     MT_UtilzclGeneral_KeyEstablish_InitiateKeyEstablishment(pBuf);
+@@ -1584,6 +1589,33 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
+ }
+ 
++/***************************************************************************************************
++ * @fn      MT_UtilAssocRemove
++ *
++ * @brief   Proxy the AssocRemove() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilAssocRemove(uint8_t *pBuf)
++{
++  uint8_t cmdId;
++  uint8_t ieeeAddr[Z_EXTADDR_LEN];
++  uint8_t retValue = 0;
++
++  // parse header
++  cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  /* IeeAddress */
++  OsalPort_memcpy(ieeeAddr, pBuf, Z_EXTADDR_LEN);
++
++  AssocRemove(ieeeAddr);
++
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
+ /***************************************************************************************************
+  * @fn      MT_UtilAssocFindDevice
+  *
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 index dbe48fb..f8402cd 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
@@ -521,13 +734,13 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..5594a9d
+index 0000000..5fb07f3
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200721
++#define CODE_REVISION_NUMBER 20200805
 +#endif
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
