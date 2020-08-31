@@ -1,7 +1,7 @@
 # Compiling the firmware
 
 ## Setup development environment
-1. Download and install [SIMPLELINK-CC13X2-26X2-SDK_4.20.00.35](http://www.ti.com/tool/download/SIMPLELINK-CC13X2-26X2-SDK).
+1. Download and install [SIMPLELINK-CC13X2-26X2-SDK_4.20.01.04](http://www.ti.com/tool/download/SIMPLELINK-CC13X2-26X2-SDK).
 1. Download and install [Code Composer Studio 10.1.0.00010](http://www.ti.com/tool/CCSTUDIO).
 
 ## Compiling

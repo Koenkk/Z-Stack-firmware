@@ -1,3 +1,7 @@
+# 20200831
+- SimpleLink SDK 4.20.01.04 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/4.20.01.04/exports/changelog.html))
+- Allow support for Samsung SmartThings PGC410EU presence sensor ([link](https://github.com/Koenkk/zigbee2mqtt/issues/4055))
+
 # 20200805
 - Expose `AssocRemove` function
 - SimpleLink SDK 4.20.00.35 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/4.20.00.35/exports/changelog.html))
