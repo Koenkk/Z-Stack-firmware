@@ -1,6 +1,7 @@
-# 20200831
+# 20200925
 - SimpleLink SDK 4.20.01.04 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/4.20.01.04/exports/changelog.html))
 - Allow support for Samsung SmartThings PGC410EU presence sensor ([link](https://github.com/Koenkk/zigbee2mqtt/issues/4055))
+- Fix commands to long sleeping end devices failing when directly connected to coordinator (e.g. Xiaomi JTYJ-GD-01LM/BW)
 
 # 20200805
 - Expose `AssocRemove` function

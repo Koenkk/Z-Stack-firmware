@@ -1,7 +1,7 @@
-From fec659d434c779a80ad137b148f78d3a067fe748 Mon Sep 17 00:00:00 2001
+From a8ec8cc8e5e07b58cf8d077069a9cd5f446cdecb Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Mon, 31 Aug 2020 16:45:20 +0200
-Subject: [PATCH 1/1] Own changes
+Subject: [PATCH] Own changes
 
 ---
  .../Application/mt/mt.h                       |   1 +
@@ -9,7 +9,7 @@ Subject: [PATCH 1/1] Own changes
  .../Application/mt/mt_util.c                  |  32 ++
  .../Application/mt/mt_version.c               |   2 +-
  .../Application/mt/revision_info.h            |   4 +
- .../Stack/Config/preinclude.h                 |  38 ++
+ .../Stack/Config/preinclude.h                 |  39 ++
  .../Stack/Config/znp_cnf.opts                 |   2 +
  .../Stack/af/af.c                             |  18 +-
  .../Stack/sys/zglobals.c                      |   6 +-
@@ -21,7 +21,7 @@ Subject: [PATCH 1/1] Own changes
  .../Application/mt/mt_util.c                  |  32 ++
  .../Application/mt/mt_version.c               |   2 +-
  .../Application/mt/revision_info.h            |   4 +
- .../Stack/Config/preinclude.h                 |  38 ++
+ .../Stack/Config/preinclude.h                 |  39 ++
  .../Stack/Config/znp_cnf.opts                 |   2 +
  .../Stack/af/af.c                             |  18 +-
  .../Stack/sys/zglobals.c                      |   6 +-
@@ -33,14 +33,14 @@ Subject: [PATCH 1/1] Own changes
  .../Application/mt/mt_util.c                  |  32 ++
  .../Application/mt/mt_version.c               |   2 +-
  .../Application/mt/revision_info.h            |   4 +
- .../Stack/Config/preinclude.h                 |  38 ++
+ .../Stack/Config/preinclude.h                 |  39 ++
  .../Stack/Config/znp_cnf.opts                 |   2 +
  .../Stack/af/af.c                             |  18 +-
  .../Stack/sys/zglobals.c                      |   6 +-
  .../Stack/zdo/zd_app.c                        |  22 +-
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |   6 +-
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   | 340 ++++++++---------
- 36 files changed, 806 insertions(+), 630 deletions(-)
+ 36 files changed, 809 insertions(+), 630 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
@@ -146,20 +146,20 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..de9a15c
+index 0000000..fac1a7e
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200830
++#define CODE_REVISION_NUMBER 20200925
 +#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..733be1d
+index 0000000..27496eb
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,38 @@
+@@ -0,0 +1,39 @@
 +#define INCLUDE_REVISION_INFORMATION
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
@@ -198,6 +198,8 @@ index 0000000..733be1d
 +#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
++#define NWK_INDIRECT_MSG_TIMEOUT 20
+\ No newline at end of file
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 index d809fb2..abb769e 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -780,20 +782,20 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..de9a15c
+index 0000000..fac1a7e
 --- /dev/null
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200830
++#define CODE_REVISION_NUMBER 20200925
 +#endif
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..733be1d
+index 0000000..27496eb
 --- /dev/null
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,38 @@
+@@ -0,0 +1,39 @@
 +#define INCLUDE_REVISION_INFORMATION
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
@@ -832,6 +834,8 @@ index 0000000..733be1d
 +#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
++#define NWK_INDIRECT_MSG_TIMEOUT 20
+\ No newline at end of file
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 index d809fb2..abb769e 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -1411,20 +1415,20 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..de9a15c
+index 0000000..fac1a7e
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200830
++#define CODE_REVISION_NUMBER 20200925
 +#endif
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..733be1d
+index 0000000..27496eb
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,38 @@
+@@ -0,0 +1,39 @@
 +#define INCLUDE_REVISION_INFORMATION
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
@@ -1463,6 +1467,8 @@ index 0000000..733be1d
 +#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
++#define NWK_INDIRECT_MSG_TIMEOUT 20
+\ No newline at end of file
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 index d809fb2..abb769e 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
