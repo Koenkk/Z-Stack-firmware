@@ -1,46 +1,43 @@
-From a8ec8cc8e5e07b58cf8d077069a9cd5f446cdecb Mon Sep 17 00:00:00 2001
+From 9fe868de1070c2d23d84559298e61260262ad9d7 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Mon, 31 Aug 2020 16:45:20 +0200
-Subject: [PATCH] Own changes
+Subject: [PATCH 1/1] Own changes
 
 ---
- .../Application/mt/mt.h                       |   1 +
- .../Application/mt/mt_sys.c                   |   2 +-
- .../Application/mt/mt_util.c                  |  32 ++
- .../Application/mt/mt_version.c               |   2 +-
- .../Application/mt/revision_info.h            |   4 +
- .../Stack/Config/preinclude.h                 |  39 ++
- .../Stack/Config/znp_cnf.opts                 |   2 +
- .../Stack/af/af.c                             |  18 +-
- .../Stack/sys/zglobals.c                      |   6 +-
- .../Stack/zdo/zd_app.c                        |  22 +-
- .../cc13x2lp.cmd                              |   6 +-
- znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  | 350 +++++++++---------
- .../Application/mt/mt.h                       |   1 +
- .../Application/mt/mt_sys.c                   |   2 +-
- .../Application/mt/mt_util.c                  |  32 ++
- .../Application/mt/mt_version.c               |   2 +-
- .../Application/mt/revision_info.h            |   4 +
- .../Stack/Config/preinclude.h                 |  39 ++
- .../Stack/Config/znp_cnf.opts                 |   2 +
- .../Stack/af/af.c                             |  18 +-
- .../Stack/sys/zglobals.c                      |   6 +-
- .../Stack/zdo/zd_app.c                        |  22 +-
- znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  12 +-
- znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   | 341 ++++++++---------
- .../Application/mt/mt.h                       |   1 +
- .../Application/mt/mt_sys.c                   |   2 +-
- .../Application/mt/mt_util.c                  |  32 ++
- .../Application/mt/mt_version.c               |   2 +-
- .../Application/mt/revision_info.h            |   4 +
- .../Stack/Config/preinclude.h                 |  39 ++
- .../Stack/Config/znp_cnf.opts                 |   2 +
- .../Stack/af/af.c                             |  18 +-
- .../Stack/sys/zglobals.c                      |   6 +-
- .../Stack/zdo/zd_app.c                        |  22 +-
- znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |   6 +-
- znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   | 340 ++++++++---------
- 36 files changed, 809 insertions(+), 630 deletions(-)
+ .../Application/mt/mt.h                       |  1 +
+ .../Application/mt/mt_util.c                  | 32 +++++++++++++++
+ .../Application/mt/mt_version.c               |  2 +-
+ .../Application/mt/revision_info.h            |  4 ++
+ .../Stack/Config/preinclude.h                 | 39 +++++++++++++++++++
+ .../Stack/Config/znp_cnf.opts                 |  2 +
+ .../Stack/af/af.c                             | 18 +++++++--
+ .../Stack/sys/zglobals.c                      |  6 ++-
+ .../Stack/zdo/zd_app.c                        | 22 +++++------
+ .../cc13x2lp.cmd                              |  6 +--
+ znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  |  5 ++-
+ .../Application/mt/mt.h                       |  1 +
+ .../Application/mt/mt_util.c                  | 32 +++++++++++++++
+ .../Application/mt/mt_version.c               |  2 +-
+ .../Application/mt/revision_info.h            |  4 ++
+ .../Stack/Config/preinclude.h                 | 39 +++++++++++++++++++
+ .../Stack/Config/znp_cnf.opts                 |  2 +
+ .../Stack/af/af.c                             | 18 +++++++--
+ .../Stack/sys/zglobals.c                      |  6 ++-
+ .../Stack/zdo/zd_app.c                        | 22 +++++------
+ znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd | 12 ++----
+ znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   |  5 ++-
+ .../Application/mt/mt.h                       |  1 +
+ .../Application/mt/mt_util.c                  | 32 +++++++++++++++
+ .../Application/mt/mt_version.c               |  2 +-
+ .../Application/mt/revision_info.h            |  4 ++
+ .../Stack/Config/preinclude.h                 | 39 +++++++++++++++++++
+ .../Stack/Config/znp_cnf.opts                 |  2 +
+ .../Stack/af/af.c                             | 18 +++++++--
+ .../Stack/sys/zglobals.c                      |  6 ++-
+ .../Stack/zdo/zd_app.c                        | 22 +++++------
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  6 +--
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |  5 ++-
+ 33 files changed, 339 insertions(+), 78 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
@@ -49,10 +46,10 @@ Subject: [PATCH] Own changes
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-index e4c8212..8efa00a 100644
+index 2c5073c..e169f74 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-@@ -443,6 +443,7 @@ extern "C"
+@@ -441,6 +441,7 @@ extern "C"
  #define MT_UTIL_SRNG_GENERATE                0x4C
  #endif
  #define MT_UTIL_BIND_ADD_ENTRY               0x4D
@@ -60,25 +57,11 @@ index e4c8212..8efa00a 100644
  
  #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
  #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-index f3d45f6..d709df7 100644
---- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-@@ -510,8 +510,8 @@ static void MT_SysVersion(void)
-   uint8_t *pBuf = &verStr[sizeof(MTVersionString)];
- #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
-   uint32_t sblSig;
--  uint32_t sblRev;
- #endif
-+  uint32_t sblRev;
- 
-   OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
- 
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-index b7ed73b..661e027 100644
+index 90d6d4a..7fd95b2 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-@@ -151,6 +151,7 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+@@ -128,6 +128,7 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
  #endif //MT_SYS_KEY_MANAGEMENT
  static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
  static void MT_UtilAssocCount(uint8_t *pBuf);
@@ -86,7 +69,7 @@ index b7ed73b..661e027 100644
  static void MT_UtilAssocFindDevice(uint8_t *pBuf);
  static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
  static void MT_UtilBindAddEntry(uint8_t *pBuf);
-@@ -317,6 +318,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -272,6 +273,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilBindAddEntry(pBuf);
      break;
  
@@ -94,10 +77,10 @@ index b7ed73b..661e027 100644
 +    MT_UtilAssocRemove(pBuf);
 +    break;
 +
- #if defined ZCL_KEY_ESTABLISH
-   case MT_UTIL_ZCL_KEY_EST_INIT_EST:
-     MT_UtilzclGeneral_KeyEstablish_InitiateKeyEstablishment(pBuf);
-@@ -1584,6 +1589,33 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+   case MT_UTIL_SYNC_REQ:
+     MT_UtilSync();
+     break;
+@@ -1375,6 +1380,33 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
    MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
  }
  
@@ -132,10 +115,10 @@ index b7ed73b..661e027 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index dbe48fb..f8402cd 100644
+index 63c143b..d3d1775 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-@@ -69,7 +69,7 @@
+@@ -48,7 +48,7 @@
   *****************************************************************************/
  const uint8_t MTVersionString[] = {
                                     2,  /* Transport protocol revision */
@@ -146,17 +129,17 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..fac1a7e
+index 0000000..b587a68
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200925
++#define CODE_REVISION_NUMBER 20201017
 +#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..27496eb
+index 0000000..addb0b7
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,39 @@
@@ -199,23 +182,22 @@ index 0000000..27496eb
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
 +#define NWK_INDIRECT_MSG_TIMEOUT 20
-\ No newline at end of file
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-index d809fb2..abb769e 100644
+index 6e3cb6a..1f90cc6 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-@@ -93,3 +93,5 @@
+@@ -32,3 +32,5 @@
+ -DMT_GP_CB_FUNC
  
- /* BDB interface */
  -DMT_APP_CNF_FUNC
 +
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index a96b3cc..088df18 100644
+index 3a7afa3..e3a2706 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-@@ -406,10 +406,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+@@ -407,10 +407,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
  #if !defined ( APS_NO_GROUPS )
      // Find the first endpoint for this group
      grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
@@ -237,7 +219,7 @@ index a96b3cc..088df18 100644
      if ( epDesc == NULL )
        return;   // Endpoint descriptor not found
  
-@@ -456,7 +464,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+@@ -457,7 +465,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
      // if the Wildcard ProfileID is received the message should not be sent to ZDO endpoint
      if ( (aff->ProfileID == epProfileID) ||
           ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
@@ -249,10 +231,10 @@ index a96b3cc..088df18 100644
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index 0c62cd3..6d55ba4 100644
+index e716024..f8d8404 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-@@ -110,7 +110,7 @@ uint8_t zgSecurePermitJoin = TRUE;
+@@ -104,7 +104,7 @@ uint8_t zgSecurePermitJoin = TRUE;
  // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
  // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
  // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
@@ -261,7 +243,7 @@ index 0c62cd3..6d55ba4 100644
  
  //allowInstallCodes
  uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
-@@ -204,7 +204,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
+@@ -198,7 +198,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
  //
  // NOTICE:  Before enabling Child Aging make sure to review all the related
  // definitions in this file, especially zgNwkParentInformation.
@@ -273,10 +255,10 @@ index 0c62cd3..6d55ba4 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index a893bc3..ca57a6a 100644
+index 17ac2f5..9c0021b 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -422,12 +422,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
+@@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
            ZDApp_ChangeState( DEV_ROUTER );
          }
  
@@ -294,7 +276,7 @@ index a893bc3..ca57a6a 100644
        }
        else
        {
-@@ -905,12 +904,11 @@ void ZDApp_NetworkStartEvt( void )
+@@ -882,12 +881,11 @@ void ZDApp_NetworkStartEvt( void )
          bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
        }
  
@@ -313,7 +295,7 @@ index a893bc3..ca57a6a 100644
      else
      {
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
-index 30e5847..016187a 100755
+index 2b5d2ae..c12e296 100755
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
 @@ -70,9 +70,9 @@
@@ -330,365 +312,33 @@ index 30e5847..016187a 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
-index e44b370..867fac2 100644
+index 9680070..9ba7dae 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
-@@ -1,185 +1,165 @@
--/*
-- * Copyright (c) 2018, Texas Instruments Incorporated
-- * All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- *
-- * *  Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions and the following disclaimer.
-- *
-- * *  Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- *
-- * *  Neither the name of Texas Instruments Incorporated nor the names of
-- *    its contributors may be used to endorse or promote products derived
-- *    from this software without specific prior written permission.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
--// @cliArgs --board /ti/boards/CC1352P_2_LAUNCHXL
--
--/*
-- *  znp.syscfg
-- */
--
--/* Modules */
--var AESCBC  = scripting.addModule("/ti/drivers/AESCBC");
--var AESCCM  = scripting.addModule("/ti/drivers/AESCCM");
--var AESECB  = scripting.addModule("/ti/drivers/AESECB");
--var device  = scripting.addModule("/ti/devices/CCFG");
--var DMA     = scripting.addModule("/ti/drivers/DMA");
--var ECDH    = scripting.addModule("/ti/drivers/ECDH");
--var ECDSA   = scripting.addModule("/ti/drivers/ECDSA");
--var ECJPAKE = scripting.addModule("/ti/drivers/ECJPAKE");
--var Button  = scripting.addModule("/ti/drivers/apps/Button");
--var LED     = scripting.addModule("/ti/drivers/apps/LED");
--var NVS     = scripting.addModule("/ti/drivers/NVS");
--var Power   = scripting.addModule("/ti/drivers/Power");
--var RF      = scripting.addModule("/ti/drivers/RF");
--var SHA2    = scripting.addModule("/ti/drivers/SHA2");
--var TRNG    = scripting.addModule("/ti/drivers/TRNG");
--var UART    = scripting.addModule("/ti/drivers/UART");
--var zstack  = scripting.addModule("/ti/zstack/zstack");
--
--
--/* Instances */
--var AESCBC1  = AESCBC.addInstance();
--var AESCCM1  = AESCCM.addInstance();
--var AESECB1  = AESECB.addInstance();
--var ECDH1    = ECDH.addInstance();
--var ECDSA1   = ECDSA.addInstance();
--var ECJPAKE1 = ECJPAKE.addInstance();
--var Button1  = Button.addInstance();
--var Button2  = Button.addInstance();
--var LED1     = LED.addInstance();
--var LED2     = LED.addInstance();
--var NVS1     = NVS.addInstance();
--var NVS2     = NVS.addInstance();
--var SHA21    = SHA2.addInstance();
--var TRNG1    = TRNG.addInstance();
--var UART1    = UART.addInstance();
--
--
--/* AESCCM */
--AESCCM1.interruptPriority = "2";
--
--
--/* AESECB */
--AESECB1.interruptPriority = "1";
--
--/* ======== RF Design ======== */
--var rfDesign = scripting.addModule("ti/devices/radioconfig/rfdesign");
--const rfDesignSettings = system.getScript("/ti/common/lprf_rf_design_settings.js").rfDesignSettings;
--for(var setting in rfDesignSettings)
--{
--    rfDesign[setting] = rfDesignSettings[setting];
--}
--
--
--/* CCFG */
--const ccfgSettings = system.getScript("/ti/common/lprf_ccfg_settings.js").ccfgSettings;
--for(var setting in ccfgSettings)
--{
--    device[setting] = ccfgSettings[setting];
--}
--
--
--/* Red LED */
--LED1.$name                      = "CONFIG_LED_RED";
--LED1.$hardware                  = system.deviceData.board.components.LED_RED;
--LED1.gpioPin.$name              = "CONFIG_GPIO_RLED";
--LED1.gpioPin.mode               = "Output";
--LED1.gpioPin.callbackFunction   = "";
--LED1.gpioPin.pinInstance.$name  = "CONFIG_PIN_RLED";
--
--/* Green LED */
--LED2.$name                      = "CONFIG_LED_GREEN";
--LED2.$hardware                  = system.deviceData.board.components.LED_GREEN;
--LED2.gpioPin.$name              = "CONFIG_GPIO_GLED";
--LED2.gpioPin.mode               = "Output";
--LED2.gpioPin.callbackFunction   = "";
--LED2.gpioPin.pinInstance.$name  = "CONFIG_PIN_GLED";
--
--/* Left Button */
--Button1.$name                       = "CONFIG_BTN_LEFT";
--Button1.$hardware                   = system.deviceData.board.components["BTN-1"];
--Button1.gpioPin.$name               = "CONFIG_GPIO_BTN1";
--Button1.gpioPin.pull                = "Pull Up";
--Button1.gpioPin.interruptTrigger    = "Falling Edge";
--Button1.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN1";
--
--/* Left Button */
--Button2.$name                       = "CONFIG_BTN_RIGHT";
--Button2.$hardware                   = system.deviceData.board.components["BTN-2"];
--Button2.gpioPin.$name               = "CONFIG_GPIO_BTN2";
--Button2.gpioPin.pull                = "Pull Up";
--Button2.gpioPin.interruptTrigger    = "Falling Edge";
--Button2.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN2";
--
--
--/* Internal NVS */
--NVS1.$name                    = "CONFIG_NVSINTERNAL";
--NVS1.nvsType                  = "Internal";
+@@ -52,6 +52,7 @@ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 15;
+ CCFG.levelBootloaderBackdoor  = "Active low";
+ CCFG.forceVddr                = true;
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
+ 
+ rfdesign.rfDesign = "LAUNCHXL-CC1352P-2";
+@@ -72,8 +73,8 @@ ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
 -NVS1.internalFlash.regionBase = 0x52000;
 -NVS1.internalFlash.regionSize = 0x4000;
--
--
--/* External NVS */
--NVS2.$name                          = "CONFIG_NVSEXTERNAL";
--NVS2.nvsType                        = "External";
--NVS2.$hardware                      = system.deviceData.board.components.MX25R8035F;
--NVS2.externalFlash.regionBase       = 0;
--NVS2.externalFlash.regionSize       = 0x256000;
--NVS2.externalFlash.sectorSize       = 0x1000;
--NVS2.externalFlash.verifyBufferSize = 64;
--
--
--/* External NVS SPI instance */
--var NVSSPI25XDevice1 = NVS2.externalFlash.spiFlashDevice;
--var SPI1                   = NVSSPI25XDevice1.sharedSpiInstance;
--SPI1.$name                 = "CONFIG_SPI_0";
--SPI1.sclkPinInstance.$name = "CONFIG_PIN_SPI_SCLK";
--SPI1.misoPinInstance.$name = "CONFIG_PIN_SPI_MISO";
--SPI1.mosiPinInstance.$name = "CONFIG_PIN_SPI_MOSI";
--
--
--/* RF */
--/* if an antenna component exists, assign it to the RF instance */
--if (system.deviceData.board && system.deviceData.board.components.RF) {
--    RF.$hardware = system.deviceData.board.components.RF;
--}
--
--/* Display (UART) */
--UART1.$hardware           = system.deviceData.board.components.XDS110UART;
--UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
--UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
--UART1.$name               = "CONFIG_DISPLAY_UART";
--
--
--/* Z-Stack */
--zstack.deviceType = "znp";
--zstack.deviceTypeReadOnly = true;
--zstack.rf.rfDesign = rfDesignSettings.rfDesign;
--
--/* ======== Do device specific settings ======== */
--const deviceName = system.getScript("/ti/ti154stack/ti154stack_common.js").getLaunchPadFromDevice();
--
--/* Update LF Clock Source for CC2652RB devices */
--if(deviceName.includes("RB"))
--{
--    device.srcClkLF = "Derived from HF XOSC";
--}
--
-+/**
-+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
-+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
-+ * @cliArgs --board "/ti/boards/CC1352P_2_LAUNCHXL" --product "simplelink_cc13x2_26x2_sdk@4.20.01.04"
-+ * @versions {"data":"2020052512","timestamp":"2020052512","tool":"1.5.0+1397","templates":"2020052512"}
-+ */
-+
-+/**
-+ * Import the modules used in this configuration.
-+ */
-+const CCFG     = scripting.addModule("/ti/devices/CCFG");
-+const rfdesign = scripting.addModule("/ti/devices/radioconfig/rfdesign");
-+const AESCBC   = scripting.addModule("/ti/drivers/AESCBC");
-+const AESCBC1  = AESCBC.addInstance();
-+const AESCCM   = scripting.addModule("/ti/drivers/AESCCM");
-+const AESCCM1  = AESCCM.addInstance();
-+const AESECB   = scripting.addModule("/ti/drivers/AESECB");
-+const AESECB1  = AESECB.addInstance();
-+const DMA      = scripting.addModule("/ti/drivers/DMA");
-+const ECDH     = scripting.addModule("/ti/drivers/ECDH");
-+const ECDH1    = ECDH.addInstance();
-+const ECDSA    = scripting.addModule("/ti/drivers/ECDSA");
-+const ECDSA1   = ECDSA.addInstance();
-+const ECJPAKE  = scripting.addModule("/ti/drivers/ECJPAKE");
-+const ECJPAKE1 = ECJPAKE.addInstance();
-+const NVS      = scripting.addModule("/ti/drivers/NVS");
-+const NVS1     = NVS.addInstance();
-+const NVS2     = NVS.addInstance();
-+const Power    = scripting.addModule("/ti/drivers/Power");
-+const RF       = scripting.addModule("/ti/drivers/RF");
-+const SHA2     = scripting.addModule("/ti/drivers/SHA2");
-+const SHA21    = SHA2.addInstance();
-+const TRNG     = scripting.addModule("/ti/drivers/TRNG");
-+const TRNG1    = TRNG.addInstance();
-+const UART     = scripting.addModule("/ti/drivers/UART");
-+const UART1    = UART.addInstance();
-+const Button   = scripting.addModule("/ti/drivers/apps/Button");
-+const Button1  = Button.addInstance();
-+const Button2  = Button.addInstance();
-+const LED      = scripting.addModule("/ti/drivers/apps/LED");
-+const LED1     = LED.addInstance();
-+const LED2     = LED.addInstance();
-+const zstack   = scripting.addModule("/ti/zstack/zstack");
-+
-+/**
-+ * Write custom configuration values to the imported modules.
-+ */
-+CCFG.xoscCapArray             = true;
-+CCFG.xoscCapArrayDelta        = 0xC1;
-+CCFG.enableBootloader         = true;
-+CCFG.enableBootloaderBackdoor = true;
-+CCFG.dioBootloaderBackdoor    = 15;
-+CCFG.levelBootloaderBackdoor  = "Active low";
-+CCFG.forceVddr                = true;
-+CCFG.enableDCDC               = false;
-+CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
-+
-+rfdesign.rfDesign = "LAUNCHXL-CC1352P-2";
-+
-+AESCBC1.$name = "CONFIG_AESCBC_0";
-+
-+AESCCM1.$name             = "CONFIG_AESCCM_0";
-+AESCCM1.interruptPriority = "2";
-+
-+AESECB1.$name             = "CONFIG_AESECB_0";
-+AESECB1.interruptPriority = "1";
-+
-+ECDH1.$name = "CONFIG_ECDH_0";
-+
-+ECDSA1.$name = "CONFIG_ECDSA_0";
-+
-+ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
-+
-+NVS1.$name                    = "CONFIG_NVSINTERNAL";
-+NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
 +NVS1.internalFlash.regionBase = 0x50000;
 +NVS1.internalFlash.regionSize = 0x6000;
-+
-+NVS2.$name                          = "CONFIG_NVSEXTERNAL";
-+NVS2.nvsType                        = "External";
-+NVS2.$hardware                      = system.deviceData.board.components.MX25R8035F;
-+NVS2.externalFlash.$name            = "ti_drivers_nvs_NVSSPI25X0";
-+NVS2.externalFlash.regionSize       = 0x256000;
-+NVS2.externalFlash.verifyBufferSize = 64;
-+
-+RF.$hardware = system.deviceData.board.components["SKY13317-373LF"];
-+
-+SHA21.$name = "CONFIG_SHA2_0";
-+
-+TRNG1.$name = "CONFIG_TRNG_0";
-+
-+UART1.$hardware           = system.deviceData.board.components.XDS110UART;
-+UART1.$name               = "CONFIG_DISPLAY_UART";
-+UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
-+UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
-+
-+Button1.$name                     = "CONFIG_BTN_LEFT";
-+Button1.$hardware                 = system.deviceData.board.components["BTN-1"];
-+Button1.gpioPin.$name             = "CONFIG_GPIO_BTN1";
-+Button1.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN1";
-+
-+Button2.$name                     = "CONFIG_BTN_RIGHT";
-+Button2.$hardware                 = system.deviceData.board.components["BTN-2"];
-+Button2.gpioPin.$name             = "CONFIG_GPIO_BTN2";
-+Button2.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN2";
-+
-+LED1.$name                     = "CONFIG_LED_RED";
-+LED1.$hardware                 = system.deviceData.board.components.LED_RED;
-+LED1.gpioPin.$name             = "CONFIG_GPIO_RLED";
-+LED1.gpioPin.pinInstance.$name = "CONFIG_PIN_RLED";
-+
-+LED2.$name                     = "CONFIG_LED_GREEN";
-+LED2.$hardware                 = system.deviceData.board.components.LED_GREEN;
-+LED2.gpioPin.$name             = "CONFIG_GPIO_GLED";
-+LED2.gpioPin.pinInstance.$name = "CONFIG_PIN_GLED";
-+
-+const NVSSPI25XDevice                                      = scripting.addModule("/ti/drivers/nvs/NVSSPI25XDevice", {}, false);
-+const NVSSPI25XDevice1                                     = NVSSPI25XDevice.addInstance({}, false);
-+NVSSPI25XDevice1.$name                                     = "CONFIG_NVS_SPI_0";
-+NVS2.externalFlash.spiFlashDevice                          = NVSSPI25XDevice1;
-+NVSSPI25XDevice1.slaveSelectGpioInstance.$name             = "CONFIG_GPIO_0";
-+NVSSPI25XDevice1.slaveSelectGpioInstance.pinInstance.$name = "CONFIG_PIN_0";
-+
-+const SPI                          = scripting.addModule("/ti/drivers/SPI", {}, false);
-+const SPI1                         = SPI.addInstance({}, false);
-+SPI1.$name                         = "CONFIG_SPI_0";
-+NVSSPI25XDevice1.sharedSpiInstance = SPI1;
-+SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
-+SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
-+SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
-+
-+zstack.deviceType                            = "znp";
-+zstack.deviceTypeReadOnly                    = true;
-+zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
-+zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
-+zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
-+zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
-+zstack.network.$name                         = "ti_zstack_network_zstack_network0";
-+zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanced0";
-+zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
-+zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
-+zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
-+
-+/**
-+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
-+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
-+ * re-solve from scratch.
-+ */
-+RF.rfAntennaPin0.$suggestSolution                                 = "DIO_28";
-+RF.rfAntennaPin1.$suggestSolution                                 = "DIO_29";
-+RF.rfAntennaPin2.$suggestSolution                                 = "DIO_30";
-+UART1.uart.$suggestSolution                                       = "UART0";
-+UART1.uart.txPin.$suggestSolution                                 = "boosterpack.4";
-+UART1.uart.rxPin.$suggestSolution                                 = "boosterpack.3";
-+Button1.gpioPin.gpioPin.$suggestSolution                          = "boosterpack.13";
-+Button2.gpioPin.gpioPin.$suggestSolution                          = "boosterpack.8";
-+LED1.gpioPin.gpioPin.$suggestSolution                             = "boosterpack.39";
-+LED2.gpioPin.gpioPin.$suggestSolution                             = "boosterpack.40";
-+NVSSPI25XDevice1.slaveSelectGpioInstance.gpioPin.$suggestSolution = "boosterpack.38";
-+SPI1.spi.$suggestSolution                                         = "SSI0";
-+SPI1.spi.sclkPin.$suggestSolution                                 = "boosterpack.7";
-+SPI1.spi.misoPin.$suggestSolution                                 = "boosterpack.14";
-+SPI1.spi.mosiPin.$suggestSolution                                 = "boosterpack.15";
-+SPI1.spi.dmaRxChannel.$suggestSolution                            = "DMA_CH3";
-+SPI1.spi.dmaTxChannel.$suggestSolution                            = "DMA_CH4";
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-index e4c8212..8efa00a 100644
+index 2c5073c..e169f74 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-@@ -443,6 +443,7 @@ extern "C"
+@@ -441,6 +441,7 @@ extern "C"
  #define MT_UTIL_SRNG_GENERATE                0x4C
  #endif
  #define MT_UTIL_BIND_ADD_ENTRY               0x4D
@@ -696,25 +346,11 @@ index e4c8212..8efa00a 100644
  
  #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
  #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-index f3d45f6..d709df7 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-@@ -510,8 +510,8 @@ static void MT_SysVersion(void)
-   uint8_t *pBuf = &verStr[sizeof(MTVersionString)];
- #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
-   uint32_t sblSig;
--  uint32_t sblRev;
- #endif
-+  uint32_t sblRev;
- 
-   OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
- 
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-index b7ed73b..661e027 100644
+index 90d6d4a..7fd95b2 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-@@ -151,6 +151,7 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+@@ -128,6 +128,7 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
  #endif //MT_SYS_KEY_MANAGEMENT
  static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
  static void MT_UtilAssocCount(uint8_t *pBuf);
@@ -722,7 +358,7 @@ index b7ed73b..661e027 100644
  static void MT_UtilAssocFindDevice(uint8_t *pBuf);
  static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
  static void MT_UtilBindAddEntry(uint8_t *pBuf);
-@@ -317,6 +318,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -272,6 +273,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilBindAddEntry(pBuf);
      break;
  
@@ -730,10 +366,10 @@ index b7ed73b..661e027 100644
 +    MT_UtilAssocRemove(pBuf);
 +    break;
 +
- #if defined ZCL_KEY_ESTABLISH
-   case MT_UTIL_ZCL_KEY_EST_INIT_EST:
-     MT_UtilzclGeneral_KeyEstablish_InitiateKeyEstablishment(pBuf);
-@@ -1584,6 +1589,33 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+   case MT_UTIL_SYNC_REQ:
+     MT_UtilSync();
+     break;
+@@ -1375,6 +1380,33 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
    MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
  }
  
@@ -768,10 +404,10 @@ index b7ed73b..661e027 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index dbe48fb..f8402cd 100644
+index 63c143b..d3d1775 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-@@ -69,7 +69,7 @@
+@@ -48,7 +48,7 @@
   *****************************************************************************/
  const uint8_t MTVersionString[] = {
                                     2,  /* Transport protocol revision */
@@ -782,17 +418,17 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..fac1a7e
+index 0000000..b587a68
 --- /dev/null
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200925
++#define CODE_REVISION_NUMBER 20201017
 +#endif
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..27496eb
+index 0000000..addb0b7
 --- /dev/null
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,39 @@
@@ -835,23 +471,22 @@ index 0000000..27496eb
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
 +#define NWK_INDIRECT_MSG_TIMEOUT 20
-\ No newline at end of file
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-index d809fb2..abb769e 100644
+index 6e3cb6a..1f90cc6 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-@@ -93,3 +93,5 @@
+@@ -32,3 +32,5 @@
+ -DMT_GP_CB_FUNC
  
- /* BDB interface */
  -DMT_APP_CNF_FUNC
 +
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index a96b3cc..088df18 100644
+index 3a7afa3..e3a2706 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-@@ -406,10 +406,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+@@ -407,10 +407,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
  #if !defined ( APS_NO_GROUPS )
      // Find the first endpoint for this group
      grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
@@ -873,7 +508,7 @@ index a96b3cc..088df18 100644
      if ( epDesc == NULL )
        return;   // Endpoint descriptor not found
  
-@@ -456,7 +464,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+@@ -457,7 +465,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
      // if the Wildcard ProfileID is received the message should not be sent to ZDO endpoint
      if ( (aff->ProfileID == epProfileID) ||
           ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
@@ -885,10 +520,10 @@ index a96b3cc..088df18 100644
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index 0c62cd3..6d55ba4 100644
+index e716024..f8d8404 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-@@ -110,7 +110,7 @@ uint8_t zgSecurePermitJoin = TRUE;
+@@ -104,7 +104,7 @@ uint8_t zgSecurePermitJoin = TRUE;
  // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
  // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
  // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
@@ -897,7 +532,7 @@ index 0c62cd3..6d55ba4 100644
  
  //allowInstallCodes
  uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
-@@ -204,7 +204,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
+@@ -198,7 +198,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
  //
  // NOTICE:  Before enabling Child Aging make sure to review all the related
  // definitions in this file, especially zgNwkParentInformation.
@@ -909,10 +544,10 @@ index 0c62cd3..6d55ba4 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index a893bc3..ca57a6a 100644
+index 17ac2f5..9c0021b 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -422,12 +422,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
+@@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
            ZDApp_ChangeState( DEV_ROUTER );
          }
  
@@ -930,7 +565,7 @@ index a893bc3..ca57a6a 100644
        }
        else
        {
-@@ -905,12 +904,11 @@ void ZDApp_NetworkStartEvt( void )
+@@ -882,12 +881,11 @@ void ZDApp_NetworkStartEvt( void )
          bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
        }
  
@@ -949,7 +584,7 @@ index a893bc3..ca57a6a 100644
      else
      {
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
-index 2991774..1329f45 100755
+index 2b19342..b448752 100755
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
 @@ -70,15 +70,9 @@
@@ -972,356 +607,33 @@ index 2991774..1329f45 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-index f5a095e..ed9b48e 100644
+index 58838a8..19219e0 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-@@ -1,185 +1,156 @@
--/*
-- * Copyright (c) 2018, Texas Instruments Incorporated
-- * All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- *
-- * *  Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions and the following disclaimer.
-- *
-- * *  Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- *
-- * *  Neither the name of Texas Instruments Incorporated nor the names of
-- *    its contributors may be used to endorse or promote products derived
-- *    from this software without specific prior written permission.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
--// @cliArgs --board /ti/boards/CC2652RB_LAUNCHXL
--
--/*
-- *  znp.syscfg
-- */
--
--/* Modules */
--var AESCBC  = scripting.addModule("/ti/drivers/AESCBC");
--var AESCCM  = scripting.addModule("/ti/drivers/AESCCM");
--var AESECB  = scripting.addModule("/ti/drivers/AESECB");
--var device  = scripting.addModule("/ti/devices/CCFG");
--var DMA     = scripting.addModule("/ti/drivers/DMA");
--var ECDH    = scripting.addModule("/ti/drivers/ECDH");
--var ECDSA   = scripting.addModule("/ti/drivers/ECDSA");
--var ECJPAKE = scripting.addModule("/ti/drivers/ECJPAKE");
--var Button  = scripting.addModule("/ti/drivers/apps/Button");
--var LED     = scripting.addModule("/ti/drivers/apps/LED");
--var NVS     = scripting.addModule("/ti/drivers/NVS");
--var Power   = scripting.addModule("/ti/drivers/Power");
--var RF      = scripting.addModule("/ti/drivers/RF");
--var SHA2    = scripting.addModule("/ti/drivers/SHA2");
--var TRNG    = scripting.addModule("/ti/drivers/TRNG");
--var UART    = scripting.addModule("/ti/drivers/UART");
--var zstack  = scripting.addModule("/ti/zstack/zstack");
--
--
--/* Instances */
--var AESCBC1  = AESCBC.addInstance();
--var AESCCM1  = AESCCM.addInstance();
--var AESECB1  = AESECB.addInstance();
--var ECDH1    = ECDH.addInstance();
--var ECDSA1   = ECDSA.addInstance();
--var ECJPAKE1 = ECJPAKE.addInstance();
--var Button1  = Button.addInstance();
--var Button2  = Button.addInstance();
--var LED1     = LED.addInstance();
--var LED2     = LED.addInstance();
--var NVS1     = NVS.addInstance();
--var NVS2     = NVS.addInstance();
--var SHA21    = SHA2.addInstance();
--var TRNG1    = TRNG.addInstance();
--var UART1    = UART.addInstance();
--
--
--/* AESCCM */
--AESCCM1.interruptPriority = "2";
--
--
--/* AESECB */
--AESECB1.interruptPriority = "1";
--
--/* ======== RF Design ======== */
--var rfDesign = scripting.addModule("ti/devices/radioconfig/rfdesign");
--const rfDesignSettings = system.getScript("/ti/common/lprf_rf_design_settings.js").rfDesignSettings;
--for(var setting in rfDesignSettings)
--{
--    rfDesign[setting] = rfDesignSettings[setting];
--}
--
--
--/* CCFG */
--const ccfgSettings = system.getScript("/ti/common/lprf_ccfg_settings.js").ccfgSettings;
--for(var setting in ccfgSettings)
--{
--    device[setting] = ccfgSettings[setting];
--}
--
--
--/* Red LED */
--LED1.$name                      = "CONFIG_LED_RED";
--LED1.$hardware                  = system.deviceData.board.components.LED_RED;
--LED1.gpioPin.$name              = "CONFIG_GPIO_RLED";
--LED1.gpioPin.mode               = "Output";
--LED1.gpioPin.callbackFunction   = "";
--LED1.gpioPin.pinInstance.$name  = "CONFIG_PIN_RLED";
--
--/* Green LED */
--LED2.$name                      = "CONFIG_LED_GREEN";
--LED2.$hardware                  = system.deviceData.board.components.LED_GREEN;
--LED2.gpioPin.$name              = "CONFIG_GPIO_GLED";
--LED2.gpioPin.mode               = "Output";
--LED2.gpioPin.callbackFunction   = "";
--LED2.gpioPin.pinInstance.$name  = "CONFIG_PIN_GLED";
--
--/* Left Button */
--Button1.$name                       = "CONFIG_BTN_LEFT";
--Button1.$hardware                   = system.deviceData.board.components["BTN-1"];
--Button1.gpioPin.$name               = "CONFIG_GPIO_BTN1";
--Button1.gpioPin.pull                = "Pull Up";
--Button1.gpioPin.interruptTrigger    = "Falling Edge";
--Button1.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN1";
--
--/* Left Button */
--Button2.$name                       = "CONFIG_BTN_RIGHT";
--Button2.$hardware                   = system.deviceData.board.components["BTN-2"];
--Button2.gpioPin.$name               = "CONFIG_GPIO_BTN2";
--Button2.gpioPin.pull                = "Pull Up";
--Button2.gpioPin.interruptTrigger    = "Falling Edge";
--Button2.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN2";
--
--
--/* Internal NVS */
--NVS1.$name                    = "CONFIG_NVSINTERNAL";
--NVS1.nvsType                  = "Internal";
+@@ -50,6 +50,7 @@ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 13;
+ CCFG.levelBootloaderBackdoor  = "Active low";
+ CCFG.srcClkLF                 = "Derived from HF XOSC";
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
+ 
+ AESCBC1.$name = "CONFIG_AESCBC_0";
+@@ -68,8 +69,8 @@ ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
 -NVS1.internalFlash.regionBase = 0x52000;
 -NVS1.internalFlash.regionSize = 0x4000;
--
--
--/* External NVS */
--NVS2.$name                          = "CONFIG_NVSEXTERNAL";
--NVS2.nvsType                        = "External";
--NVS2.$hardware                      = system.deviceData.board.components.MX25R8035F;
--NVS2.externalFlash.regionBase       = 0;
--NVS2.externalFlash.regionSize       = 0x256000;
--NVS2.externalFlash.sectorSize       = 0x1000;
--NVS2.externalFlash.verifyBufferSize = 64;
--
--
--/* External NVS SPI instance */
--var NVSSPI25XDevice1 = NVS2.externalFlash.spiFlashDevice;
--var SPI1                   = NVSSPI25XDevice1.sharedSpiInstance;
--SPI1.$name                 = "CONFIG_SPI_0";
--SPI1.sclkPinInstance.$name = "CONFIG_PIN_SPI_SCLK";
--SPI1.misoPinInstance.$name = "CONFIG_PIN_SPI_MISO";
--SPI1.mosiPinInstance.$name = "CONFIG_PIN_SPI_MOSI";
--
--
--/* RF */
--/* if an antenna component exists, assign it to the RF instance */
--if (system.deviceData.board && system.deviceData.board.components.RF) {
--    RF.$hardware = system.deviceData.board.components.RF;
--}
--
--/* Display (UART) */
--UART1.$hardware           = system.deviceData.board.components.XDS110UART;
--UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
--UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
--UART1.$name               = "CONFIG_DISPLAY_UART";
--
--
--/* Z-Stack */
--zstack.deviceType = "znp";
--zstack.deviceTypeReadOnly = true;
--zstack.rf.rfDesign = rfDesignSettings.rfDesign;
--
--/* ======== Do device specific settings ======== */
--const deviceName = system.getScript("/ti/ti154stack/ti154stack_common.js").getLaunchPadFromDevice();
--
--/* Update LF Clock Source for CC2652RB devices */
--if(deviceName.includes("RB"))
--{
--    device.srcClkLF = "Derived from HF XOSC";
--}
--
-+/**
-+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
-+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
-+ * @cliArgs --board "/ti/boards/CC2652RB_LAUNCHXL" --product "simplelink_cc13x2_26x2_sdk@4.20.01.04"
-+ * @versions {"data":"2020052512","timestamp":"2020052512","tool":"1.5.0+1397","templates":"2020052512"}
-+ */
-+
-+/**
-+ * Import the modules used in this configuration.
-+ */
-+const CCFG     = scripting.addModule("/ti/devices/CCFG");
-+const rfdesign = scripting.addModule("/ti/devices/radioconfig/rfdesign");
-+const AESCBC   = scripting.addModule("/ti/drivers/AESCBC");
-+const AESCBC1  = AESCBC.addInstance();
-+const AESCCM   = scripting.addModule("/ti/drivers/AESCCM");
-+const AESCCM1  = AESCCM.addInstance();
-+const AESECB   = scripting.addModule("/ti/drivers/AESECB");
-+const AESECB1  = AESECB.addInstance();
-+const DMA      = scripting.addModule("/ti/drivers/DMA");
-+const ECDH     = scripting.addModule("/ti/drivers/ECDH");
-+const ECDH1    = ECDH.addInstance();
-+const ECDSA    = scripting.addModule("/ti/drivers/ECDSA");
-+const ECDSA1   = ECDSA.addInstance();
-+const ECJPAKE  = scripting.addModule("/ti/drivers/ECJPAKE");
-+const ECJPAKE1 = ECJPAKE.addInstance();
-+const NVS      = scripting.addModule("/ti/drivers/NVS");
-+const NVS1     = NVS.addInstance();
-+const NVS2     = NVS.addInstance();
-+const Power    = scripting.addModule("/ti/drivers/Power");
-+const RF       = scripting.addModule("/ti/drivers/RF");
-+const SHA2     = scripting.addModule("/ti/drivers/SHA2");
-+const SHA21    = SHA2.addInstance();
-+const TRNG     = scripting.addModule("/ti/drivers/TRNG");
-+const TRNG1    = TRNG.addInstance();
-+const UART     = scripting.addModule("/ti/drivers/UART");
-+const UART1    = UART.addInstance();
-+const Button   = scripting.addModule("/ti/drivers/apps/Button");
-+const Button1  = Button.addInstance();
-+const Button2  = Button.addInstance();
-+const LED      = scripting.addModule("/ti/drivers/apps/LED");
-+const LED1     = LED.addInstance();
-+const LED2     = LED.addInstance();
-+const zstack   = scripting.addModule("/ti/zstack/zstack");
-+
-+/**
-+ * Write custom configuration values to the imported modules.
-+ */
-+CCFG.enableBootloader         = true;
-+CCFG.enableBootloaderBackdoor = true;
-+CCFG.dioBootloaderBackdoor    = 13;
-+CCFG.levelBootloaderBackdoor  = "Active low";
-+CCFG.srcClkLF                 = "Derived from HF XOSC";
-+CCFG.enableDCDC               = false;
-+CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
-+
-+AESCBC1.$name = "CONFIG_AESCBC_0";
-+
-+AESCCM1.$name             = "CONFIG_AESCCM_0";
-+AESCCM1.interruptPriority = "2";
-+
-+AESECB1.$name             = "CONFIG_AESECB_0";
-+AESECB1.interruptPriority = "1";
-+
-+ECDH1.$name = "CONFIG_ECDH_0";
-+
-+ECDSA1.$name = "CONFIG_ECDSA_0";
-+
-+ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
-+
-+NVS1.$name                    = "CONFIG_NVSINTERNAL";
-+NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
 +NVS1.internalFlash.regionBase = 0x50000;
 +NVS1.internalFlash.regionSize = 0x6000;
-+
-+NVS2.$name                          = "CONFIG_NVSEXTERNAL";
-+NVS2.nvsType                        = "External";
-+NVS2.$hardware                      = system.deviceData.board.components.MX25R8035F;
-+NVS2.externalFlash.$name            = "ti_drivers_nvs_NVSSPI25X0";
-+NVS2.externalFlash.regionSize       = 0x256000;
-+NVS2.externalFlash.verifyBufferSize = 64;
-+
-+SHA21.$name = "CONFIG_SHA2_0";
-+
-+TRNG1.$name = "CONFIG_TRNG_0";
-+
-+UART1.$hardware           = system.deviceData.board.components.XDS110UART;
-+UART1.$name               = "CONFIG_DISPLAY_UART";
-+UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
-+UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
-+
-+Button1.$name                     = "CONFIG_BTN_LEFT";
-+Button1.$hardware                 = system.deviceData.board.components["BTN-1"];
-+Button1.gpioPin.$name             = "CONFIG_GPIO_BTN1";
-+Button1.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN1";
-+
-+Button2.$name                     = "CONFIG_BTN_RIGHT";
-+Button2.$hardware                 = system.deviceData.board.components["BTN-2"];
-+Button2.gpioPin.$name             = "CONFIG_GPIO_BTN2";
-+Button2.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN2";
-+
-+LED1.$name                     = "CONFIG_LED_RED";
-+LED1.$hardware                 = system.deviceData.board.components.LED_RED;
-+LED1.gpioPin.$name             = "CONFIG_GPIO_RLED";
-+LED1.gpioPin.pinInstance.$name = "CONFIG_PIN_RLED";
-+
-+LED2.$name                     = "CONFIG_LED_GREEN";
-+LED2.$hardware                 = system.deviceData.board.components.LED_GREEN;
-+LED2.gpioPin.$name             = "CONFIG_GPIO_GLED";
-+LED2.gpioPin.pinInstance.$name = "CONFIG_PIN_GLED";
-+
-+const NVSSPI25XDevice                                      = scripting.addModule("/ti/drivers/nvs/NVSSPI25XDevice", {}, false);
-+const NVSSPI25XDevice1                                     = NVSSPI25XDevice.addInstance({}, false);
-+NVSSPI25XDevice1.$name                                     = "CONFIG_NVS_SPI_0";
-+NVS2.externalFlash.spiFlashDevice                          = NVSSPI25XDevice1;
-+NVSSPI25XDevice1.slaveSelectGpioInstance.$name             = "CONFIG_GPIO_0";
-+NVSSPI25XDevice1.slaveSelectGpioInstance.pinInstance.$name = "CONFIG_PIN_0";
-+
-+const SPI                          = scripting.addModule("/ti/drivers/SPI", {}, false);
-+const SPI1                         = SPI.addInstance({}, false);
-+SPI1.$name                         = "CONFIG_SPI_0";
-+NVSSPI25XDevice1.sharedSpiInstance = SPI1;
-+SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
-+SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
-+SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
-+
-+zstack.deviceType                            = "znp";
-+zstack.deviceTypeReadOnly                    = true;
-+zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
-+zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
-+zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
-+zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
-+zstack.network.$name                         = "ti_zstack_network_zstack_network0";
-+zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanced0";
-+zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
-+zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
-+zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
-+
-+/**
-+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
-+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
-+ * re-solve from scratch.
-+ */
-+UART1.uart.$suggestSolution                                       = "UART1";
-+UART1.uart.txPin.$suggestSolution                                 = "boosterpack.4";
-+UART1.uart.rxPin.$suggestSolution                                 = "boosterpack.3";
-+Button1.gpioPin.gpioPin.$suggestSolution                          = "boosterpack.13";
-+Button2.gpioPin.gpioPin.$suggestSolution                          = "boosterpack.12";
-+LED1.gpioPin.gpioPin.$suggestSolution                             = "boosterpack.39";
-+LED2.gpioPin.gpioPin.$suggestSolution                             = "boosterpack.40";
-+NVSSPI25XDevice1.slaveSelectGpioInstance.gpioPin.$suggestSolution = "boosterpack.38";
-+SPI1.spi.$suggestSolution                                         = "SSI0";
-+SPI1.spi.sclkPin.$suggestSolution                                 = "boosterpack.7";
-+SPI1.spi.misoPin.$suggestSolution                                 = "boosterpack.14";
-+SPI1.spi.mosiPin.$suggestSolution                                 = "boosterpack.15";
-+SPI1.spi.dmaRxChannel.$suggestSolution                            = "DMA_CH3";
-+SPI1.spi.dmaTxChannel.$suggestSolution                            = "DMA_CH4";
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-index e4c8212..8efa00a 100644
+index 2c5073c..e169f74 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-@@ -443,6 +443,7 @@ extern "C"
+@@ -441,6 +441,7 @@ extern "C"
  #define MT_UTIL_SRNG_GENERATE                0x4C
  #endif
  #define MT_UTIL_BIND_ADD_ENTRY               0x4D
@@ -1329,25 +641,11 @@ index e4c8212..8efa00a 100644
  
  #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
  #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
-diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-index f3d45f6..d709df7 100644
---- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-+++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_sys.c
-@@ -510,8 +510,8 @@ static void MT_SysVersion(void)
-   uint8_t *pBuf = &verStr[sizeof(MTVersionString)];
- #if (defined MAKE_CRC_SHDW) || (defined FAKE_CRC_SHDW)  //built for bootloader
-   uint32_t sblSig;
--  uint32_t sblRev;
- #endif
-+  uint32_t sblRev;
- 
-   OsalPort_memcpy(verStr, (uint8_t *)MTVersionString, sizeof(MTVersionString));
- 
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-index b7ed73b..661e027 100644
+index 90d6d4a..7fd95b2 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-@@ -151,6 +151,7 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+@@ -128,6 +128,7 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
  #endif //MT_SYS_KEY_MANAGEMENT
  static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
  static void MT_UtilAssocCount(uint8_t *pBuf);
@@ -1355,7 +653,7 @@ index b7ed73b..661e027 100644
  static void MT_UtilAssocFindDevice(uint8_t *pBuf);
  static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
  static void MT_UtilBindAddEntry(uint8_t *pBuf);
-@@ -317,6 +318,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -272,6 +273,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilBindAddEntry(pBuf);
      break;
  
@@ -1363,10 +661,10 @@ index b7ed73b..661e027 100644
 +    MT_UtilAssocRemove(pBuf);
 +    break;
 +
- #if defined ZCL_KEY_ESTABLISH
-   case MT_UTIL_ZCL_KEY_EST_INIT_EST:
-     MT_UtilzclGeneral_KeyEstablish_InitiateKeyEstablishment(pBuf);
-@@ -1584,6 +1589,33 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+   case MT_UTIL_SYNC_REQ:
+     MT_UtilSync();
+     break;
+@@ -1375,6 +1380,33 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
    MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
  }
  
@@ -1401,10 +699,10 @@ index b7ed73b..661e027 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index dbe48fb..f8402cd 100644
+index 63c143b..d3d1775 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-@@ -69,7 +69,7 @@
+@@ -48,7 +48,7 @@
   *****************************************************************************/
  const uint8_t MTVersionString[] = {
                                     2,  /* Transport protocol revision */
@@ -1415,17 +713,17 @@ index dbe48fb..f8402cd 100644
                                     1,  /* Software maintenance release number */
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 new file mode 100644
-index 0000000..fac1a7e
+index 0000000..b587a68
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/revision_info.h
 @@ -0,0 +1,4 @@
 +#ifndef APPLICATION_MT_REVISION_INFO_H_
 +#define APPLICATION_MT_REVISION_INFO_H_
-+#define CODE_REVISION_NUMBER 20200925
++#define CODE_REVISION_NUMBER 20201017
 +#endif
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..27496eb
+index 0000000..addb0b7
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,39 @@
@@ -1468,23 +766,22 @@ index 0000000..27496eb
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
 +#define NWK_INDIRECT_MSG_TIMEOUT 20
-\ No newline at end of file
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-index d809fb2..abb769e 100644
+index 6e3cb6a..1f90cc6 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-@@ -93,3 +93,5 @@
+@@ -32,3 +32,5 @@
+ -DMT_GP_CB_FUNC
  
- /* BDB interface */
  -DMT_APP_CNF_FUNC
 +
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index a96b3cc..088df18 100644
+index 3a7afa3..e3a2706 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-@@ -406,10 +406,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+@@ -407,10 +407,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
  #if !defined ( APS_NO_GROUPS )
      // Find the first endpoint for this group
      grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
@@ -1506,7 +803,7 @@ index a96b3cc..088df18 100644
      if ( epDesc == NULL )
        return;   // Endpoint descriptor not found
  
-@@ -456,7 +464,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+@@ -457,7 +465,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
      // if the Wildcard ProfileID is received the message should not be sent to ZDO endpoint
      if ( (aff->ProfileID == epProfileID) ||
           ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
@@ -1518,10 +815,10 @@ index a96b3cc..088df18 100644
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index 0c62cd3..6d55ba4 100644
+index e716024..f8d8404 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-@@ -110,7 +110,7 @@ uint8_t zgSecurePermitJoin = TRUE;
+@@ -104,7 +104,7 @@ uint8_t zgSecurePermitJoin = TRUE;
  // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
  // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
  // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
@@ -1530,7 +827,7 @@ index 0c62cd3..6d55ba4 100644
  
  //allowInstallCodes
  uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
-@@ -204,7 +204,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
+@@ -198,7 +198,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
  //
  // NOTICE:  Before enabling Child Aging make sure to review all the related
  // definitions in this file, especially zgNwkParentInformation.
@@ -1542,10 +839,10 @@ index 0c62cd3..6d55ba4 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index a893bc3..ca57a6a 100644
+index 17ac2f5..9c0021b 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -422,12 +422,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
+@@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
            ZDApp_ChangeState( DEV_ROUTER );
          }
  
@@ -1563,7 +860,7 @@ index a893bc3..ca57a6a 100644
        }
        else
        {
-@@ -905,12 +904,11 @@ void ZDApp_NetworkStartEvt( void )
+@@ -882,12 +881,11 @@ void ZDApp_NetworkStartEvt( void )
          bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
        }
  
@@ -1582,7 +879,7 @@ index a893bc3..ca57a6a 100644
      else
      {
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
-index 464e39c..1329f45 100755
+index e3fea91..b448752 100755
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
 @@ -70,9 +70,9 @@
@@ -1599,350 +896,28 @@ index 464e39c..1329f45 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-index aec0296..dd5e562 100644
+index a44107b..5d645ba 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-@@ -1,185 +1,155 @@
--/*
-- * Copyright (c) 2018, Texas Instruments Incorporated
-- * All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- *
-- * *  Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions and the following disclaimer.
-- *
-- * *  Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- *
-- * *  Neither the name of Texas Instruments Incorporated nor the names of
-- *    its contributors may be used to endorse or promote products derived
-- *    from this software without specific prior written permission.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
--// @cliArgs --board /ti/boards/CC26X2R1_LAUNCHXL
--
--/*
-- *  znp.syscfg
-- */
--
--/* Modules */
--var AESCBC  = scripting.addModule("/ti/drivers/AESCBC");
--var AESCCM  = scripting.addModule("/ti/drivers/AESCCM");
--var AESECB  = scripting.addModule("/ti/drivers/AESECB");
--var device  = scripting.addModule("/ti/devices/CCFG");
--var DMA     = scripting.addModule("/ti/drivers/DMA");
--var ECDH    = scripting.addModule("/ti/drivers/ECDH");
--var ECDSA   = scripting.addModule("/ti/drivers/ECDSA");
--var ECJPAKE = scripting.addModule("/ti/drivers/ECJPAKE");
--var Button  = scripting.addModule("/ti/drivers/apps/Button");
--var LED     = scripting.addModule("/ti/drivers/apps/LED");
--var NVS     = scripting.addModule("/ti/drivers/NVS");
--var Power   = scripting.addModule("/ti/drivers/Power");
--var RF      = scripting.addModule("/ti/drivers/RF");
--var SHA2    = scripting.addModule("/ti/drivers/SHA2");
--var TRNG    = scripting.addModule("/ti/drivers/TRNG");
--var UART    = scripting.addModule("/ti/drivers/UART");
--var zstack  = scripting.addModule("/ti/zstack/zstack");
--
--
--/* Instances */
--var AESCBC1  = AESCBC.addInstance();
--var AESCCM1  = AESCCM.addInstance();
--var AESECB1  = AESECB.addInstance();
--var ECDH1    = ECDH.addInstance();
--var ECDSA1   = ECDSA.addInstance();
--var ECJPAKE1 = ECJPAKE.addInstance();
--var Button1  = Button.addInstance();
--var Button2  = Button.addInstance();
--var LED1     = LED.addInstance();
--var LED2     = LED.addInstance();
--var NVS1     = NVS.addInstance();
--var NVS2     = NVS.addInstance();
--var SHA21    = SHA2.addInstance();
--var TRNG1    = TRNG.addInstance();
--var UART1    = UART.addInstance();
--
--
--/* AESCCM */
--AESCCM1.interruptPriority = "2";
--
--
--/* AESECB */
--AESECB1.interruptPriority = "1";
--
--/* ======== RF Design ======== */
--var rfDesign = scripting.addModule("ti/devices/radioconfig/rfdesign");
--const rfDesignSettings = system.getScript("/ti/common/lprf_rf_design_settings.js").rfDesignSettings;
--for(var setting in rfDesignSettings)
--{
--    rfDesign[setting] = rfDesignSettings[setting];
--}
--
--
--/* CCFG */
--const ccfgSettings = system.getScript("/ti/common/lprf_ccfg_settings.js").ccfgSettings;
--for(var setting in ccfgSettings)
--{
--    device[setting] = ccfgSettings[setting];
--}
--
--
--/* Red LED */
--LED1.$name                      = "CONFIG_LED_RED";
--LED1.$hardware                  = system.deviceData.board.components.LED_RED;
--LED1.gpioPin.$name              = "CONFIG_GPIO_RLED";
--LED1.gpioPin.mode               = "Output";
--LED1.gpioPin.callbackFunction   = "";
--LED1.gpioPin.pinInstance.$name  = "CONFIG_PIN_RLED";
--
--/* Green LED */
--LED2.$name                      = "CONFIG_LED_GREEN";
--LED2.$hardware                  = system.deviceData.board.components.LED_GREEN;
--LED2.gpioPin.$name              = "CONFIG_GPIO_GLED";
--LED2.gpioPin.mode               = "Output";
--LED2.gpioPin.callbackFunction   = "";
--LED2.gpioPin.pinInstance.$name  = "CONFIG_PIN_GLED";
--
--/* Left Button */
--Button1.$name                       = "CONFIG_BTN_LEFT";
--Button1.$hardware                   = system.deviceData.board.components["BTN-1"];
--Button1.gpioPin.$name               = "CONFIG_GPIO_BTN1";
--Button1.gpioPin.pull                = "Pull Up";
--Button1.gpioPin.interruptTrigger    = "Falling Edge";
--Button1.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN1";
--
--/* Left Button */
--Button2.$name                       = "CONFIG_BTN_RIGHT";
--Button2.$hardware                   = system.deviceData.board.components["BTN-2"];
--Button2.gpioPin.$name               = "CONFIG_GPIO_BTN2";
--Button2.gpioPin.pull                = "Pull Up";
--Button2.gpioPin.interruptTrigger    = "Falling Edge";
--Button2.gpioPin.pinInstance.$name   = "CONFIG_PIN_BTN2";
--
--
--/* Internal NVS */
--NVS1.$name                    = "CONFIG_NVSINTERNAL";
--NVS1.nvsType                  = "Internal";
+@@ -49,6 +49,7 @@ CCFG.enableBootloader         = true;
+ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 13;
+ CCFG.levelBootloaderBackdoor  = "Active low";
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
+ 
+ AESCBC1.$name = "CONFIG_AESCBC_0";
+@@ -67,8 +68,8 @@ ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
 -NVS1.internalFlash.regionBase = 0x52000;
 -NVS1.internalFlash.regionSize = 0x4000;
--
--
--/* External NVS */
--NVS2.$name                          = "CONFIG_NVSEXTERNAL";
--NVS2.nvsType                        = "External";
--NVS2.$hardware                      = system.deviceData.board.components.MX25R8035F;
--NVS2.externalFlash.regionBase       = 0;
--NVS2.externalFlash.regionSize       = 0x256000;
--NVS2.externalFlash.sectorSize       = 0x1000;
--NVS2.externalFlash.verifyBufferSize = 64;
--
--
--/* External NVS SPI instance */
--var NVSSPI25XDevice1 = NVS2.externalFlash.spiFlashDevice;
--var SPI1                   = NVSSPI25XDevice1.sharedSpiInstance;
--SPI1.$name                 = "CONFIG_SPI_0";
--SPI1.sclkPinInstance.$name = "CONFIG_PIN_SPI_SCLK";
--SPI1.misoPinInstance.$name = "CONFIG_PIN_SPI_MISO";
--SPI1.mosiPinInstance.$name = "CONFIG_PIN_SPI_MOSI";
--
--
--/* RF */
--/* if an antenna component exists, assign it to the RF instance */
--if (system.deviceData.board && system.deviceData.board.components.RF) {
--    RF.$hardware = system.deviceData.board.components.RF;
--}
--
--/* Display (UART) */
--UART1.$hardware           = system.deviceData.board.components.XDS110UART;
--UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
--UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
--UART1.$name               = "CONFIG_DISPLAY_UART";
--
--
--/* Z-Stack */
--zstack.deviceType = "znp";
--zstack.deviceTypeReadOnly = true;
--zstack.rf.rfDesign = rfDesignSettings.rfDesign;
--
--/* ======== Do device specific settings ======== */
--const deviceName = system.getScript("/ti/ti154stack/ti154stack_common.js").getLaunchPadFromDevice();
--
--/* Update LF Clock Source for CC2652RB devices */
--if(deviceName.includes("RB"))
--{
--    device.srcClkLF = "Derived from HF XOSC";
--}
--
-+/**
-+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
-+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
-+ * @cliArgs --board "/ti/boards/CC26X2R1_LAUNCHXL" --product "simplelink_cc13x2_26x2_sdk@4.20.01.04"
-+ * @versions {"data":"2020052512","timestamp":"2020052512","tool":"1.5.0+1397","templates":"2020052512"}
-+ */
-+
-+/**
-+ * Import the modules used in this configuration.
-+ */
-+const CCFG     = scripting.addModule("/ti/devices/CCFG");
-+const rfdesign = scripting.addModule("/ti/devices/radioconfig/rfdesign");
-+const AESCBC   = scripting.addModule("/ti/drivers/AESCBC");
-+const AESCBC1  = AESCBC.addInstance();
-+const AESCCM   = scripting.addModule("/ti/drivers/AESCCM");
-+const AESCCM1  = AESCCM.addInstance();
-+const AESECB   = scripting.addModule("/ti/drivers/AESECB");
-+const AESECB1  = AESECB.addInstance();
-+const DMA      = scripting.addModule("/ti/drivers/DMA");
-+const ECDH     = scripting.addModule("/ti/drivers/ECDH");
-+const ECDH1    = ECDH.addInstance();
-+const ECDSA    = scripting.addModule("/ti/drivers/ECDSA");
-+const ECDSA1   = ECDSA.addInstance();
-+const ECJPAKE  = scripting.addModule("/ti/drivers/ECJPAKE");
-+const ECJPAKE1 = ECJPAKE.addInstance();
-+const NVS      = scripting.addModule("/ti/drivers/NVS");
-+const NVS1     = NVS.addInstance();
-+const NVS2     = NVS.addInstance();
-+const Power    = scripting.addModule("/ti/drivers/Power");
-+const RF       = scripting.addModule("/ti/drivers/RF");
-+const SHA2     = scripting.addModule("/ti/drivers/SHA2");
-+const SHA21    = SHA2.addInstance();
-+const TRNG     = scripting.addModule("/ti/drivers/TRNG");
-+const TRNG1    = TRNG.addInstance();
-+const UART     = scripting.addModule("/ti/drivers/UART");
-+const UART1    = UART.addInstance();
-+const Button   = scripting.addModule("/ti/drivers/apps/Button");
-+const Button1  = Button.addInstance();
-+const Button2  = Button.addInstance();
-+const LED      = scripting.addModule("/ti/drivers/apps/LED");
-+const LED1     = LED.addInstance();
-+const LED2     = LED.addInstance();
-+const zstack   = scripting.addModule("/ti/zstack/zstack");
-+
-+/**
-+ * Write custom configuration values to the imported modules.
-+ */
-+CCFG.enableBootloader         = true;
-+CCFG.enableBootloaderBackdoor = true;
-+CCFG.dioBootloaderBackdoor    = 13;
-+CCFG.levelBootloaderBackdoor  = "Active low";
-+CCFG.enableDCDC               = false;
-+CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
-+
-+AESCBC1.$name = "CONFIG_AESCBC_0";
-+
-+AESCCM1.$name             = "CONFIG_AESCCM_0";
-+AESCCM1.interruptPriority = "2";
-+
-+AESECB1.$name             = "CONFIG_AESECB_0";
-+AESECB1.interruptPriority = "1";
-+
-+ECDH1.$name = "CONFIG_ECDH_0";
-+
-+ECDSA1.$name = "CONFIG_ECDSA_0";
-+
-+ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
-+
-+NVS1.$name                    = "CONFIG_NVSINTERNAL";
-+NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
 +NVS1.internalFlash.regionBase = 0x50000;
 +NVS1.internalFlash.regionSize = 0x6000;
-+
-+NVS2.$name                          = "CONFIG_NVSEXTERNAL";
-+NVS2.nvsType                        = "External";
-+NVS2.$hardware                      = system.deviceData.board.components.MX25R8035F;
-+NVS2.externalFlash.$name            = "ti_drivers_nvs_NVSSPI25X0";
-+NVS2.externalFlash.regionSize       = 0x256000;
-+NVS2.externalFlash.verifyBufferSize = 64;
-+
-+SHA21.$name = "CONFIG_SHA2_0";
-+
-+TRNG1.$name = "CONFIG_TRNG_0";
-+
-+UART1.$hardware           = system.deviceData.board.components.XDS110UART;
-+UART1.$name               = "CONFIG_DISPLAY_UART";
-+UART1.txPinInstance.$name = "CONFIG_PIN_UART_TX";
-+UART1.rxPinInstance.$name = "CONFIG_PIN_UART_RX";
-+
-+Button1.$name                     = "CONFIG_BTN_LEFT";
-+Button1.$hardware                 = system.deviceData.board.components["BTN-1"];
-+Button1.gpioPin.$name             = "CONFIG_GPIO_BTN1";
-+Button1.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN1";
-+
-+Button2.$name                     = "CONFIG_BTN_RIGHT";
-+Button2.$hardware                 = system.deviceData.board.components["BTN-2"];
-+Button2.gpioPin.$name             = "CONFIG_GPIO_BTN2";
-+Button2.gpioPin.pinInstance.$name = "CONFIG_PIN_BTN2";
-+
-+LED1.$name                     = "CONFIG_LED_RED";
-+LED1.$hardware                 = system.deviceData.board.components.LED_RED;
-+LED1.gpioPin.$name             = "CONFIG_GPIO_RLED";
-+LED1.gpioPin.pinInstance.$name = "CONFIG_PIN_RLED";
-+
-+LED2.$name                     = "CONFIG_LED_GREEN";
-+LED2.$hardware                 = system.deviceData.board.components.LED_GREEN;
-+LED2.gpioPin.$name             = "CONFIG_GPIO_GLED";
-+LED2.gpioPin.pinInstance.$name = "CONFIG_PIN_GLED";
-+
-+const NVSSPI25XDevice                                      = scripting.addModule("/ti/drivers/nvs/NVSSPI25XDevice", {}, false);
-+const NVSSPI25XDevice1                                     = NVSSPI25XDevice.addInstance({}, false);
-+NVSSPI25XDevice1.$name                                     = "CONFIG_NVS_SPI_0";
-+NVS2.externalFlash.spiFlashDevice                          = NVSSPI25XDevice1;
-+NVSSPI25XDevice1.slaveSelectGpioInstance.$name             = "CONFIG_GPIO_0";
-+NVSSPI25XDevice1.slaveSelectGpioInstance.pinInstance.$name = "CONFIG_PIN_0";
-+
-+const SPI                          = scripting.addModule("/ti/drivers/SPI", {}, false);
-+const SPI1                         = SPI.addInstance({}, false);
-+SPI1.$name                         = "CONFIG_SPI_0";
-+NVSSPI25XDevice1.sharedSpiInstance = SPI1;
-+SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
-+SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
-+SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
-+
-+zstack.deviceType                            = "znp";
-+zstack.deviceTypeReadOnly                    = true;
-+zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
-+zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
-+zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
-+zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
-+zstack.network.$name                         = "ti_zstack_network_zstack_network0";
-+zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanced0";
-+zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
-+zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
-+zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
-+
-+/**
-+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
-+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
-+ * re-solve from scratch.
-+ */
-+UART1.uart.$suggestSolution                                       = "UART1";
-+UART1.uart.txPin.$suggestSolution                                 = "boosterpack.4";
-+UART1.uart.rxPin.$suggestSolution                                 = "boosterpack.3";
-+Button1.gpioPin.gpioPin.$suggestSolution                          = "boosterpack.13";
-+Button2.gpioPin.gpioPin.$suggestSolution                          = "boosterpack.12";
-+LED1.gpioPin.gpioPin.$suggestSolution                             = "boosterpack.39";
-+LED2.gpioPin.gpioPin.$suggestSolution                             = "boosterpack.40";
-+NVSSPI25XDevice1.slaveSelectGpioInstance.gpioPin.$suggestSolution = "boosterpack.38";
-+SPI1.spi.$suggestSolution                                         = "SSI0";
-+SPI1.spi.sclkPin.$suggestSolution                                 = "boosterpack.7";
-+SPI1.spi.misoPin.$suggestSolution                                 = "boosterpack.14";
-+SPI1.spi.mosiPin.$suggestSolution                                 = "boosterpack.15";
-+SPI1.spi.dmaRxChannel.$suggestSolution                            = "DMA_CH3";
-+SPI1.spi.dmaTxChannel.$suggestSolution                            = "DMA_CH4";
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
 -- 
 2.24.3 (Apple Git-128)
 
