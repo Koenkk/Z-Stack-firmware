@@ -1,5 +1,6 @@
-# 20201017
+# 20201026
 - SimpleLink SDK 4.30.00.54 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/4.30.00.54/exports/changelog.html))
+- Expose `AssocAdd` function
 
 # 20200925
 - SimpleLink SDK 4.20.01.04 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/4.20.01.04/exports/changelog.html))
