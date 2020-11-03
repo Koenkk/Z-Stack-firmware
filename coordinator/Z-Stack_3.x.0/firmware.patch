@@ -1,4 +1,4 @@
-From c9e8956a44680858cc7ceaef25621d564b190fa8 Mon Sep 17 00:00:00 2001
+From f021277dbf135d03a98fc2ae58939fc9386df139 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Mon, 31 Aug 2020 16:45:20 +0200
 Subject: [PATCH 1/1] Own changes
@@ -7,34 +7,34 @@ Subject: [PATCH 1/1] Own changes
  .../Application/mt/mt.h                       |  2 +
  .../Application/mt/mt_util.c                  | 64 +++++++++++++++++++
  .../Application/mt/mt_version.c               |  8 ++-
- .../Stack/Config/preinclude.h                 | 37 +++++++++++
+ .../Stack/Config/preinclude.h                 | 46 +++++++++++++
  .../Stack/Config/znp_cnf.opts                 |  2 +
  .../Stack/af/af.c                             | 18 ++++--
  .../Stack/sys/zglobals.c                      |  6 +-
  .../Stack/zdo/zd_app.c                        | 22 +++----
  .../cc13x2lp.cmd                              |  6 +-
- znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  |  5 +-
+ znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  | 30 +++++----
  .../Application/mt/mt.h                       |  2 +
  .../Application/mt/mt_util.c                  | 64 +++++++++++++++++++
  .../Application/mt/mt_version.c               |  8 ++-
- .../Stack/Config/preinclude.h                 | 37 +++++++++++
+ .../Stack/Config/preinclude.h                 | 46 +++++++++++++
  .../Stack/Config/znp_cnf.opts                 |  2 +
  .../Stack/af/af.c                             | 18 ++++--
  .../Stack/sys/zglobals.c                      |  6 +-
  .../Stack/zdo/zd_app.c                        | 22 +++----
  znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd | 12 +---
- znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   |  5 +-
+ znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   | 30 +++++----
  .../Application/mt/mt.h                       |  2 +
  .../Application/mt/mt_util.c                  | 64 +++++++++++++++++++
  .../Application/mt/mt_version.c               |  8 ++-
- .../Stack/Config/preinclude.h                 | 37 +++++++++++
+ .../Stack/Config/preinclude.h                 | 46 +++++++++++++
  .../Stack/Config/znp_cnf.opts                 |  2 +
  .../Stack/af/af.c                             | 18 ++++--
  .../Stack/sys/zglobals.c                      |  6 +-
  .../Stack/zdo/zd_app.c                        | 22 +++----
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  6 +-
- znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |  5 +-
- 30 files changed, 438 insertions(+), 78 deletions(-)
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   | 30 +++++----
+ 30 files changed, 504 insertions(+), 114 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
@@ -142,14 +142,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..fc3895f 100644
+index 63c143b..da6cb80 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20201026
++#define CODE_REVISION_NUMBER 20201103
 +
  /******************************************************************************
   * CONSTANTS
@@ -170,10 +170,10 @@ index 63c143b..fc3895f 100644
  /******************************************************************************
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..18ec8d6
+index 0000000..80f2097
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,46 @@
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
 +
@@ -199,10 +199,10 @@ index 0000000..18ec8d6
 + * Enable MTO routing
 + */
 +#define CONCENTRATOR_ENABLE TRUE
-+#define CONCENTRATOR_DISCOVERY_TIME 120
++#define CONCENTRATOR_DISCOVERY_TIME 100
 +#define CONCENTRATOR_ROUTE_CACHE TRUE
 +#define MAX_RTG_SRC_ENTRIES 200
-+#define SRC_RTG_EXPIRY_TIME 255
++#define SRC_RTG_EXPIRY_TIME 2
 +
 +/**
 + * Scale other device tables appropriately
@@ -211,6 +211,15 @@ index 0000000..18ec8d6
 +#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
++
++// From https://www.ti.com/lit/an/swra650b/swra650b.pdf?ts=1604389355381
++#define LINK_DOWN_TRIGGER 12
++#define NWK_ROUTE_AGE_LIMIT 5
++#define DEF_NWK_RADIUS 15
++#define DEFAULT_ROUTE_REQUEST_RADIUS 8
++#define ZDNWKMGR_MIN_TRANSMISSIONS 0
++#define ROUTE_DISCOVERY_TIME 13
++#define MTO_RREQ_LIMIT_TIME 5000
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 index 6e3cb6a..1f90cc6 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -341,7 +350,7 @@ index 2b5d2ae..c12e296 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
-index 9680070..9ba7dae 100644
+index 9680070..508b792 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -52,6 +52,7 @@ CCFG.enableBootloaderBackdoor = true;
@@ -363,6 +372,38 @@ index 9680070..9ba7dae 100644
  
  NVS2.$name                          = "CONFIG_NVSEXTERNAL";
  NVS2.nvsType                        = "External";
+@@ -128,18 +129,19 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
+ SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
+ SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
+ 
+-zstack.deviceType                            = "znp";
+-zstack.deviceTypeReadOnly                    = true;
+-zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+-zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+-zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
+-zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+-zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+-zstack.network.$name                         = "ti_zstack_network_zstack_network0";
+-zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanced0";
+-zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
+-zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
+-zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
++zstack.deviceType                                      = "znp";
++zstack.deviceTypeReadOnly                              = true;
++zstack.touchlink.$name                                 = "ti_zstack_touchlink_zstack_touchlink0";
++zstack.pm.$name                                        = "ti_zstack_pm_zstack_pm0";
++zstack.rf.$name                                        = "ti_zstack_rf_zstack_rf0";
++zstack.rf.radioConfig.$name                            = "ti_devices_radioconfig_settings_ieee_15_40";
++zstack.rf.radioConfig.codeExportConfig.$name           = "ti_devices_radioconfig_code_export_param0";
++zstack.network.$name                                   = "ti_zstack_network_zstack_network0";
++zstack.advanced.$name                                  = "ti_zstack_advanced_zstack_advanced0";
++zstack.advanced.routing.$name                          = "ti_zstack_advanced_zstack_routing0";
++zstack.advanced.packetSending.$name                    = "ti_zstack_advanced_zstack_packet_sending0";
++zstack.advanced.packetSending.apsAckWaitDurationPolled = 1000;
++zstack.advanced.tableSize.$name                        = "ti_zstack_advanced_zstack_table_size0";
+ 
+ /**
+  * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 index 2c5073c..8732c65 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
@@ -466,14 +507,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..fc3895f 100644
+index 63c143b..da6cb80 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20201026
++#define CODE_REVISION_NUMBER 20201103
 +
  /******************************************************************************
   * CONSTANTS
@@ -494,10 +535,10 @@ index 63c143b..fc3895f 100644
  /******************************************************************************
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..18ec8d6
+index 0000000..80f2097
 --- /dev/null
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,46 @@
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
 +
@@ -523,10 +564,10 @@ index 0000000..18ec8d6
 + * Enable MTO routing
 + */
 +#define CONCENTRATOR_ENABLE TRUE
-+#define CONCENTRATOR_DISCOVERY_TIME 120
++#define CONCENTRATOR_DISCOVERY_TIME 100
 +#define CONCENTRATOR_ROUTE_CACHE TRUE
 +#define MAX_RTG_SRC_ENTRIES 200
-+#define SRC_RTG_EXPIRY_TIME 255
++#define SRC_RTG_EXPIRY_TIME 2
 +
 +/**
 + * Scale other device tables appropriately
@@ -535,6 +576,15 @@ index 0000000..18ec8d6
 +#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
++
++// From https://www.ti.com/lit/an/swra650b/swra650b.pdf?ts=1604389355381
++#define LINK_DOWN_TRIGGER 12
++#define NWK_ROUTE_AGE_LIMIT 5
++#define DEF_NWK_RADIUS 15
++#define DEFAULT_ROUTE_REQUEST_RADIUS 8
++#define ZDNWKMGR_MIN_TRANSMISSIONS 0
++#define ROUTE_DISCOVERY_TIME 13
++#define MTO_RREQ_LIMIT_TIME 5000
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 index 6e3cb6a..1f90cc6 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -671,7 +721,7 @@ index 2b19342..b448752 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-index 58838a8..19219e0 100644
+index 58838a8..54012e0 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -50,6 +50,7 @@ CCFG.enableBootloaderBackdoor = true;
@@ -693,6 +743,38 @@ index 58838a8..19219e0 100644
  
  NVS2.$name                          = "CONFIG_NVSEXTERNAL";
  NVS2.nvsType                        = "External";
+@@ -122,18 +123,19 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
+ SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
+ SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
+ 
+-zstack.deviceType                            = "znp";
+-zstack.deviceTypeReadOnly                    = true;
+-zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+-zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+-zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
+-zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+-zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+-zstack.network.$name                         = "ti_zstack_network_zstack_network0";
+-zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanced0";
+-zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
+-zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
+-zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
++zstack.deviceType                                      = "znp";
++zstack.deviceTypeReadOnly                              = true;
++zstack.touchlink.$name                                 = "ti_zstack_touchlink_zstack_touchlink0";
++zstack.pm.$name                                        = "ti_zstack_pm_zstack_pm0";
++zstack.rf.$name                                        = "ti_zstack_rf_zstack_rf0";
++zstack.rf.radioConfig.$name                            = "ti_devices_radioconfig_settings_ieee_15_40";
++zstack.rf.radioConfig.codeExportConfig.$name           = "ti_devices_radioconfig_code_export_param0";
++zstack.network.$name                                   = "ti_zstack_network_zstack_network0";
++zstack.advanced.$name                                  = "ti_zstack_advanced_zstack_advanced0";
++zstack.advanced.routing.$name                          = "ti_zstack_advanced_zstack_routing0";
++zstack.advanced.packetSending.$name                    = "ti_zstack_advanced_zstack_packet_sending0";
++zstack.advanced.packetSending.apsAckWaitDurationPolled = 1000;
++zstack.advanced.tableSize.$name                        = "ti_zstack_advanced_zstack_table_size0";
+ 
+ /**
+  * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 index 2c5073c..8732c65 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
@@ -796,14 +878,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..fc3895f 100644
+index 63c143b..da6cb80 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20201026
++#define CODE_REVISION_NUMBER 20201103
 +
  /******************************************************************************
   * CONSTANTS
@@ -824,10 +906,10 @@ index 63c143b..fc3895f 100644
  /******************************************************************************
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..18ec8d6
+index 0000000..80f2097
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,46 @@
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
 +
@@ -853,10 +935,10 @@ index 0000000..18ec8d6
 + * Enable MTO routing
 + */
 +#define CONCENTRATOR_ENABLE TRUE
-+#define CONCENTRATOR_DISCOVERY_TIME 120
++#define CONCENTRATOR_DISCOVERY_TIME 100
 +#define CONCENTRATOR_ROUTE_CACHE TRUE
 +#define MAX_RTG_SRC_ENTRIES 200
-+#define SRC_RTG_EXPIRY_TIME 255
++#define SRC_RTG_EXPIRY_TIME 2
 +
 +/**
 + * Scale other device tables appropriately
@@ -865,6 +947,15 @@ index 0000000..18ec8d6
 +#define ZDSECMGR_TC_DEVICE_MAX 200
 +#define MAX_NEIGHBOR_ENTRIES 20
 +#define MAX_RTG_ENTRIES 100
++
++// From https://www.ti.com/lit/an/swra650b/swra650b.pdf?ts=1604389355381
++#define LINK_DOWN_TRIGGER 12
++#define NWK_ROUTE_AGE_LIMIT 5
++#define DEF_NWK_RADIUS 15
++#define DEFAULT_ROUTE_REQUEST_RADIUS 8
++#define ZDNWKMGR_MIN_TRANSMISSIONS 0
++#define ROUTE_DISCOVERY_TIME 13
++#define MTO_RREQ_LIMIT_TIME 5000
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 index 6e3cb6a..1f90cc6 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -995,7 +1086,7 @@ index e3fea91..b448752 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-index a44107b..5d645ba 100644
+index a44107b..722142c 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -49,6 +49,7 @@ CCFG.enableBootloader         = true;
@@ -1017,6 +1108,38 @@ index a44107b..5d645ba 100644
  
  NVS2.$name                          = "CONFIG_NVSEXTERNAL";
  NVS2.nvsType                        = "External";
+@@ -121,18 +122,19 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
+ SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
+ SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
+ 
+-zstack.deviceType                            = "znp";
+-zstack.deviceTypeReadOnly                    = true;
+-zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+-zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+-zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
+-zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+-zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+-zstack.network.$name                         = "ti_zstack_network_zstack_network0";
+-zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanced0";
+-zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
+-zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
+-zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
++zstack.deviceType                                      = "znp";
++zstack.deviceTypeReadOnly                              = true;
++zstack.touchlink.$name                                 = "ti_zstack_touchlink_zstack_touchlink0";
++zstack.pm.$name                                        = "ti_zstack_pm_zstack_pm0";
++zstack.rf.$name                                        = "ti_zstack_rf_zstack_rf0";
++zstack.rf.radioConfig.$name                            = "ti_devices_radioconfig_settings_ieee_15_40";
++zstack.rf.radioConfig.codeExportConfig.$name           = "ti_devices_radioconfig_code_export_param0";
++zstack.network.$name                                   = "ti_zstack_network_zstack_network0";
++zstack.advanced.$name                                  = "ti_zstack_advanced_zstack_advanced0";
++zstack.advanced.routing.$name                          = "ti_zstack_advanced_zstack_routing0";
++zstack.advanced.packetSending.$name                    = "ti_zstack_advanced_zstack_packet_sending0";
++zstack.advanced.packetSending.apsAckWaitDurationPolled = 1000;
++zstack.advanced.tableSize.$name                        = "ti_zstack_advanced_zstack_table_size0";
+ 
+ /**
+  * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
 -- 
 2.24.3 (Apple Git-128)
 
