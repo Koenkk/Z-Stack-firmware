@@ -12,3 +12,4 @@
 1. Open Git Bash, go to your CCS root and apply the patch using `git apply firmware.patch --ignore-space-change`.
 1. Build both projects; right click -> *Build project*.
 1. Once finished, the firmware can be found under `znp_[CC26X2R1/CC1352P_2/CC2652RB]_LAUNCHXL_tirtos_ccs/default/znp_[CC26X2R1/CC1352P_2]_LAUNCHXL_tirtos_ccs.hex`
+    - Note: by default the **launchpad** variant of the CC1352P2_CC2652P (= `znp_CC1352P_2_LAUNCHXL_tirtos_ccs.hex`) is build. To build the **other** variant comment `#define LAUNCHPAD_CONFIG 1` in `preinclude.h`.

@@ -1,44 +1,463 @@
-From f021277dbf135d03a98fc2ae58939fc9386df139 Mon Sep 17 00:00:00 2001
+From 5be34b6a8651e24211b623a040c6563fed00d3b6 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Mon, 31 Aug 2020 16:45:20 +0200
 Subject: [PATCH 1/1] Own changes
 
 ---
- .../Application/mt/mt.h                       |  2 +
- .../Application/mt/mt_util.c                  | 64 +++++++++++++++++++
- .../Application/mt/mt_version.c               |  8 ++-
- .../Stack/Config/preinclude.h                 | 46 +++++++++++++
- .../Stack/Config/znp_cnf.opts                 |  2 +
- .../Stack/af/af.c                             | 18 ++++--
- .../Stack/sys/zglobals.c                      |  6 +-
- .../Stack/zdo/zd_app.c                        | 22 +++----
- .../cc13x2lp.cmd                              |  6 +-
- znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  | 30 +++++----
- .../Application/mt/mt.h                       |  2 +
- .../Application/mt/mt_util.c                  | 64 +++++++++++++++++++
- .../Application/mt/mt_version.c               |  8 ++-
- .../Stack/Config/preinclude.h                 | 46 +++++++++++++
- .../Stack/Config/znp_cnf.opts                 |  2 +
- .../Stack/af/af.c                             | 18 ++++--
- .../Stack/sys/zglobals.c                      |  6 +-
- .../Stack/zdo/zd_app.c                        | 22 +++----
- znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd | 12 +---
- znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   | 30 +++++----
- .../Application/mt/mt.h                       |  2 +
- .../Application/mt/mt_util.c                  | 64 +++++++++++++++++++
- .../Application/mt/mt_version.c               |  8 ++-
- .../Stack/Config/preinclude.h                 | 46 +++++++++++++
- .../Stack/Config/znp_cnf.opts                 |  2 +
- .../Stack/af/af.c                             | 18 ++++--
- .../Stack/sys/zglobals.c                      |  6 +-
- .../Stack/zdo/zd_app.c                        | 22 +++----
- znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |  6 +-
- znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   | 30 +++++----
- 30 files changed, 504 insertions(+), 114 deletions(-)
+ znp_CC1352P_2_LAUNCHXL_tirtos_ccs/.cproject   |  330 +++++-
+ .../Application/mt/mt.h                       |    2 +
+ .../Application/mt/mt_util.c                  |   64 +
+ .../Application/mt/mt_version.c               |    8 +-
+ .../Stack/Config/preinclude.h                 |   59 +
+ .../Stack/Config/znp_cnf.opts                 |    2 +
+ .../Stack/af/af.c                             |   18 +-
+ .../Stack/sys/zglobals.c                      |    6 +-
+ .../Stack/zdo/zd_app.c                        |   22 +-
+ .../cc13x2lp.cmd                              |    6 +-
+ .../syscfg/ti_devices_config.c                |  103 ++
+ .../syscfg/ti_drivers_config.c                | 1050 +++++++++++++++++
+ .../syscfg/ti_drivers_config.h                |  283 +++++
+ .../syscfg/ti_radio_config.c                  |  339 ++++++
+ .../syscfg/ti_radio_config.h                  |   77 ++
+ .../syscfg/ti_utils_build_linker.cmd.genlibs  |   35 +
+ .../syscfg/ti_zstack_config.h                 |  215 ++++
+ znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  |   30 +-
+ .../Application/mt/mt.h                       |    2 +
+ .../Application/mt/mt_util.c                  |   64 +
+ .../Application/mt/mt_version.c               |    8 +-
+ .../Stack/Config/preinclude.h                 |   46 +
+ .../Stack/Config/znp_cnf.opts                 |    2 +
+ .../Stack/af/af.c                             |   18 +-
+ .../Stack/sys/zglobals.c                      |    6 +-
+ .../Stack/zdo/zd_app.c                        |   22 +-
+ znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |   12 +-
+ znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   |   30 +-
+ .../Application/mt/mt.h                       |    2 +
+ .../Application/mt/mt_util.c                  |   64 +
+ .../Application/mt/mt_version.c               |    8 +-
+ .../Stack/Config/preinclude.h                 |   46 +
+ .../Stack/Config/znp_cnf.opts                 |    2 +
+ .../Stack/af/af.c                             |   18 +-
+ .../Stack/sys/zglobals.c                      |    6 +-
+ .../Stack/zdo/zd_app.c                        |   22 +-
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |    6 +-
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |   30 +-
+ 38 files changed, 2902 insertions(+), 161 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
+ create mode 100755 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.h
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
  create mode 100644 znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/.cproject b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/.cproject
+index f031f65..dcb8fd9 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/.cproject
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/.cproject
+@@ -30,18 +30,18 @@
+ 								<listOptionValue builtIn="false" value="PRODUCTS=com.ti.SIMPLELINK_CC13X2_26X2_SDK:4.30.0.54;"/>
+ 								<listOptionValue builtIn="false" value="PRODUCT_MACRO_IMPORTS={&quot;com.ti.SIMPLELINK_CC13X2_26X2_SDK&quot;:[&quot;${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INCLUDE_PATH}&quot;,&quot;${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_LIBRARY_PATH}&quot;,&quot;${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_LIBRARIES}&quot;,&quot;${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_SYMBOLS}&quot;,&quot;${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_SYSCONFIG_MANIFEST}&quot;]}"/>
+ 							</option>
+-							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION.360529634" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION" value="20.2.1.LTS" valueType="string"/>
++							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION.360529634" name="Compiler version" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION" value="20.2.1.LTS" valueType="string"/>
+ 							<targetPlatform id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.targetPlatformDebug.1903153374" name="Platform" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.targetPlatformDebug"/>
+-							<builder buildPath="${BuildDirectory}" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.builderDebug.225707644" name="GNU Make.default" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.builderDebug"/>
++							<builder buildPath="${BuildDirectory}" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.builderDebug.225707644" keepEnvironmentInBuildfile="false" name="GNU Make" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.builderDebug"/>
+ 							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.compilerDebug.1131069278" name="ARM Compiler" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.compilerDebug">
+-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WARNING.1068994583" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WARNING" useByScannerDiscovery="false" valueType="stringList">
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WARNING.1068994583" name="Treat diagnostic &lt;id&gt; as warning (--diag_warning, -pdsw)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WARNING" useByScannerDiscovery="false" valueType="stringList">
+ 									<listOptionValue builtIn="false" value="225"/>
+ 									<listOptionValue builtIn="false" value="255"/>
+ 								</option>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DISPLAY_ERROR_NUMBER.584760544" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DISPLAY_ERROR_NUMBER" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP.79097909" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP.off" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.LITTLE_ENDIAN.858215818" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.LITTLE_ENDIAN" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.INCLUDE_PATH.1700406433" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.INCLUDE_PATH" valueType="includePath">
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DISPLAY_ERROR_NUMBER.584760544" name="Emit diagnostic identifier numbers (--display_error_number, -pden)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DISPLAY_ERROR_NUMBER" useByScannerDiscovery="false" value="true" valueType="boolean"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP.79097909" name="Wrap diagnostic messages (--diag_wrap)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP.off" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.LITTLE_ENDIAN.858215818" name="Little endian code [See 'General' page to edit] (--little_endian, -me)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.LITTLE_ENDIAN" useByScannerDiscovery="false" value="true" valueType="boolean"/>
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.INCLUDE_PATH.1700406433" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.INCLUDE_PATH" valueType="includePath">
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INCLUDE_PATH}"/>
+ 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
+ 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/${ConfigName}"/>
+@@ -120,8 +120,9 @@
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/common/boards"/>
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source"/>
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/posix/ccs"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/syscfg"/>
+ 								</option>
+-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEFINE.360261072" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEFINE" valueType="definedSymbols">
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEFINE.360261072" name="Pre-define NAME (--define, -D)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEFINE" valueType="definedSymbols">
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_SYMBOLS}"/>
+ 									<listOptionValue builtIn="false" value="NPI_USE_UART"/>
+ 									<listOptionValue builtIn="false" value="NPI"/>
+@@ -151,80 +152,309 @@
+ 									<listOptionValue builtIn="false" value="CONFIG_PA_TYPE=APIMAC_HIGH_PA"/>
+ 									<listOptionValue builtIn="false" value="CC1352P_2"/>
+ 								</option>
+-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CMD_FILE.467690538" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CMD_FILE" useByScannerDiscovery="false" valueType="stringList">
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CMD_FILE.467690538" name="Read options from specified file (--cmd_file, -@)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CMD_FILE" useByScannerDiscovery="false" valueType="stringList">
+ 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/Config/znp_cnf.opts"/>
+ 								</option>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SILICON_VERSION.1806820265" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SILICON_VERSION" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SILICON_VERSION.7M4" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CODE_STATE.521534873" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CODE_STATE" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CODE_STATE.16" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FLOAT_SUPPORT.894800803" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FLOAT_SUPPORT" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FLOAT_SUPPORT.FPv4SPD16" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_LEVEL.1088897013" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_LEVEL" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_LEVEL.4" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_FOR_SPEED.1099773059" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_FOR_SPEED" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_FOR_SPEED.0" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ABI.1224350004" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ABI" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ABI.eabi" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.C_DIALECT.154281776" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.C_DIALECT" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.C_DIALECT.C99" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.GEN_FUNC_SUBSECTIONS.1144350359" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.GEN_FUNC_SUBSECTIONS" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.GEN_FUNC_SUBSECTIONS.on" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FP_REASSOC.224214363" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FP_REASSOC" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FP_REASSOC.off" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.UNALIGNED_ACCESS.698278968" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.UNALIGNED_ACCESS" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.UNALIGNED_ACCESS.on" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.EMBEDDED_CONSTANTS.66904966" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.EMBEDDED_CONSTANTS" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.EMBEDDED_CONSTANTS.on" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.WCHAR_T.435091536" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.WCHAR_T" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.WCHAR_T.16" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ENUM_TYPE.54671639" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ENUM_TYPE" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ENUM_TYPE.packed" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.COMMON.1007704286" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.COMMON" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.COMMON.on" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SAT_REASSOC.862785994" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SAT_REASSOC" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SAT_REASSOC.off" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.PLAIN_CHAR.482091154" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.PLAIN_CHAR" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.PLAIN_CHAR.unsigned" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEBUGGING_MODEL.539177393" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEBUGGING_MODEL" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SILICON_VERSION.1806820265" name="Target processor version (--silicon_version, -mv)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SILICON_VERSION" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SILICON_VERSION.7M4" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CODE_STATE.521534873" name="Designate code state, 16-bit (thumb) or 32-bit (--code_state)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CODE_STATE" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CODE_STATE.16" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FLOAT_SUPPORT.894800803" name="Specify floating point support (--float_support)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FLOAT_SUPPORT" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FLOAT_SUPPORT.FPv4SPD16" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_LEVEL.1088897013" name="Optimization level (--opt_level, -O)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_LEVEL" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_LEVEL.4" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_FOR_SPEED.1099773059" name="Speed vs. size trade-offs (--opt_for_speed, -mf)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_FOR_SPEED" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_FOR_SPEED.0" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ABI.1224350004" name="Application binary interface. (--abi)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ABI" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ABI.eabi" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.C_DIALECT.154281776" name="C Dialect" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.C_DIALECT" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.C_DIALECT.C99" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.GEN_FUNC_SUBSECTIONS.1144350359" name="Place each function in a separate subsection (--gen_func_subsections, -ms)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.GEN_FUNC_SUBSECTIONS" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.GEN_FUNC_SUBSECTIONS.on" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FP_REASSOC.224214363" name="Allow reassociation of FP arithmetic (--fp_reassoc)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FP_REASSOC" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FP_REASSOC.off" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.UNALIGNED_ACCESS.698278968" name="Generate unaligned loads and stores (--unaligned_access)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.UNALIGNED_ACCESS" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.UNALIGNED_ACCESS.on" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.EMBEDDED_CONSTANTS.66904966" name="Specify whether constants can be embedded in code sections (--embedded_constants)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.EMBEDDED_CONSTANTS" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.EMBEDDED_CONSTANTS.on" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.WCHAR_T.435091536" name="Set the size (in bits) of the C/C++ type wchar_t (16,32) (--wchar_t)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.WCHAR_T" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.WCHAR_T.16" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ENUM_TYPE.54671639" name="Designate enum type (--enum_type)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ENUM_TYPE" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ENUM_TYPE.packed" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.COMMON.1007704286" name="Use ELF common symbols (--common)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.COMMON" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.COMMON.on" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SAT_REASSOC.862785994" name="Allow reassociation of sat arithmetic (--sat_reassoc)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SAT_REASSOC" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SAT_REASSOC.off" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.PLAIN_CHAR.482091154" name="Specify how to treat plain chars (signed/unsigned) (--plain_char)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.PLAIN_CHAR" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.PLAIN_CHAR.unsigned" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEBUGGING_MODEL.539177393" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEBUGGING_MODEL" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
+ 								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__C_SRCS.846821586" name="C Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__C_SRCS"/>
+ 								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__CPP_SRCS.1502085591" name="C++ Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__CPP_SRCS"/>
+ 								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__ASM_SRCS.1873146351" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__ASM_SRCS"/>
+ 								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__ASM2_SRCS.694285703" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__ASM2_SRCS"/>
+ 							</tool>
+ 							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.linkerDebug.894620385" name="ARM Linker" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.linkerDebug">
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.OUTPUT_FILE.497398653" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.OUTPUT_FILE" useByScannerDiscovery="false" value="${ProjName}.out" valueType="string"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.MAP_FILE.669249278" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.MAP_FILE" useByScannerDiscovery="false" value="${ProjName}.map" valueType="string"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.XML_LINK_INFO.1081478720" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.XML_LINK_INFO" useByScannerDiscovery="false" value="${ProjName}_linkInfo.xml" valueType="string"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DISPLAY_ERROR_NUMBER.245021422" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DISPLAY_ERROR_NUMBER" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DIAG_WRAP.803336893" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DIAG_WRAP" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DIAG_WRAP.off" valueType="enumerated"/>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.REREAD_LIBS.1428981995" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.REREAD_LIBS" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.SEARCH_PATH.997563103" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.SEARCH_PATH" valueType="libPaths">
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.OUTPUT_FILE.497398653" name="Specify output file name (--output_file, -o)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.OUTPUT_FILE" useByScannerDiscovery="false" value="${ProjName}.out" valueType="string"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.MAP_FILE.669249278" name="Link information (map) listed into &lt;file&gt; (--map_file, -m)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.MAP_FILE" useByScannerDiscovery="false" value="${ProjName}.map" valueType="string"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.XML_LINK_INFO.1081478720" name="Detailed link information data-base into &lt;file&gt; (--xml_link_info, -xml_link_info)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.XML_LINK_INFO" useByScannerDiscovery="false" value="${ProjName}_linkInfo.xml" valueType="string"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DISPLAY_ERROR_NUMBER.245021422" name="Emit diagnostic identifier numbers (--display_error_number)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DISPLAY_ERROR_NUMBER" useByScannerDiscovery="false" value="true" valueType="boolean"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DIAG_WRAP.803336893" name="Wrap diagnostic messages (--diag_wrap)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DIAG_WRAP" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DIAG_WRAP.off" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.REREAD_LIBS.1428981995" name="Reread libraries; resolve backward references (--reread_libs, -x)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.REREAD_LIBS" useByScannerDiscovery="false" value="true" valueType="boolean"/>
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.SEARCH_PATH.997563103" name="Add &lt;dir&gt; to library search path (--search_path, -i)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.SEARCH_PATH" valueType="libPaths">
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_LIBRARY_PATH}"/>
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source"/>
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/kernel/tirtos/packages"/>
+ 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/lib"/>
+ 								</option>
+-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.LIBRARY.566206333" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.LIBRARY" useByScannerDiscovery="false" valueType="libs">
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.LIBRARY.566206333" name="Include library file or command file as input (--library, -l)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.LIBRARY" useByScannerDiscovery="false" valueType="libs">
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_LIBRARIES}"/>
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/library/tirtos/ccs/timac_rom_PG2_0_rom_api_linker.cmd"/>
+-									<listOptionValue builtIn="false" value="${PROJECT_BUILD_DIR}/syscfg/ti_utils_build_linker.cmd.genlibs"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/syscfg/ti_utils_build_linker.cmd.genlibs"/>
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/devices/cc13x2_cc26x2/driverlib/bin/ccs/driverlib.lib"/>
+ 									<listOptionValue builtIn="false" value="libc.a"/>
+ 								</option>
+-								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.UNUSED_SECTION_ELIMINATION.413703330" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.UNUSED_SECTION_ELIMINATION" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.UNUSED_SECTION_ELIMINATION.on" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.UNUSED_SECTION_ELIMINATION.413703330" name="Eliminate sections not needed in the executable (--unused_section_elimination)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.UNUSED_SECTION_ELIMINATION" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.UNUSED_SECTION_ELIMINATION.on" valueType="enumerated"/>
+ 								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__CMD_SRCS.282533898" name="Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__CMD_SRCS"/>
+ 								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__CMD2_SRCS.443573959" name="Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__CMD2_SRCS"/>
+ 								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__GEN_CMDS.1693300339" name="Generated Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__GEN_CMDS"/>
+ 							</tool>
+ 							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.hex.396406094" name="ARM Hex Utility" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.hex"/>
+ 							<tool id="com.ti.ccstudio.buildDefinitions.sysConfig.859180558" name="SysConfig" superClass="com.ti.ccstudio.buildDefinitions.sysConfig">
+-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.sysConfig.PRODUCTS.1600418421" superClass="com.ti.ccstudio.buildDefinitions.sysConfig.PRODUCTS" useByScannerDiscovery="false" valueType="stringList">
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.sysConfig.PRODUCTS.1600418421" name="Root system config meta data file in a product or SDK (-s, --product)" superClass="com.ti.ccstudio.buildDefinitions.sysConfig.PRODUCTS" useByScannerDiscovery="false" valueType="stringList">
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_SYSCONFIG_MANIFEST}"/>
+ 								</option>
+-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.sysConfig.OTHER_FLAGS.1687694721" superClass="com.ti.ccstudio.buildDefinitions.sysConfig.OTHER_FLAGS" useByScannerDiscovery="false" valueType="stringList">
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.sysConfig.OTHER_FLAGS.1687694721" name="Other flags" superClass="com.ti.ccstudio.buildDefinitions.sysConfig.OTHER_FLAGS" useByScannerDiscovery="false" valueType="stringList">
+ 									<listOptionValue builtIn="false" value="--compiler ccs"/>
+ 								</option>
+ 							</tool>
+ 							<tool id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.1363804858" name="XDCtools" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool">
+-								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.CODEGEN_TOOL_DIR.1278115323" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.CODEGEN_TOOL_DIR" value="${CG_TOOL_ROOT}" valueType="string"/>
+-								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.TARGET.1249934239" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.TARGET" value="ti.targets.arm.elf.M4F" valueType="string"/>
+-								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM.143635382" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM" value="ti.platforms.simplelink:CC1352P1F3" valueType="string"/>
+-								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM_RAW.730864500" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM_RAW" value="ti.platforms.simplelink:CC1352P1F3" valueType="string"/>
+-								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.BUILD_PROFILE.986930419" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.BUILD_PROFILE" value="release" valueType="string"/>
+-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.XDC_PATH.228668205" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.XDC_PATH" valueType="stringList">
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.CODEGEN_TOOL_DIR.1278115323" name="Compiler tools directory (-c)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.CODEGEN_TOOL_DIR" value="${CG_TOOL_ROOT}" valueType="string"/>
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.TARGET.1249934239" name="Target (-t)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.TARGET" value="ti.targets.arm.elf.M4F" valueType="string"/>
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM.143635382" name="Platform (-p)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM" value="ti.platforms.simplelink:CC1352P1F3" valueType="string"/>
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM_RAW.730864500" name="Platform (-p)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM_RAW" value="ti.platforms.simplelink:CC1352P1F3" valueType="string"/>
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.BUILD_PROFILE.986930419" name="Build-profile (-r)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.BUILD_PROFILE" value="release" valueType="string"/>
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.XDC_PATH.228668205" name="XDCpath package repositories (--xdcpath)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.XDC_PATH" valueType="stringList">
+ 									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR_REPOS}"/>
+ 								</option>
+-								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.COMPILE_OPTIONS.144128957" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.COMPILE_OPTIONS" useByScannerDiscovery="false" value="&quot;${COMPILER_FLAGS} &quot;" valueType="string"/>
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.COMPILE_OPTIONS.144128957" name="Additional compiler options (--compileOptions)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.COMPILE_OPTIONS" useByScannerDiscovery="false" value="&quot;${COMPILER_FLAGS} &quot;" valueType="string"/>
+ 							</tool>
+ 						</toolChain>
+ 					</folderInfo>
+ 					<sourceEntries>
+-						<entry excluding="README.html" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
++						<entry excluding="znp.syscfg|src|README.html" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
++					</sourceEntries>
++				</configuration>
++			</storageModule>
++			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
++		</cconfiguration>
++		<cconfiguration id="com.ti.ccstudio.buildDefinitions.TMS470.Default.529489427">
++			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.ti.ccstudio.buildDefinitions.TMS470.Default.529489427" moduleId="org.eclipse.cdt.core.settings" name="default">
++				<externalSettings/>
++				<extensions>
++					<extension id="com.ti.ccstudio.binaryparser.CoffParser" point="org.eclipse.cdt.core.BinaryParser"/>
++					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
++					<extension id="com.ti.ccstudio.errorparser.CoffErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
++					<extension id="org.eclipse.rtsc.xdctools.parsers.ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
++					<extension id="com.ti.ccstudio.errorparser.AsmErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
++					<extension id="com.ti.ccstudio.errorparser.SysConfigErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
++					<extension id="com.ti.ccstudio.errorparser.LinkErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
++				</extensions>
++			</storageModule>
++			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
++				<configuration artifactExtension="out" artifactName="${ProjName}" buildProperties="" cleanCommand="${CG_CLEAN_CMD}" description="" errorParsers="org.eclipse.rtsc.xdctools.parsers.ErrorParser;org.eclipse.cdt.core.GmakeErrorParser;com.ti.ccstudio.errorparser.CoffErrorParser;com.ti.ccstudio.errorparser.AsmErrorParser;com.ti.ccstudio.errorparser.SysConfigErrorParser;com.ti.ccstudio.errorparser.LinkErrorParser" id="com.ti.ccstudio.buildDefinitions.TMS470.Default.529489427" name="default" parent="com.ti.ccstudio.buildDefinitions.TMS470.Default" postbuildStep="             ${CG_TOOL_HEX} -order MS --memwidth=8 --romwidth=8 --intel -o ${ProjName}.hex ${ProjName};         " prebuildStep="         ">
++					<folderInfo id="com.ti.ccstudio.buildDefinitions.TMS470.Default.529489427." name="/" resourcePath="">
++						<toolChain id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.DebugToolchain.999842406" name="TI Build Tools" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.DebugToolchain" targetTool="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.linkerDebug.614342205">
++							<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.993401556" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS" valueType="stringList">
++								<listOptionValue builtIn="false" value="DEVICE_CONFIGURATION_ID=Cortex M.CC1352P1F3"/>
++								<listOptionValue builtIn="false" value="DEVICE_ENDIANNESS=little"/>
++								<listOptionValue builtIn="false" value="OUTPUT_FORMAT=ELF"/>
++								<listOptionValue builtIn="false" value="CCS_MBS_VERSION=6.1.3"/>
++								<listOptionValue builtIn="false" value="RUNTIME_SUPPORT_LIBRARY="/>
++								<listOptionValue builtIn="false" value="RTSC_MBS_VERSION=7.0.0"/>
++								<listOptionValue builtIn="false" value="XDC_VERSION=3.61.2.27_core"/>
++								<listOptionValue builtIn="false" value="OUTPUT_TYPE=rtscApplication:executable"/>
++								<listOptionValue builtIn="false" value="PRODUCTS=com.ti.SIMPLELINK_CC13X2_26X2_SDK:4.30.0.54;"/>
++								<listOptionValue builtIn="false" value="PRODUCT_MACRO_IMPORTS={&quot;com.ti.SIMPLELINK_CC13X2_26X2_SDK&quot;:[&quot;${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INCLUDE_PATH}&quot;,&quot;${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_LIBRARY_PATH}&quot;,&quot;${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_LIBRARIES}&quot;,&quot;${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_SYMBOLS}&quot;,&quot;${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_SYSCONFIG_MANIFEST}&quot;]}"/>
++							</option>
++							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION.573075251" name="Compiler version" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION" value="20.2.2.LTS" valueType="string"/>
++							<targetPlatform id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.targetPlatformDebug.1852243903" name="Platform" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.targetPlatformDebug"/>
++							<builder buildPath="${BuildDirectory}" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.builderDebug.676330873" keepEnvironmentInBuildfile="false" name="GNU Make" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.builderDebug"/>
++							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.compilerDebug.412691997" name="ARM Compiler" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.compilerDebug">
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WARNING.633141045" name="Treat diagnostic &lt;id&gt; as warning (--diag_warning, -pdsw)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WARNING" useByScannerDiscovery="false" valueType="stringList">
++									<listOptionValue builtIn="false" value="225"/>
++									<listOptionValue builtIn="false" value="255"/>
++								</option>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DISPLAY_ERROR_NUMBER.67363761" name="Emit diagnostic identifier numbers (--display_error_number, -pden)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DISPLAY_ERROR_NUMBER" useByScannerDiscovery="false" value="true" valueType="boolean"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP.990366126" name="Wrap diagnostic messages (--diag_wrap)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP.off" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.LITTLE_ENDIAN.589130502" name="Little endian code [See 'General' page to edit] (--little_endian, -me)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.LITTLE_ENDIAN" useByScannerDiscovery="false" value="true" valueType="boolean"/>
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.INCLUDE_PATH.281460977" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.INCLUDE_PATH" valueType="includePath">
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INCLUDE_PATH}"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/${ConfigName}"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Application/npi"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Application/mt"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/npi"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Application/StartUp"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Application/Services"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Application/ui"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Application/util"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Application/ZStackApi"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Common/gp"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Common/touchlink"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/af"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/bdb"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/Config"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/gp"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/HAL/Crypto"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/HAL/Platform"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/HAL/RF"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/MAC/HighLevel"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/MAC/LowLevel"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/MAC"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/nwk"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/osal_port"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/ROM"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/sec"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/sys"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/zdo"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/zmac"/>
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/ZStackTask"/>
++									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/mt"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/osal"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/services/saddr"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/services/sdata"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/hal/crypto"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/hal/platform"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/hal/rf"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/af"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/bdb"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/bdb/touchlinkapp"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/gp"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/api"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/sec"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/sys"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/zcl"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/zdo"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/zmac"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/zmac/f8w"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/stack/ui"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/common/cui"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/fh"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/high_level"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/inc"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/inc/cc13xx"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/low_level/cc13xx"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/tracer"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/rom"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/common/heapmgr"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/common/osal_port"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/common/osal_port/osal_port_tirtos"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/common/nv"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/util"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/common/util"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/config"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/startup"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/common/api/inc"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/devices/cc13x2_cc26x2"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/devices/cc13x2_cc26x2/inc"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/devices/cc13x2_cc26x2/driverlib"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/common/time"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/zstack/apps/znp"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/common/boards"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/posix/ccs"/>
++								</option>
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEFINE.1862457221" name="Pre-define NAME (--define, -D)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEFINE" valueType="definedSymbols">
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_SYMBOLS}"/>
++									<listOptionValue builtIn="false" value="NPI_USE_UART"/>
++									<listOptionValue builtIn="false" value="NPI"/>
++									<listOptionValue builtIn="false" value="ZNP_NPI"/>
++									<listOptionValue builtIn="false" value="BDB_FINDING_BINDING_CAPABILITY_ENABLED=0"/>
++									<listOptionValue builtIn="false" value="DISABLE_GREENPOWER_BASIC_PROXY"/>
++									<listOptionValue builtIn="false" value="TIMAC_ROM_IMAGE_BUILD"/>
++									<listOptionValue builtIn="false" value="TIMAC_ROM_PATCH"/>
++									<listOptionValue builtIn="false" value="CUI_DISABLE"/>
++									<listOptionValue builtIn="false" value="MAX_STATUS_LINES=10"/>
++									<listOptionValue builtIn="false" value="ZSTACK_SECURITY"/>
++									<listOptionValue builtIn="false" value="FREQ_2_4G"/>
++									<listOptionValue builtIn="false" value="OSAL_PORT2TIRTOS"/>
++									<listOptionValue builtIn="false" value="OSAL_PORT2TIRTOS_OSALMAP"/>
++									<listOptionValue builtIn="false" value="ZDO_API_BASIC"/>
++									<listOptionValue builtIn="false" value="TC_LINKKEY_JOIN"/>
++									<listOptionValue builtIn="false" value="NV_RESTORE"/>
++									<listOptionValue builtIn="false" value="NV_INIT"/>
++									<listOptionValue builtIn="false" value="FEATURE_NON_BEACON_MODE"/>
++									<listOptionValue builtIn="false" value="ZCL_STANDALONE"/>
++									<listOptionValue builtIn="false" value="MAX_DEVICE_TABLE_ENTRIES=50"/>
++									<listOptionValue builtIn="false" value="NVOCMP_NVPAGES=2"/>
++									<listOptionValue builtIn="false" value="COMBO_MAC"/>
++									<listOptionValue builtIn="false" value="DEVICE_FAMILY=cc13x0"/>
++									<listOptionValue builtIn="false" value="DeviceFamily_CC13X2"/>
++									<listOptionValue builtIn="false" value="NO_CC1312R1_SUPPORT"/>
++									<listOptionValue builtIn="false" value="CONFIG_PA_TYPE=APIMAC_HIGH_PA"/>
++									<listOptionValue builtIn="false" value="CC1352P_2"/>
++								</option>
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CMD_FILE.1183711990" name="Read options from specified file (--cmd_file, -@)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CMD_FILE" useByScannerDiscovery="false" valueType="stringList">
++									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Stack/Config/znp_cnf.opts"/>
++								</option>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SILICON_VERSION.844719709" name="Target processor version (--silicon_version, -mv)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SILICON_VERSION" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SILICON_VERSION.7M4" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CODE_STATE.1334123771" name="Designate code state, 16-bit (thumb) or 32-bit (--code_state)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CODE_STATE" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.CODE_STATE.16" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FLOAT_SUPPORT.77138814" name="Specify floating point support (--float_support)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FLOAT_SUPPORT" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FLOAT_SUPPORT.FPv4SPD16" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_LEVEL.876097029" name="Optimization level (--opt_level, -O)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_LEVEL" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_LEVEL.4" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_FOR_SPEED.559901582" name="Speed vs. size trade-offs (--opt_for_speed, -mf)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_FOR_SPEED" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.OPT_FOR_SPEED.0" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ABI.747947718" name="Application binary interface. (--abi)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ABI" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ABI.eabi" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.C_DIALECT.419651951" name="C Dialect" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.C_DIALECT" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.C_DIALECT.C99" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.GEN_FUNC_SUBSECTIONS.436372424" name="Place each function in a separate subsection (--gen_func_subsections, -ms)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.GEN_FUNC_SUBSECTIONS" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.GEN_FUNC_SUBSECTIONS.on" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FP_REASSOC.249410712" name="Allow reassociation of FP arithmetic (--fp_reassoc)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FP_REASSOC" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.FP_REASSOC.off" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.UNALIGNED_ACCESS.2091053870" name="Generate unaligned loads and stores (--unaligned_access)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.UNALIGNED_ACCESS" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.UNALIGNED_ACCESS.on" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.EMBEDDED_CONSTANTS.657417750" name="Specify whether constants can be embedded in code sections (--embedded_constants)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.EMBEDDED_CONSTANTS" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.EMBEDDED_CONSTANTS.on" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.WCHAR_T.892807498" name="Set the size (in bits) of the C/C++ type wchar_t (16,32) (--wchar_t)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.WCHAR_T" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.WCHAR_T.16" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ENUM_TYPE.1002879930" name="Designate enum type (--enum_type)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ENUM_TYPE" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.ENUM_TYPE.packed" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.COMMON.1636855528" name="Use ELF common symbols (--common)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.COMMON" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.COMMON.on" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SAT_REASSOC.1371490861" name="Allow reassociation of sat arithmetic (--sat_reassoc)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SAT_REASSOC" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.SAT_REASSOC.off" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.PLAIN_CHAR.1633619977" name="Specify how to treat plain chars (signed/unsigned) (--plain_char)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.PLAIN_CHAR" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.PLAIN_CHAR.unsigned" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEBUGGING_MODEL.1304701384" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEBUGGING_MODEL" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
++								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__C_SRCS.1681099143" name="C Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__C_SRCS"/>
++								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__CPP_SRCS.1871065446" name="C++ Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__CPP_SRCS"/>
++								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__ASM_SRCS.1116856284" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__ASM_SRCS"/>
++								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__ASM2_SRCS.216999164" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compiler.inputType__ASM2_SRCS"/>
++							</tool>
++							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.linkerDebug.614342205" name="ARM Linker" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exe.linkerDebug">
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.OUTPUT_FILE.1133863385" name="Specify output file name (--output_file, -o)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.OUTPUT_FILE" useByScannerDiscovery="false" value="${ProjName}.out" valueType="string"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.MAP_FILE.604381426" name="Link information (map) listed into &lt;file&gt; (--map_file, -m)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.MAP_FILE" useByScannerDiscovery="false" value="${ProjName}.map" valueType="string"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.XML_LINK_INFO.1961119594" name="Detailed link information data-base into &lt;file&gt; (--xml_link_info, -xml_link_info)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.XML_LINK_INFO" useByScannerDiscovery="false" value="${ProjName}_linkInfo.xml" valueType="string"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DISPLAY_ERROR_NUMBER.573469547" name="Emit diagnostic identifier numbers (--display_error_number)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DISPLAY_ERROR_NUMBER" useByScannerDiscovery="false" value="true" valueType="boolean"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DIAG_WRAP.2114161597" name="Wrap diagnostic messages (--diag_wrap)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DIAG_WRAP" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.DIAG_WRAP.off" valueType="enumerated"/>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.REREAD_LIBS.770875241" name="Reread libraries; resolve backward references (--reread_libs, -x)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.REREAD_LIBS" useByScannerDiscovery="false" value="true" valueType="boolean"/>
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.SEARCH_PATH.1173550567" name="Add &lt;dir&gt; to library search path (--search_path, -i)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.SEARCH_PATH" valueType="libPaths">
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_LIBRARY_PATH}"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/kernel/tirtos/packages"/>
++									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/lib"/>
++								</option>
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.LIBRARY.1576615413" name="Include library file or command file as input (--library, -l)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.LIBRARY" useByScannerDiscovery="false" valueType="libs">
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_LIBRARIES}"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/ti154stack/library/tirtos/ccs/timac_rom_PG2_0_rom_api_linker.cmd"/>
++									<listOptionValue builtIn="false" value="${PROJECT_BUILD_DIR}/syscfg/ti_utils_build_linker.cmd.genlibs"/>
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR}/source/ti/devices/cc13x2_cc26x2/driverlib/bin/ccs/driverlib.lib"/>
++									<listOptionValue builtIn="false" value="libc.a"/>
++								</option>
++								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.UNUSED_SECTION_ELIMINATION.1809592104" name="Eliminate sections not needed in the executable (--unused_section_elimination)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.UNUSED_SECTION_ELIMINATION" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.linkerID.UNUSED_SECTION_ELIMINATION.on" valueType="enumerated"/>
++								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__CMD_SRCS.1928088067" name="Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__CMD_SRCS"/>
++								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__CMD2_SRCS.502588709" name="Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__CMD2_SRCS"/>
++								<inputType id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__GEN_CMDS.1502309408" name="Generated Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.exeLinker.inputType__GEN_CMDS"/>
++							</tool>
++							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.hex.282495804" name="ARM Hex Utility" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.hex"/>
++							<tool id="com.ti.ccstudio.buildDefinitions.sysConfig.2017604119" name="SysConfig" superClass="com.ti.ccstudio.buildDefinitions.sysConfig">
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.sysConfig.PRODUCTS.310493608" name="Root system config meta data file in a product or SDK (-s, --product)" superClass="com.ti.ccstudio.buildDefinitions.sysConfig.PRODUCTS" useByScannerDiscovery="false" valueType="stringList">
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_SYSCONFIG_MANIFEST}"/>
++								</option>
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.sysConfig.OTHER_FLAGS.411806819" name="Other flags" superClass="com.ti.ccstudio.buildDefinitions.sysConfig.OTHER_FLAGS" useByScannerDiscovery="false" valueType="stringList">
++									<listOptionValue builtIn="false" value="--compiler ccs"/>
++								</option>
++							</tool>
++							<tool id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.973414511" name="XDCtools" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool">
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.CODEGEN_TOOL_DIR.17991952" name="Compiler tools directory (-c)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.CODEGEN_TOOL_DIR" value="${CG_TOOL_ROOT}" valueType="string"/>
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.TARGET.1457353464" name="Target (-t)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.TARGET" value="ti.targets.arm.elf.M4F" valueType="string"/>
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM.2096041259" name="Platform (-p)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM" value="ti.platforms.simplelink:CC1352P1F3" valueType="string"/>
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM_RAW.1290632389" name="Platform (-p)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.PLATFORM_RAW" value="ti.platforms.simplelink:CC1352P1F3" valueType="string"/>
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.BUILD_PROFILE.979711725" name="Build-profile (-r)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.BUILD_PROFILE" value="release" valueType="string"/>
++								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.XDC_PATH.1796271446" name="XDCpath package repositories (--xdcpath)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.XDC_PATH" valueType="stringList">
++									<listOptionValue builtIn="false" value="${COM_TI_SIMPLELINK_CC13X2_26X2_SDK_INSTALL_DIR_REPOS}"/>
++								</option>
++								<option id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.COMPILE_OPTIONS.844823701" name="Additional compiler options (--compileOptions)" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.COMPILE_OPTIONS" useByScannerDiscovery="false" value="&quot;${COMPILER_FLAGS} &quot;" valueType="string"/>
++							</tool>
++						</toolChain>
++					</folderInfo>
++					<sourceEntries>
++						<entry excluding="src|cc13x2lp.cmd|README.html" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+ 					</sourceEntries>
+ 				</configuration>
+ 			</storageModule>
+@@ -233,7 +463,13 @@
+ 	</storageModule>
+ 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+ 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+-		<project id="znp_CC1352P_2_LAUNCHXL_tirtos_ccs.com.ti.ccstudio.buildDefinitions.TMS470.ProjectType.390215888" name="TMS470" projectType="com.ti.ccstudio.buildDefinitions.TMS470.ProjectType"/>
++		<project id="znp_CC1352P_2_LAUNCHXL_tirtos_ccs.com.ti.ccstudio.buildDefinitions.TMS470.ProjectType.1185304622" name="TMS470" projectType="com.ti.ccstudio.buildDefinitions.TMS470.ProjectType"/>
+ 	</storageModule>
+ 	<storageModule moduleId="scannerConfiguration"/>
++	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
++	<storageModule moduleId="refreshScope" versionNumber="2">
++		<configuration configurationName="default">
++			<resource resourceType="PROJECT" workspacePath="/znp_CC1352P_2_LAUNCHXL_tirtos_ccs"/>
++		</configuration>
++	</storageModule>
+ </cproject>
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 index 2c5073c..8732c65 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
@@ -170,10 +589,10 @@ index 63c143b..da6cb80 100644
  /******************************************************************************
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..80f2097
+index 0000000..842becf
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,46 @@
+@@ -0,0 +1,59 @@
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
 +
@@ -220,6 +639,19 @@ index 0000000..80f2097
 +#define ZDNWKMGR_MIN_TRANSMISSIONS 0
 +#define ROUTE_DISCOVERY_TIME 13
 +#define MTO_RREQ_LIMIT_TIME 5000
++
++// Different configs, uncomment for for launchpad firmware
++#define LAUNCHPAD_CONFIG 1
++
++#ifdef LAUNCHPAD_CONFIG
++#define CONFIG_RF_24GHZ                         0x0000001c
++#define CONFIG_RF_HIGH_PA                       0x0000001d
++#define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA  0xc1
++#else
++#define CONFIG_RF_24GHZ                         0x0000006
++#define CONFIG_RF_HIGH_PA                       0x0000005
++#define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA  0xfa
++#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 index 6e3cb6a..1f90cc6 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
@@ -349,6 +781,2150 @@ index 2b5d2ae..c12e296 100755
  #define FLASH_LAST_BASE         0x56000
  #define FLASH_LAST_SIZE         0x2000
  
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
+new file mode 100755
+index 0000000..1e2430b
+--- /dev/null
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
+@@ -0,0 +1,103 @@
++/*
++ *  ======== ti_devices_config.c ========
++ *  Customer Configuration for CC26XX and CC13XX devices.
++ *
++ *  DO NOT EDIT - This file is generated by the SysConfig tool.
++ *
++ */
++
++//#####################################
++// Force VDDR high setting (Higher output power but also higher power consumption)
++// This is also called "boost mode"
++//#####################################
++
++// Force VDDR voltage to the factory HH setting (FCFG1..VDDR_TRIM_HH)
++#define CCFG_FORCE_VDDR_HH                              0x1
++
++
++//#####################################
++// Power settings
++//#####################################
++
++// Do not use the DC/DC during recharge in powerdown
++#define SET_CCFG_MODE_CONF_DCDC_RECHARGE                0x1
++
++// Do not use the DC/DC during active mode
++#define SET_CCFG_MODE_CONF_DCDC_ACTIVE                  0x1
++
++
++//#####################################
++// Clock settings
++//#####################################
++
++// LF XOSC
++#define SET_CCFG_MODE_CONF_SCLK_LF_OPTION               0x2
++
++// Apply cap-array delta
++#define SET_CCFG_MODE_CONF_XOSC_CAP_MOD                 0x0
++// #define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA          0xc1
++
++//#####################################
++// Special HF clock source setting
++//#####################################
++
++// HF source is a 48 MHz xtal
++#define SET_CCFG_MODE_CONF_XOSC_FREQ                    0x2
++
++//#####################################
++// Bootloader settings
++//#####################################
++
++// Enable ROM boot loader
++#define SET_CCFG_BL_CONFIG_BOOTLOADER_ENABLE            0xC5
++
++// Enabled boot loader backdoor
++#define SET_CCFG_BL_CONFIG_BL_ENABLE                    0xC5
++
++// DIO number for boot loader backdoor
++#define SET_CCFG_BL_CONFIG_BL_PIN_NUMBER                0xf
++
++// Active low to open boot loader backdoor
++#define SET_CCFG_BL_CONFIG_BL_LEVEL                     0x0
++
++
++//#####################################
++// Debug access settings
++//#####################################
++
++// Disable unlocking of TI FA option.
++#define SET_CCFG_CCFG_TI_OPTIONS_TI_FA_ENABLE           0x00
++
++// Access enabled if also enabled in FCFG
++#define SET_CCFG_CCFG_TAP_DAP_0_CPU_DAP_ENABLE          0xC5
++
++// Access enabled if also enabled in FCFG
++#define SET_CCFG_CCFG_TAP_DAP_0_PWRPROF_TAP_ENABLE      0xC5
++
++// Access disabled
++#define SET_CCFG_CCFG_TAP_DAP_0_TEST_TAP_ENABLE         0x00
++
++// Access disabled
++#define SET_CCFG_CCFG_TAP_DAP_1_PBIST2_TAP_ENABLE       0x00
++
++// Access disabled
++#define SET_CCFG_CCFG_TAP_DAP_1_PBIST1_TAP_ENABLE       0x00
++
++// Access disabled
++#define SET_CCFG_CCFG_TAP_DAP_1_AON_TAP_ENABLE          0x00
++
++
++//#####################################
++// Select between cache or GPRAM
++//#####################################
++// Cache is enabled and GPRAM is disabled (unavailable)
++#define SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_GPRAM           0x1
++
++
++
++/*
++ *  ======== Include Base Settings for device ========
++ */
++
++#include <ti/devices/DeviceFamily.h>
++#include DeviceFamily_constructPath(startup_files/ccfg.c)
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
+new file mode 100644
+index 0000000..327efbf
+--- /dev/null
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
+@@ -0,0 +1,1050 @@
++/*
++ *  ======== ti_drivers_config.c ========
++ *  Configured TI-Drivers module definitions
++ *
++ *  DO NOT EDIT - This file is generated for the CC1352P_2_LAUNCHXL
++ *  by the SysConfig tool.
++ */
++
++#include <stddef.h>
++#include <stdint.h>
++
++#ifndef DeviceFamily_CC13X2
++#define DeviceFamily_CC13X2
++#endif
++
++#include <ti/devices/DeviceFamily.h>
++
++#include "ti_drivers_config.h"
++
++/*
++ *  =============================== AESCBC ===============================
++ */
++
++#include <ti/drivers/AESCBC.h>
++#include <ti/drivers/aescbc/AESCBCCC26XX.h>
++
++#define CONFIG_AESCBC_COUNT 1
++AESCBCCC26XX_Object aescbcCC26XXObjects[CONFIG_AESCBC_COUNT];
++
++/*
++ *  ======== aescbcCC26XXHWAttrs ========
++ */
++const AESCBCCC26XX_HWAttrs aescbcCC26XXHWAttrs[CONFIG_AESCBC_COUNT] = {
++    {
++        .intPriority = (~0),
++    },
++};
++
++const AESCBC_Config AESCBC_config[CONFIG_AESCBC_COUNT] = {
++    {   /* CONFIG_AESCBC_0 */
++        .object  = &aescbcCC26XXObjects[CONFIG_AESCBC_0],
++        .hwAttrs = &aescbcCC26XXHWAttrs[CONFIG_AESCBC_0]
++    },
++};
++
++const uint_least8_t CONFIG_AESCBC_0_CONST = CONFIG_AESCBC_0;
++const uint_least8_t AESCBC_count = CONFIG_AESCBC_COUNT;
++
++/*
++ *  =============================== AESCCM ===============================
++ */
++
++#include <ti/drivers/AESCCM.h>
++#include <ti/drivers/aesccm/AESCCMCC26XX.h>
++
++#define CONFIG_AESCCM_COUNT 1
++AESCCMCC26XX_Object aesccmCC26XXObjects[CONFIG_AESCCM_COUNT];
++
++/*
++ *  ======== aesccmCC26XXHWAttrs ========
++ */
++const AESCCMCC26XX_HWAttrs aesccmCC26XXHWAttrs[CONFIG_AESCCM_COUNT] = {
++    {
++        .intPriority = 0x40,
++    },
++};
++
++const AESCCM_Config AESCCM_config[CONFIG_AESCCM_COUNT] = {
++    {   /* CONFIG_AESCCM_0 */
++        .object  = &aesccmCC26XXObjects[CONFIG_AESCCM_0],
++        .hwAttrs = &aesccmCC26XXHWAttrs[CONFIG_AESCCM_0]
++    },
++};
++
++const uint_least8_t CONFIG_AESCCM_0_CONST = CONFIG_AESCCM_0;
++const uint_least8_t AESCCM_count = CONFIG_AESCCM_COUNT;
++
++/*
++ *  =============================== AESECB ===============================
++ */
++
++#include <ti/drivers/AESECB.h>
++#include <ti/drivers/aesecb/AESECBCC26XX.h>
++
++#define CONFIG_AESECB_COUNT 1
++AESECBCC26XX_Object aesecbCC26XXObjects[CONFIG_AESECB_COUNT];
++
++/*
++ *  ======== aesecbCC26XXHWAttrs ========
++ */
++const AESECBCC26XX_HWAttrs aesecbCC26XXHWAttrs[CONFIG_AESECB_COUNT] = {
++    {
++        .intPriority = 0x20,
++    },
++};
++
++const AESECB_Config AESECB_config[CONFIG_AESECB_COUNT] = {
++    {   /* CONFIG_AESECB_0 */
++        .object  = &aesecbCC26XXObjects[CONFIG_AESECB_0],
++        .hwAttrs = &aesecbCC26XXHWAttrs[CONFIG_AESECB_0]
++    },
++};
++
++
++const uint_least8_t CONFIG_AESECB_0_CONST = CONFIG_AESECB_0;
++const uint_least8_t AESECB_count = CONFIG_AESECB_COUNT;
++
++/*
++ *  =============================== DMA ===============================
++ */
++
++#include <ti/drivers/dma/UDMACC26XX.h>
++#include <ti/devices/cc13x2_cc26x2/driverlib/udma.h>
++#include <ti/devices/cc13x2_cc26x2/inc/hw_memmap.h>
++
++UDMACC26XX_Object udmaCC26XXObject;
++
++const UDMACC26XX_HWAttrs udmaCC26XXHWAttrs = {
++    .baseAddr        = UDMA0_BASE,
++    .powerMngrId     = PowerCC26XX_PERIPH_UDMA,
++    .intNum          = INT_DMA_ERR,
++    .intPriority     = (~0)
++};
++
++const UDMACC26XX_Config UDMACC26XX_config[1] = {
++    {
++        .object         = &udmaCC26XXObject,
++        .hwAttrs        = &udmaCC26XXHWAttrs,
++    },
++};
++
++/*
++ *  =============================== ECDH ===============================
++ */
++
++#include <ti/drivers/ECDH.h>
++#include <ti/drivers/ecdh/ECDHCC26X2.h>
++
++#define CONFIG_ECDH_COUNT 1
++
++ECDHCC26X2_Object ecdhCC26X2Objects[CONFIG_ECDH_COUNT];
++
++/*
++ *  ======== ecdhCC26X2HWAttrs ========
++ */
++const ECDHCC26X2_HWAttrs ecdhCC26X2HWAttrs[CONFIG_ECDH_COUNT] = {
++    {
++        .intPriority = (~0),
++    },
++};
++
++const ECDH_Config ECDH_config[CONFIG_ECDH_COUNT] = {
++    {   /* CONFIG_ECDH_0 */
++        .object         = &ecdhCC26X2Objects[CONFIG_ECDH_0],
++        .hwAttrs        = &ecdhCC26X2HWAttrs[CONFIG_ECDH_0]
++    },
++};
++
++const uint_least8_t CONFIG_ECDH_0_CONST = CONFIG_ECDH_0;
++const uint_least8_t ECDH_count = CONFIG_ECDH_COUNT;
++
++/*
++ *  =============================== ECDSA ===============================
++ */
++
++#include <ti/drivers/ECDSA.h>
++#include <ti/drivers/ecdsa/ECDSACC26X2.h>
++
++#define CONFIG_ECDSA_COUNT 1
++ECDSACC26X2_Object ecdsaCC26X2Objects[CONFIG_ECDSA_COUNT];
++
++/*
++ *  ======== ecdsaCC26X2HWAttrs ========
++ */
++const ECDSACC26X2_HWAttrs ecdsaCC26X2HWAttrs[CONFIG_ECDSA_COUNT] = {
++    {
++        .intPriority = (~0),
++        .trngIntPriority = (~0),
++    },
++};
++
++const ECDSA_Config ECDSA_config[CONFIG_ECDSA_COUNT] = {
++    {   /* CONFIG_ECDSA_0 */
++        .object         = &ecdsaCC26X2Objects[CONFIG_ECDSA_0],
++        .hwAttrs        = &ecdsaCC26X2HWAttrs[CONFIG_ECDSA_0]
++    },
++};
++
++const uint_least8_t CONFIG_ECDSA_0_CONST = CONFIG_ECDSA_0;
++const uint_least8_t ECDSA_count = CONFIG_ECDSA_COUNT;
++
++/*
++ *  =============================== ECJPAKE ===============================
++ */
++
++#include <ti/drivers/ECJPAKE.h>
++#include <ti/drivers/ecjpake/ECJPAKECC26X2.h>
++
++#define CONFIG_ECJPAKE_COUNT 1
++ECJPAKECC26X2_Object ecjpakeCC26X2Objects[CONFIG_ECJPAKE_COUNT];
++
++/*
++ *  ======== ecjpakeCC26X2HWAttrs ========
++ */
++const ECJPAKECC26X2_HWAttrs ecjpakeCC26X2HWAttrs[CONFIG_ECJPAKE_COUNT] = {
++    {
++        .intPriority = (~0),
++    },
++};
++
++const ECJPAKE_Config ECJPAKE_config[CONFIG_ECJPAKE_COUNT] = {
++    {   /* CONFIG_ECJPAKE_0 */
++        .object         = &ecjpakeCC26X2Objects[CONFIG_ECJPAKE_0],
++        .hwAttrs        = &ecjpakeCC26X2HWAttrs[CONFIG_ECJPAKE_0]
++    },
++};
++
++const uint_least8_t CONFIG_ECJPAKE_0_CONST = CONFIG_ECJPAKE_0;
++const uint_least8_t ECJPAKE_count = CONFIG_ECJPAKE_COUNT;
++
++/*
++ *  =============================== GPIO ===============================
++ */
++
++#include <ti/drivers/GPIO.h>
++#include <ti/drivers/gpio/GPIOCC26XX.h>
++
++#define CONFIG_GPIO_COUNT 5
++
++/*
++ *  ======== gpioPinConfigs ========
++ *  Array of Pin configurations
++ */
++GPIO_PinConfig gpioPinConfigs[] = {
++    /* CONFIG_GPIO_BTN1 : LaunchPad Button BTN-1 (Left) */
++    GPIOCC26XX_DIO_15 | GPIO_CFG_IN_PU | GPIO_CFG_IN_INT_FALLING,
++    /* CONFIG_GPIO_BTN2 : LaunchPad Button BTN-2 (Right) */
++    GPIOCC26XX_DIO_14 | GPIO_CFG_IN_PU | GPIO_CFG_IN_INT_FALLING,
++    /* CONFIG_GPIO_RLED : LaunchPad LED Red */
++    GPIOCC26XX_DIO_06 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_LOW,
++    /* CONFIG_GPIO_GLED : LaunchPad LED Green */
++    GPIOCC26XX_DIO_07 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_LOW,
++    /* SPI Flash Slave Select GPIO Instance */
++    GPIOCC26XX_DIO_20 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_HIGH,
++};
++
++/*
++ *  ======== gpioCallbackFunctions ========
++ *  Array of callback function pointers
++ *
++ *  NOTE: Unused callback entries can be omitted from the callbacks array to
++ *  reduce memory usage by enabling callback table optimization
++ *  (GPIO.optimizeCallbackTableSize = true)
++ */
++GPIO_CallbackFxn gpioCallbackFunctions[] = {
++    /* CONFIG_GPIO_BTN1 : LaunchPad Button BTN-1 (Left) */
++    NULL,
++    /* CONFIG_GPIO_BTN2 : LaunchPad Button BTN-2 (Right) */
++    NULL,
++    /* CONFIG_GPIO_RLED : LaunchPad LED Red */
++    NULL,
++    /* CONFIG_GPIO_GLED : LaunchPad LED Green */
++    NULL,
++    /* SPI Flash Slave Select GPIO Instance */
++    NULL,
++};
++
++const uint_least8_t CONFIG_GPIO_BTN1_CONST = CONFIG_GPIO_BTN1;
++const uint_least8_t CONFIG_GPIO_BTN2_CONST = CONFIG_GPIO_BTN2;
++const uint_least8_t CONFIG_GPIO_RLED_CONST = CONFIG_GPIO_RLED;
++const uint_least8_t CONFIG_GPIO_GLED_CONST = CONFIG_GPIO_GLED;
++const uint_least8_t CONFIG_GPIO_0_CONST = CONFIG_GPIO_0;
++
++/*
++ *  ======== GPIOCC26XX_config ========
++ */
++const GPIOCC26XX_Config GPIOCC26XX_config = {
++    .pinConfigs = (GPIO_PinConfig *)gpioPinConfigs,
++    .callbacks = (GPIO_CallbackFxn *)gpioCallbackFunctions,
++    .numberOfPinConfigs = 5,
++    .numberOfCallbacks = 5,
++    .intPriority = (~0)
++};
++
++/*
++ *  =============================== NVS ===============================
++ */
++
++#include <ti/drivers/NVS.h>
++#include <ti/drivers/nvs/NVSCC26XX.h>
++
++/*
++ *  NVSCC26XX Internal NVS flash region definitions
++ *
++ * Place uninitialized char arrays at addresses
++ * corresponding to the 'regionBase' addresses defined in
++ * the configured NVS regions. These arrays are used as
++ * place holders so that the linker will not place other
++ * content there.
++ *
++ * For GCC targets, the char arrays are each placed into
++ * the shared ".nvs" section. The user must add content to
++ * their GCC linker command file to place the .nvs section
++ * at the lowest 'regionBase' address specified in their NVS
++ * regions.
++ */
++
++#if defined(__TI_COMPILER_VERSION__) || defined(__clang__)
++
++static char flashBuf0[0x6000] __attribute__ ((retain, noinit, location(0x50000)));
++
++#elif defined(__IAR_SYSTEMS_ICC__)
++
++__no_init static char flashBuf0[0x6000] @ 0x50000;
++
++#elif defined(__GNUC__)
++
++__attribute__ ((section (".nvs")))
++static char flashBuf0[0x6000];
++
++#endif
++
++NVSCC26XX_Object nvsCC26XXObjects[1];
++
++static const NVSCC26XX_HWAttrs nvsCC26XXHWAttrs[1] = {
++    /* CONFIG_NVSINTERNAL */
++    {
++        .regionBase = (void *) flashBuf0,
++        .regionSize = 0x6000
++    },
++};
++
++#include <ti/drivers/nvs/NVSSPI25X.h>
++
++/*
++ *  NVSSPI25X External NVS flash region definitions
++ */
++
++/*
++ * Provide write verification buffer whose size is
++ * the largest specified Verification Buffer Size
++ */
++
++static uint8_t verifyBuf[64];
++
++NVSSPI25X_Object nvsSPI25XObjects[1];
++
++static const NVSSPI25X_HWAttrs nvsSPI25XHWAttrs[1] = {
++    /* CONFIG_NVSEXTERNAL */
++    /* MX25R8035F SPI Flash */
++    {
++        .regionBaseOffset = 0x0,
++        .regionSize = 0x256000,
++        .sectorSize = 0x1000,
++        .verifyBuf = verifyBuf,
++        .verifyBufSize = 64,
++        /* NVS opens SPI */
++        .spiHandle = NULL,
++        /* SPI driver index */
++        .spiIndex = CONFIG_SPI_0,
++        .spiBitRate = 4000000,
++        /* GPIO driver pin index */
++        .spiCsnGpioIndex = CONFIG_GPIO_0,
++        .statusPollDelayUs = 100
++    },
++};
++
++#define CONFIG_NVS_COUNT 2
++
++const NVS_Config NVS_config[CONFIG_NVS_COUNT] = {
++    /* CONFIG_NVSINTERNAL */
++    {
++        .fxnTablePtr = &NVSCC26XX_fxnTable,
++        .object = &nvsCC26XXObjects[0],
++        .hwAttrs = &nvsCC26XXHWAttrs[0],
++    },
++    /* CONFIG_NVSEXTERNAL */
++    /* MX25R8035F SPI Flash */
++    {
++        .fxnTablePtr = &NVSSPI25X_fxnTable,
++        .object = &nvsSPI25XObjects[0],
++        .hwAttrs = &nvsSPI25XHWAttrs[0],
++    },
++};
++
++const uint_least8_t CONFIG_NVSINTERNAL_CONST = CONFIG_NVSINTERNAL;
++const uint_least8_t CONFIG_NVSEXTERNAL_CONST = CONFIG_NVSEXTERNAL;
++const uint_least8_t NVS_count = CONFIG_NVS_COUNT;
++
++/*
++ *  =============================== PIN ===============================
++ */
++#include <ti/drivers/PIN.h>
++#include <ti/drivers/pin/PINCC26XX.h>
++
++#define CONFIG_PIN_COUNT 13
++
++const PIN_Config BoardGpioInitTable[CONFIG_PIN_COUNT + 1] = {
++    /* XDS110 UART, Parent Signal: CONFIG_DISPLAY_UART TX, (DIO13) */
++    CONFIG_PIN_UART_TX | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MED,
++    /* XDS110 UART, Parent Signal: CONFIG_DISPLAY_UART RX, (DIO12) */
++    CONFIG_PIN_UART_RX | PIN_INPUT_EN | PIN_PULLDOWN | PIN_IRQ_DIS,
++    /* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 0, (DIO28) */
++    CONFIG_RF_24GHZ | PIN_INPUT_EN | PIN_NOPULL | PIN_IRQ_DIS,
++    /* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 1, (DIO29) */
++    CONFIG_RF_HIGH_PA | PIN_INPUT_EN | PIN_NOPULL | PIN_IRQ_DIS,
++    /* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 2, (DIO30) */
++    CONFIG_RF_SUB1GHZ | PIN_INPUT_EN | PIN_NOPULL | PIN_IRQ_DIS,
++    /* LaunchPad Button BTN-1 (Left), Parent Signal: CONFIG_GPIO_BTN1 GPIO Pin, (DIO15) */
++    CONFIG_PIN_BTN1 | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_DIS,
++    /* LaunchPad Button BTN-2 (Right), Parent Signal: CONFIG_GPIO_BTN2 GPIO Pin, (DIO14) */
++    CONFIG_PIN_BTN2 | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_DIS,
++    /* LaunchPad LED Red, Parent Signal: CONFIG_GPIO_RLED GPIO Pin, (DIO6) */
++    CONFIG_PIN_RLED | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MED,
++    /* LaunchPad LED Green, Parent Signal: CONFIG_GPIO_GLED GPIO Pin, (DIO7) */
++    CONFIG_PIN_GLED | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MED,
++    /* MX25R8035F SPI Flash Slave Select, Parent Signal: CONFIG_GPIO_0 GPIO Pin, (DIO20) */
++    CONFIG_PIN_0 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MED,
++    /* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 SCLK, (DIO10) */
++    CONFIG_PIN_SPI_SCLK | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MED,
++    /* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 MISO, (DIO8) */
++    CONFIG_PIN_SPI_MISO | PIN_INPUT_EN | PIN_NOPULL | PIN_IRQ_DIS,
++    /* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 MOSI, (DIO9) */
++    CONFIG_PIN_SPI_MOSI | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MED,
++
++    PIN_TERMINATE
++};
++
++const PINCC26XX_HWAttrs PINCC26XX_hwAttrs = {
++    .intPriority = (~0),
++    .swiPriority = 0
++};
++
++/*
++ *  =============================== Power ===============================
++ */
++#include <ti/drivers/Power.h>
++#include <ti/drivers/power/PowerCC26X2.h>
++#include "ti_drivers_config.h"
++
++extern void PowerCC26XX_standbyPolicy(void);
++extern bool PowerCC26XX_calibrate(unsigned int);
++
++const PowerCC26X2_Config PowerCC26X2_config = {
++    .enablePolicy             = true,
++    .policyInitFxn            = NULL,
++    .policyFxn                = PowerCC26XX_standbyPolicy,
++    .calibrateFxn             = PowerCC26XX_calibrate,
++    .calibrateRCOSC_LF        = true,
++    .calibrateRCOSC_HF        = true,
++    .enableTCXOFxn            = NULL
++};
++
++
++/*
++ *  =============================== RF Driver ===============================
++ */
++#include <ti/drivers/rf/RF.h>
++
++/*
++ * RF driver callback function, called by the driver on global driver events.
++ */
++static void RF_globalCallbackFunction (RF_Handle client, RF_GlobalEvent events, void* arg);
++
++/*
++ * Callback function to handle custom / application specific behavior
++ */
++extern void __attribute__((weak)) rfDriverCallback (RF_Handle client, RF_GlobalEvent events, void *arg);
++
++/*
++ * Callback function to handle antenna switching
++ */
++extern void __attribute__((weak)) rfDriverCallbackAntennaSwitching (RF_Handle client, RF_GlobalEvent events, void *arg);
++
++/*
++ * Platform-specific driver configuration
++ */
++const RFCC26XX_HWAttrsV2 RFCC26XX_hwAttrs = {
++    .hwiPriority        = (~0),
++    .swiPriority        = (uint8_t)0,
++    .xoscHfAlwaysNeeded = true,
++    .globalCallback     = &RF_globalCallbackFunction,
++    .globalEventMask    = RF_GlobalEventInit | RF_GlobalEventRadioPowerDown | RF_GlobalEventRadioSetup
++};
++
++/*
++ *  ======== RF_globalCallbackFunction ========
++ *  This function is called by the driver on global driver events.
++ *  It will call specific callback functions to further handle the triggering events.
++ */
++static void RF_globalCallbackFunction(RF_Handle client, RF_GlobalEvent events, void *arg)
++{
++    rfDriverCallback(client, events, arg);
++    rfDriverCallbackAntennaSwitching(client, events, arg);
++}
++
++/*
++ *  ======== rfDriverCallback ========
++ *  Handle events triggered by the RF driver for custom / application specific behavior.
++ */
++void __attribute__((weak)) rfDriverCallback(RF_Handle client, RF_GlobalEvent events, void *arg)
++{
++    /* ======== PLEASE READ THIS ========
++    *
++    * This function is declared weak for the application to override it.
++    * A new definition of 'rfDriverCallback' is required if you want to
++    * handle the events listed in '.globalEventMask'.
++    *
++    * Please copy this function definition to create your own, but make
++    * sure to remove '__attribute__((weak))' for your definition.
++    *
++    * According to '.globalEventMask', this function will be triggered by:
++    *   - RF_GlobalEventInit
++    *   - RF_GlobalEventRadioPowerDown
++    *   - RF_GlobalEventRadioSetup
++    * 
++    * An example of how to handle these events would be:
++    * 
++    *   --- Code snippet begin ---
++    * 
++    *   if(events & RF_GlobalEventInit) {
++    *       // Perform action for this event
++    *   }
++    *   else if (events & RF_GlobalEventRadioPowerDown) {
++    *       // Perform action for this event
++    *   }
++    *   else if (events & RF_GlobalEventRadioSetup) {
++    *       // Perform action for this event
++    *   }
++    * 
++    *   --- Code snippet end ---
++    */
++}
++
++
++/*
++ * ======== Antenna switching ========
++ */
++static PIN_Handle antennaPins;
++static PIN_State antennaState;
++
++static void initAntennaSwitch()
++{
++    PIN_Config antennaConfig[] = {
++        CONFIG_RF_24GHZ | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,      /* Path disabled */
++        CONFIG_RF_HIGH_PA | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,      /* Path disabled */
++        CONFIG_RF_SUB1GHZ | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,      /* Path disabled */
++        PIN_TERMINATE
++    };
++    antennaPins = PIN_open(&antennaState, antennaConfig);
++}
++
++/*
++ * ======== rfDriverCallbackAntennaSwitching ========
++ * Sets up the antenna switch depending on the current PHY configuration.
++ * 
++ * Truth table:
++ *
++ * Path        DIO28 DIO29 DIO30
++ * =========== ===== ===== =====
++ * Off         0     0     0
++ * Sub-1 GHz   0     0     1
++ * 2.4 GHz     1     0     0
++ * 20 dBm TX   0     1     0
++ */
++void __attribute__((weak)) rfDriverCallbackAntennaSwitching(RF_Handle client, RF_GlobalEvent events, void *arg)
++{
++    /* Protect against repeated RF_init */
++    static bool initialized = false;
++
++    /* Local variable. */
++    bool    sub1GHz   = false;
++    uint8_t loDivider = 0;
++
++    if (!initialized && events & RF_GlobalEventInit) {
++        /* Don't do it again */
++        initialized = true;
++        initAntennaSwitch();
++    }
++    else if (events & RF_GlobalEventRadioSetup) {
++        /* Switch off all paths. */
++        PINCC26XX_setOutputValue(CONFIG_RF_24GHZ, 0);
++        PINCC26XX_setOutputValue(CONFIG_RF_HIGH_PA, 0);
++        PINCC26XX_setOutputValue(CONFIG_RF_SUB1GHZ, 0);
++
++        /* Decode the current PA configuration. */
++        RF_TxPowerTable_PAType paType = (RF_TxPowerTable_PAType)RF_getTxPower(client).paType;
++
++        /* Decode the generic argument as a setup command. */
++        RF_RadioSetup* setupCommand = (RF_RadioSetup*)arg;
++
++        switch (setupCommand->common.commandNo) {
++            case (CMD_RADIO_SETUP):
++            case (CMD_BLE5_RADIO_SETUP):
++                    loDivider = RF_LODIVIDER_MASK & setupCommand->common.loDivider;
++
++                    /* Sub-1GHz front-end. */
++                    if (loDivider != 0) {
++                        sub1GHz = true;
++                    }
++                    break;
++            case (CMD_PROP_RADIO_DIV_SETUP):
++                    loDivider = RF_LODIVIDER_MASK & setupCommand->prop_div.loDivider;
++
++                    /* Sub-1GHz front-end. */
++                    if (loDivider != 0) {
++                        sub1GHz = true;
++                    }
++                    break;
++            default:break;
++        }
++
++        if (sub1GHz) {
++            /* Sub-1 GHz */
++            if (paType == RF_TxPowerTable_HighPA) {
++                /* PA enable --> HIGH PA
++                 * LNA enable --> Sub-1 GHz
++                 */
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_24GHZ, PINCC26XX_MUX_GPIO);
++                /* Note: RFC_GPO3 is a work-around because the RFC_GPO1 (PA enable signal) is sometimes not
++                         de-asserted on CC1352 Rev A. */
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_HIGH_PA, PINCC26XX_MUX_RFC_GPO3);
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_SUB1GHZ, PINCC26XX_MUX_RFC_GPO0);
++            } else {
++                /* RF core active --> Sub-1 GHz */
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_24GHZ, PINCC26XX_MUX_GPIO);
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_HIGH_PA, PINCC26XX_MUX_GPIO);
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_SUB1GHZ, PINCC26XX_MUX_GPIO);
++                PINCC26XX_setOutputValue(CONFIG_RF_SUB1GHZ, 1);
++            }
++        } else {
++            /* 2.4 GHz */
++            if (paType == RF_TxPowerTable_HighPA)
++            {
++                /* PA enable --> HIGH PA
++                 * LNA enable --> 2.4 GHz
++                 */
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_24GHZ, PINCC26XX_MUX_RFC_GPO0);
++                /* Note: RFC_GPO3 is a work-around because the RFC_GPO1 (PA enable signal) is sometimes not
++                         de-asserted on CC1352 Rev A. */
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_HIGH_PA, PINCC26XX_MUX_RFC_GPO3);
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_SUB1GHZ, PINCC26XX_MUX_GPIO);
++            } else {
++                /* RF core active --> 2.4 GHz */
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_24GHZ, PINCC26XX_MUX_GPIO);
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_HIGH_PA, PINCC26XX_MUX_GPIO);
++                PINCC26XX_setMux(antennaPins, CONFIG_RF_SUB1GHZ, PINCC26XX_MUX_GPIO);
++                PINCC26XX_setOutputValue(CONFIG_RF_24GHZ, 1);
++            }
++        }
++    }
++    else if (events & RF_GlobalEventRadioPowerDown) {
++        /* Switch off all paths. */
++        PINCC26XX_setOutputValue(CONFIG_RF_24GHZ, 0);
++        PINCC26XX_setOutputValue(CONFIG_RF_HIGH_PA, 0);
++        PINCC26XX_setOutputValue(CONFIG_RF_SUB1GHZ, 0);
++
++        /* Reset the IO multiplexer to GPIO functionality */
++        PINCC26XX_setMux(antennaPins, CONFIG_RF_24GHZ, PINCC26XX_MUX_GPIO);
++        PINCC26XX_setMux(antennaPins, CONFIG_RF_HIGH_PA, PINCC26XX_MUX_GPIO);
++        PINCC26XX_setMux(antennaPins, CONFIG_RF_SUB1GHZ, PINCC26XX_MUX_GPIO);
++    }
++}
++
++/*
++ *  =============================== SHA2 ===============================
++ */
++
++#include <ti/drivers/SHA2.h>
++#include <ti/drivers/sha2/SHA2CC26X2.h>
++
++#define CONFIG_SHA2_COUNT 1
++
++SHA2CC26X2_Object sha2CC26X2Objects[CONFIG_SHA2_COUNT];
++
++/*
++ *  ======== sha2CC26X2HWAttrs ========
++ */
++const SHA2CC26X2_HWAttrs sha2CC26X2HWAttrs[CONFIG_SHA2_COUNT] = {
++    {
++        .intPriority = (~0),
++    },
++};
++
++const SHA2_Config SHA2_config[CONFIG_SHA2_COUNT] = {
++    {   /* CONFIG_SHA2_0 */
++        .object         = &sha2CC26X2Objects[CONFIG_SHA2_0],
++        .hwAttrs        = &sha2CC26X2HWAttrs[CONFIG_SHA2_0]
++    },
++};
++
++const uint_least8_t CONFIG_SHA2_0_CONST = CONFIG_SHA2_0;
++const uint_least8_t SHA2_count = CONFIG_SHA2_COUNT;
++
++/*
++ *  =============================== SPI DMA ===============================
++ */
++#include <ti/drivers/SPI.h>
++#include <ti/drivers/spi/SPICC26X2DMA.h>
++
++#define CONFIG_SPI_COUNT 1
++
++/*
++ *  ======== spiCC26X2DMAObjects ========
++ */
++SPICC26X2DMA_Object spiCC26X2DMAObjects[CONFIG_SPI_COUNT];
++
++/*
++ *  ======== spiCC26X2DMAHWAttrs ========
++ */
++const SPICC26X2DMA_HWAttrs spiCC26X2DMAHWAttrs[CONFIG_SPI_COUNT] = {
++    /* CONFIG_SPI_0 */
++    /* LaunchPad SPI Bus */
++    {
++        .baseAddr = SSI0_BASE,
++        .intNum = INT_SSI0_COMB,
++        .intPriority = (~0),
++        .swiPriority = 0,
++        .powerMngrId = PowerCC26XX_PERIPH_SSI0,
++        .defaultTxBufValue = ~0,
++        .rxChannelBitMask = 1<<UDMA_CHAN_SSI0_RX,
++        .txChannelBitMask = 1<<UDMA_CHAN_SSI0_TX,
++        .minDmaTransferSize = 10,
++        .mosiPin = IOID_9,
++        .misoPin = IOID_8,
++        .clkPin  = IOID_10,
++        .csnPin  = PIN_UNASSIGNED
++    },
++};
++
++/*
++ *  ======== SPI_config ========
++ */
++const SPI_Config SPI_config[CONFIG_SPI_COUNT] = {
++    /* CONFIG_SPI_0 */
++    /* LaunchPad SPI Bus */
++    {
++        .fxnTablePtr = &SPICC26X2DMA_fxnTable,
++        .object = &spiCC26X2DMAObjects[CONFIG_SPI_0],
++        .hwAttrs = &spiCC26X2DMAHWAttrs[CONFIG_SPI_0]
++    },
++};
++
++const uint_least8_t CONFIG_SPI_0_CONST = CONFIG_SPI_0;
++const uint_least8_t SPI_count = CONFIG_SPI_COUNT;
++
++/*
++ *  =============================== TRNG ===============================
++ */
++
++#include <ti/drivers/TRNG.h>
++#include <ti/drivers/trng/TRNGCC26XX.h>
++
++#define CONFIG_TRNG_COUNT 1
++
++TRNGCC26XX_Object trngCC26XXObjects[CONFIG_TRNG_COUNT];
++
++/*
++ *  ======== trngCC26XXHWAttrs ========
++ */
++static const TRNGCC26XX_HWAttrs trngCC26XXHWAttrs[CONFIG_TRNG_COUNT] = {
++    {
++        .intPriority = (~0),
++        .swiPriority = 0,
++        .samplesPerCycle = 240000
++    },
++};
++
++const TRNG_Config TRNG_config[CONFIG_TRNG_COUNT] = {
++    {   /* CONFIG_TRNG_0 */
++        .object         = &trngCC26XXObjects[CONFIG_TRNG_0],
++        .hwAttrs        = &trngCC26XXHWAttrs[CONFIG_TRNG_0]
++    },
++};
++
++const uint_least8_t CONFIG_TRNG_0_CONST = CONFIG_TRNG_0;
++const uint_least8_t TRNG_count = CONFIG_TRNG_COUNT;
++
++/*
++ *  =============================== UART ===============================
++ */
++
++#include <ti/drivers/UART.h>
++#include <ti/drivers/uart/UARTCC26XX.h>
++#include <ti/drivers/Power.h>
++#include <ti/drivers/power/PowerCC26X2.h>
++#include <ti/devices/cc13x2_cc26x2/inc/hw_memmap.h>
++#include <ti/devices/cc13x2_cc26x2/inc/hw_ints.h>
++
++#define CONFIG_UART_COUNT 1
++
++UARTCC26XX_Object uartCC26XXObjects[CONFIG_UART_COUNT];
++
++static unsigned char uartCC26XXRingBuffer0[32];
++
++static const UARTCC26XX_HWAttrsV2 uartCC26XXHWAttrs[CONFIG_UART_COUNT] = {
++  {
++    .baseAddr           = UART0_BASE,
++    .intNum             = INT_UART0_COMB,
++    .intPriority        = (~0),
++    .swiPriority        = 0,
++    .powerMngrId        = PowerCC26XX_PERIPH_UART0,
++    .ringBufPtr         = uartCC26XXRingBuffer0,
++    .ringBufSize        = sizeof(uartCC26XXRingBuffer0),
++    .rxPin              = IOID_12,
++    .txPin              = IOID_13,
++    .ctsPin             = PIN_UNASSIGNED,
++    .rtsPin             = PIN_UNASSIGNED,
++    .txIntFifoThr       = UARTCC26XX_FIFO_THRESHOLD_1_8,
++    .rxIntFifoThr       = UARTCC26XX_FIFO_THRESHOLD_4_8,
++    .errorFxn           = NULL
++  },
++};
++
++const UART_Config UART_config[CONFIG_UART_COUNT] = {
++    {   /* CONFIG_DISPLAY_UART */
++        .fxnTablePtr = &UARTCC26XX_fxnTable,
++        .object      = &uartCC26XXObjects[CONFIG_DISPLAY_UART],
++        .hwAttrs     = &uartCC26XXHWAttrs[CONFIG_DISPLAY_UART]
++    },
++};
++
++const uint_least8_t CONFIG_DISPLAY_UART_CONST = CONFIG_DISPLAY_UART;
++const uint_least8_t UART_count = CONFIG_UART_COUNT;
++
++/*
++ *  =============================== Button ===============================
++ */
++#include <ti/drivers/apps/Button.h>
++
++#define CONFIG_BUTTON_COUNT 2
++Button_Object ButtonObjects[CONFIG_BUTTON_COUNT];
++
++static const Button_HWAttrs ButtonHWAttrs[CONFIG_BUTTON_COUNT] = {
++    /* CONFIG_BTN_LEFT */
++    /* LaunchPad Button BTN-1 (Left) */
++    {
++        .gpioIndex = CONFIG_GPIO_BTN1
++    },
++    /* CONFIG_BTN_RIGHT */
++    /* LaunchPad Button BTN-2 (Right) */
++    {
++        .gpioIndex = CONFIG_GPIO_BTN2
++    },
++};
++
++const Button_Config Button_config[CONFIG_BUTTON_COUNT] = {
++    /* CONFIG_BTN_LEFT */
++    /* LaunchPad Button BTN-1 (Left) */
++    {
++        .object = &ButtonObjects[CONFIG_BTN_LEFT],
++        .hwAttrs = &ButtonHWAttrs[CONFIG_BTN_LEFT]
++    },
++    /* CONFIG_BTN_RIGHT */
++    /* LaunchPad Button BTN-2 (Right) */
++    {
++        .object = &ButtonObjects[CONFIG_BTN_RIGHT],
++        .hwAttrs = &ButtonHWAttrs[CONFIG_BTN_RIGHT]
++    },
++};
++
++const uint_least8_t CONFIG_BTN_LEFT_CONST = CONFIG_BTN_LEFT;
++const uint_least8_t CONFIG_BTN_RIGHT_CONST = CONFIG_BTN_RIGHT;
++const uint_least8_t Button_count = CONFIG_BUTTON_COUNT;
++
++/*
++ *  =============================== LED ===============================
++ */
++#include <ti/drivers/apps/LED.h>
++
++#define CONFIG_LED_COUNT 2
++LED_Object LEDObjects[CONFIG_LED_COUNT];
++
++static const LED_HWAttrs LEDHWAttrs[CONFIG_LED_COUNT] = {
++    /* CONFIG_LED_RED */
++    /* LaunchPad LED Red */
++    {
++        .type = LED_GPIO_CONTROLLED,
++        .index = CONFIG_GPIO_RLED,
++    },
++    /* CONFIG_LED_GREEN */
++    /* LaunchPad LED Green */
++    {
++        .type = LED_GPIO_CONTROLLED,
++        .index = CONFIG_GPIO_GLED,
++    },
++};
++
++const LED_Config LED_config[CONFIG_LED_COUNT] = {
++    /* CONFIG_LED_RED */
++    /* LaunchPad LED Red */
++    {
++        .object = &LEDObjects[CONFIG_LED_RED],
++        .hwAttrs = &LEDHWAttrs[CONFIG_LED_RED]
++    },
++    /* CONFIG_LED_GREEN */
++    /* LaunchPad LED Green */
++    {
++        .object = &LEDObjects[CONFIG_LED_GREEN],
++        .hwAttrs = &LEDHWAttrs[CONFIG_LED_GREEN]
++    },
++};
++
++const uint_least8_t CONFIG_LED_RED_CONST = CONFIG_LED_RED;
++const uint_least8_t CONFIG_LED_GREEN_CONST = CONFIG_LED_GREEN;
++const uint_least8_t LED_count = CONFIG_LED_COUNT;
++
++#include <stdbool.h>
++
++#include <ti/devices/cc13x2_cc26x2/driverlib/ioc.h>
++#include <ti/devices/cc13x2_cc26x2/driverlib/cpu.h>
++
++#include <ti/drivers/pin/PINCC26XX.h>
++
++/*
++ *  ======== Board_sendExtFlashByte ========
++ */
++void Board_sendExtFlashByte(PIN_Handle pinHandle, uint8_t byte)
++{
++    uint8_t i;
++
++    /* SPI Flash CS */
++    PIN_setOutputValue(pinHandle, IOID_20, 0);
++
++    for (i = 0; i < 8; i++) {
++        PIN_setOutputValue(pinHandle, IOID_10, 0);  /* SPI Flash CLK */
++
++        /* SPI Flash MOSI */
++        PIN_setOutputValue(pinHandle, IOID_9, (byte >> (7 - i)) & 0x01);
++        PIN_setOutputValue(pinHandle, IOID_10, 1);  /* SPI Flash CLK */
++
++        /*
++         * Waste a few cycles to keep the CLK high for at
++         * least 45% of the period.
++         * 3 cycles per loop: 8 loops @ 48 Mhz = 0.5 us.
++         */
++        CPUdelay(8);
++    }
++
++    PIN_setOutputValue(pinHandle, IOID_10, 0);  /* CLK */
++    PIN_setOutputValue(pinHandle, IOID_20, 1);  /* CS */
++
++    /*
++     * Keep CS high at least 40 us
++     * 3 cycles per loop: 700 loops @ 48 Mhz ~= 44 us
++     */
++    CPUdelay(700);
++}
++
++/*
++ *  ======== Board_wakeUpExtFlash ========
++ */
++void Board_wakeUpExtFlash(void)
++{
++    PIN_Config extFlashPinTable[] = {
++        /* SPI Flash CS */
++        IOID_20 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL |
++                PIN_INPUT_DIS | PIN_DRVSTR_MED,
++        PIN_TERMINATE
++    };
++    PIN_State extFlashPinState;
++    PIN_Handle extFlashPinHandle = PIN_open(&extFlashPinState, extFlashPinTable);
++
++    /*
++     *  To wake up we need to toggle the chip select at
++     *  least 20 ns and ten wait at least 35 us.
++     */
++
++    /* Toggle chip select for ~20ns to wake ext. flash */
++    PIN_setOutputValue(extFlashPinHandle, IOID_20, 0);
++    /* 3 cycles per loop: 1 loop @ 48 Mhz ~= 62 ns */
++    CPUdelay(1);
++    PIN_setOutputValue(extFlashPinHandle, IOID_20, 1);
++    /* 3 cycles per loop: 560 loops @ 48 Mhz ~= 35 us */
++    CPUdelay(560);
++
++    PIN_close(extFlashPinHandle);
++}
++
++/*
++ *  ======== Board_shutDownExtFlash ========
++ */
++void Board_shutDownExtFlash(void)
++{
++    /*
++     *  To be sure we are putting the flash into sleep and not waking it,
++     *  we first have to make a wake up call
++     */
++    Board_wakeUpExtFlash();
++
++    PIN_Config extFlashPinTable[] = {
++        /* SPI Flash CS*/
++        IOID_20 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL |
++                PIN_INPUT_DIS | PIN_DRVSTR_MED,
++        /* SPI Flash CLK */
++        IOID_10 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL |
++                PIN_INPUT_DIS | PIN_DRVSTR_MED,
++        /* SPI Flash MOSI */
++        IOID_9 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL |
++                PIN_INPUT_DIS | PIN_DRVSTR_MED,
++        /* SPI Flash MISO */
++        IOID_8 | PIN_INPUT_EN | PIN_PULLDOWN,
++        PIN_TERMINATE
++    };
++    PIN_State extFlashPinState;
++    PIN_Handle extFlashPinHandle = PIN_open(&extFlashPinState, extFlashPinTable);
++
++    uint8_t extFlashShutdown = 0xB9;
++
++    Board_sendExtFlashByte(extFlashPinHandle, extFlashShutdown);
++
++    PIN_close(extFlashPinHandle);
++}
++
++
++#include <ti/drivers/Board.h>
++
++/*
++ *  ======== Board_initHook ========
++ *  Perform any board-specific initialization needed at startup.  This
++ *  function is declared weak to allow applications to override it if needed.
++ */
++void __attribute__((weak)) Board_initHook(void)
++{
++}
++
++/*
++ *  ======== Board_init ========
++ *  Perform any initialization needed before using any board APIs
++ */
++void Board_init(void)
++{
++    /* ==== /ti/drivers/Power initialization ==== */
++    Power_init();
++
++    /* ==== /ti/drivers/PIN initialization ==== */
++    if (PIN_init(BoardGpioInitTable) != PIN_SUCCESS) {
++        /* Error with PIN_init */
++        while (1);
++    }
++    /* ==== /ti/devices/CCFGTemplate initialization ==== */
++
++    /* ==== /ti/drivers/RF initialization ==== */
++
++
++    Board_shutDownExtFlash();
++
++    Board_initHook();
++}
++
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.h
+new file mode 100644
+index 0000000..abf128f
+--- /dev/null
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.h
+@@ -0,0 +1,283 @@
++/*
++ *  ======== ti_drivers_config.h ========
++ *  Configured TI-Drivers module declarations
++ *
++ *  The macros defines herein are intended for use by applications which
++ *  directly include this header. These macros should NOT be hard coded or
++ *  copied into library source code.
++ *
++ *  Symbols declared as const are intended for use with libraries.
++ *  Library source code must extern the correct symbol--which is resolved
++ *  when the application is linked.
++ *
++ *  DO NOT EDIT - This file is generated for the CC1352P_2_LAUNCHXL
++ *  by the SysConfig tool.
++ */
++#ifndef ti_drivers_config_h
++#define ti_drivers_config_h
++
++#define CONFIG_SYSCONFIG_PREVIEW
++
++#define CONFIG_CC1352P_2_LAUNCHXL
++#ifndef DeviceFamily_CC13X2
++#define DeviceFamily_CC13X2
++#endif
++
++#include <ti/devices/DeviceFamily.h>
++
++#include <stdint.h>
++
++/* support C++ sources */
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++
++/*
++ *  ======== CCFG ========
++ */
++
++
++/*
++ *  ======== AESCBC ========
++ */
++
++extern const uint_least8_t                  CONFIG_AESCBC_0_CONST;
++#define CONFIG_AESCBC_0                     0
++#define CONFIG_TI_DRIVERS_AESCBC_COUNT      1
++
++
++/*
++ *  ======== AESCCM ========
++ */
++
++extern const uint_least8_t                  CONFIG_AESCCM_0_CONST;
++#define CONFIG_AESCCM_0                     0
++#define CONFIG_TI_DRIVERS_AESCCM_COUNT      1
++
++
++/*
++ *  ======== AESECB ========
++ */
++
++extern const uint_least8_t                  CONFIG_AESECB_0_CONST;
++#define CONFIG_AESECB_0                     0
++#define CONFIG_TI_DRIVERS_AESECB_COUNT      1
++
++
++/*
++ *  ======== ECDH ========
++ */
++
++extern const uint_least8_t              CONFIG_ECDH_0_CONST;
++#define CONFIG_ECDH_0                   0
++#define CONFIG_TI_DRIVERS_ECDH_COUNT    1
++
++
++/*
++ *  ======== ECDSA ========
++ */
++
++extern const uint_least8_t                  CONFIG_ECDSA_0_CONST;
++#define CONFIG_ECDSA_0                      0
++#define CONFIG_TI_DRIVERS_ECDSA_COUNT       1
++
++
++/*
++ *  ======== ECJPAKE ========
++ */
++
++extern const uint_least8_t                  CONFIG_ECJPAKE_0_CONST;
++#define CONFIG_ECJPAKE_0                    0
++#define CONFIG_TI_DRIVERS_ECJPAKE_COUNT     1
++
++
++/*
++ *  ======== GPIO ========
++ */
++
++/* DIO15, LaunchPad Button BTN-1 (Left) */
++extern const uint_least8_t              CONFIG_GPIO_BTN1_CONST;
++#define CONFIG_GPIO_BTN1                0
++/* DIO14, LaunchPad Button BTN-2 (Right) */
++extern const uint_least8_t              CONFIG_GPIO_BTN2_CONST;
++#define CONFIG_GPIO_BTN2                1
++/* DIO6, LaunchPad LED Red */
++extern const uint_least8_t              CONFIG_GPIO_RLED_CONST;
++#define CONFIG_GPIO_RLED                2
++/* DIO7, LaunchPad LED Green */
++extern const uint_least8_t              CONFIG_GPIO_GLED_CONST;
++#define CONFIG_GPIO_GLED                3
++/* DIO20, MX25R8035F SPI Flash Slave Select */
++extern const uint_least8_t              CONFIG_GPIO_0_CONST;
++#define CONFIG_GPIO_0                   4
++#define CONFIG_TI_DRIVERS_GPIO_COUNT    5
++
++/* LEDs are active high */
++#define CONFIG_GPIO_LED_ON  (1)
++#define CONFIG_GPIO_LED_OFF (0)
++
++#define CONFIG_LED_ON  (CONFIG_GPIO_LED_ON)
++#define CONFIG_LED_OFF (CONFIG_GPIO_LED_OFF)
++
++
++/*
++ *  ======== NVS ========
++ */
++
++extern const uint_least8_t              CONFIG_NVSINTERNAL_CONST;
++#define CONFIG_NVSINTERNAL              0
++/*
++ *  MOSI: DIO9
++ *  MISO: DIO8
++ *  SCLK: DIO10
++ *  LaunchPad SPI Bus
++ *  SS: DIO20, MX25R8035F SPI Flash Slave Select
++ */
++extern const uint_least8_t              CONFIG_NVSEXTERNAL_CONST;
++#define CONFIG_NVSEXTERNAL              1
++#define CONFIG_TI_DRIVERS_NVS_COUNT     2
++
++
++/*
++ *  ======== PIN ========
++ */
++#include <ti/drivers/PIN.h>
++
++extern const PIN_Config BoardGpioInitTable[];
++
++/* XDS110 UART, Parent Signal: CONFIG_DISPLAY_UART TX, (DIO13) */
++#define CONFIG_PIN_UART_TX                   0x0000000d
++/* XDS110 UART, Parent Signal: CONFIG_DISPLAY_UART RX, (DIO12) */
++#define CONFIG_PIN_UART_RX                   0x0000000c
++/* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 0, (DIO28) */
++// #define CONFIG_RF_24GHZ                   0x0000001c
++/* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 1, (DIO29) */
++// #define CONFIG_RF_HIGH_PA                   0x0000001d
++/* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 2, (DIO30) */
++#define CONFIG_RF_SUB1GHZ                   0x0000001e
++/* LaunchPad Button BTN-1 (Left), Parent Signal: CONFIG_GPIO_BTN1 GPIO Pin, (DIO15) */
++#define CONFIG_PIN_BTN1                   0x0000000f
++/* LaunchPad Button BTN-2 (Right), Parent Signal: CONFIG_GPIO_BTN2 GPIO Pin, (DIO14) */
++#define CONFIG_PIN_BTN2                   0x0000000e
++/* LaunchPad LED Red, Parent Signal: CONFIG_GPIO_RLED GPIO Pin, (DIO6) */
++#define CONFIG_PIN_RLED                   0x00000006
++/* LaunchPad LED Green, Parent Signal: CONFIG_GPIO_GLED GPIO Pin, (DIO7) */
++#define CONFIG_PIN_GLED                   0x00000007
++/* MX25R8035F SPI Flash Slave Select, Parent Signal: CONFIG_GPIO_0 GPIO Pin, (DIO20) */
++#define CONFIG_PIN_0                   0x00000014
++/* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 SCLK, (DIO10) */
++#define CONFIG_PIN_SPI_SCLK                   0x0000000a
++/* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 MISO, (DIO8) */
++#define CONFIG_PIN_SPI_MISO                   0x00000008
++/* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 MOSI, (DIO9) */
++#define CONFIG_PIN_SPI_MOSI                   0x00000009
++#define CONFIG_TI_DRIVERS_PIN_COUNT    13
++
++
++/*
++ *  ======== RF ========
++ */
++#define Board_DIO_30_RFSW 0x0000001e
++
++
++/*
++ *  ======== SHA2 ========
++ */
++
++extern const uint_least8_t              CONFIG_SHA2_0_CONST;
++#define CONFIG_SHA2_0                   0
++#define CONFIG_TI_DRIVERS_SHA2_COUNT    1
++
++
++/*
++ *  ======== SPI ========
++ */
++
++/*
++ *  MOSI: DIO9
++ *  MISO: DIO8
++ *  SCLK: DIO10
++ *  LaunchPad SPI Bus
++ */
++extern const uint_least8_t              CONFIG_SPI_0_CONST;
++#define CONFIG_SPI_0                    0
++#define CONFIG_TI_DRIVERS_SPI_COUNT     1
++
++
++/*
++ *  ======== TRNG ========
++ */
++
++extern const uint_least8_t              CONFIG_TRNG_0_CONST;
++#define CONFIG_TRNG_0                   0
++#define CONFIG_TI_DRIVERS_TRNG_COUNT    1
++
++
++/*
++ *  ======== UART ========
++ */
++
++/*
++ *  TX: DIO13
++ *  RX: DIO12
++ *  XDS110 UART
++ */
++extern const uint_least8_t              CONFIG_DISPLAY_UART_CONST;
++#define CONFIG_DISPLAY_UART             0
++#define CONFIG_TI_DRIVERS_UART_COUNT    1
++
++
++/*
++ *  ======== Button ========
++ */
++
++/* DIO15, LaunchPad Button BTN-1 (Left) */
++extern const uint_least8_t                  CONFIG_BTN_LEFT_CONST;
++#define CONFIG_BTN_LEFT                     0
++/* DIO14, LaunchPad Button BTN-2 (Right) */
++extern const uint_least8_t                  CONFIG_BTN_RIGHT_CONST;
++#define CONFIG_BTN_RIGHT                    1
++#define CONFIG_TI_DRIVERS_BUTTON_COUNT      2
++
++
++/*
++ *  ======== LED ========
++ */
++
++/* DIO6, LaunchPad LED Red */
++extern const uint_least8_t              CONFIG_LED_RED_CONST;
++#define CONFIG_LED_RED                  0
++/* DIO7, LaunchPad LED Green */
++extern const uint_least8_t              CONFIG_LED_GREEN_CONST;
++#define CONFIG_LED_GREEN                1
++#define CONFIG_TI_DRIVERS_LED_COUNT     2
++
++
++/*
++ *  ======== Board_init ========
++ *  Perform all required TI-Drivers initialization
++ *
++ *  This function should be called once at a point before any use of
++ *  TI-Drivers.
++ */
++extern void Board_init(void);
++
++/*
++ *  ======== Board_initGeneral ========
++ *  (deprecated)
++ *
++ *  Board_initGeneral() is defined purely for backward compatibility.
++ *
++ *  All new code should use Board_init() to do any required TI-Drivers
++ *  initialization _and_ use <Driver>_init() for only where specific drivers
++ *  are explicitly referenced by the application.  <Driver>_init() functions
++ *  are idempotent.
++ */
++#define Board_initGeneral Board_init
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* include guard */
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
+new file mode 100644
+index 0000000..b8d609a
+--- /dev/null
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
+@@ -0,0 +1,339 @@
++/*
++ *  ======== ti_radio_config.c ========
++ *  Configured RadioConfig module definitions
++ *
++ *  DO NOT EDIT - This file is generated for the CC1352P1F3RGZ
++ *  by the SysConfig tool.
++ *
++ *  Radio Config module version : 1.7
++ *  SmartRF Studio data version : 2.19.0
++ */
++
++#include <ti/devices/DeviceFamily.h>
++#include DeviceFamily_constructPath(driverlib/rf_mailbox.h)
++#include DeviceFamily_constructPath(driverlib/rf_common_cmd.h)
++#include DeviceFamily_constructPath(driverlib/rf_ieee_cmd.h)
++#include <ti/drivers/rf/RF.h>
++#include DeviceFamily_constructPath(rf_patches/rf_patch_cpe_ieee_802_15_4.h)
++#include "ti_radio_config.h"
++
++
++// *********************************************************************************
++//   RF Frontend configuration
++// *********************************************************************************
++
++// TX Power tables
++// The RF_TxPowerTable_DEFAULT_PA_ENTRY and RF_TxPowerTable_HIGH_PA_ENTRY macros are defined in RF.h.
++// The following arguments are required:
++// RF_TxPowerTable_DEFAULT_PA_ENTRY(bias, gain, boost, coefficient)
++// RF_TxPowerTable_HIGH_PA_ENTRY(bias, ibboost, boost, coefficient, ldoTrim)
++// See the Technical Reference Manual for further details about the "txPower" Command field.
++// The PA settings require the CCFG_FORCE_VDDR_HH = 0 unless stated otherwise.
++
++// 868 MHz, 13 dBm
++RF_TxPowerTable_Entry txPowerTable_868_pa13[TXPOWERTABLE_868_PA13_SIZE] =
++{
++    {-20, RF_TxPowerTable_DEFAULT_PA_ENTRY(0, 3, 0, 2) },
++    {-15, RF_TxPowerTable_DEFAULT_PA_ENTRY(1, 3, 0, 3) },
++    {-10, RF_TxPowerTable_DEFAULT_PA_ENTRY(2, 3, 0, 5) },
++    {-5, RF_TxPowerTable_DEFAULT_PA_ENTRY(4, 3, 0, 5) },
++    {0, RF_TxPowerTable_DEFAULT_PA_ENTRY(8, 3, 0, 8) },
++    {1, RF_TxPowerTable_DEFAULT_PA_ENTRY(9, 3, 0, 9) },
++    {2, RF_TxPowerTable_DEFAULT_PA_ENTRY(10, 3, 0, 9) },
++    {3, RF_TxPowerTable_DEFAULT_PA_ENTRY(11, 3, 0, 10) },
++    {4, RF_TxPowerTable_DEFAULT_PA_ENTRY(13, 3, 0, 11) },
++    {5, RF_TxPowerTable_DEFAULT_PA_ENTRY(14, 3, 0, 14) },
++    {6, RF_TxPowerTable_DEFAULT_PA_ENTRY(17, 3, 0, 16) },
++    {7, RF_TxPowerTable_DEFAULT_PA_ENTRY(20, 3, 0, 19) },
++    {8, RF_TxPowerTable_DEFAULT_PA_ENTRY(24, 3, 0, 22) },
++    {9, RF_TxPowerTable_DEFAULT_PA_ENTRY(28, 3, 0, 31) },
++    {10, RF_TxPowerTable_DEFAULT_PA_ENTRY(18, 2, 0, 31) },
++    {11, RF_TxPowerTable_DEFAULT_PA_ENTRY(26, 2, 0, 51) },
++    {12, RF_TxPowerTable_DEFAULT_PA_ENTRY(16, 0, 0, 82) },
++    // The original PA value (12.5 dBm) has been rounded to an integer value.
++    {13, RF_TxPowerTable_DEFAULT_PA_ENTRY(36, 0, 0, 89) },
++    // This setting requires CCFG_FORCE_VDDR_HH = 1.
++    {14, RF_TxPowerTable_DEFAULT_PA_ENTRY(63, 0, 1, 0) },
++    RF_TxPowerTable_TERMINATION_ENTRY
++};
++
++
++// 2400 MHz, 5 dBm
++RF_TxPowerTable_Entry txPowerTable_2400_pa5[TXPOWERTABLE_2400_PA5_SIZE] =
++{
++    {-20, RF_TxPowerTable_DEFAULT_PA_ENTRY(6, 3, 0, 2) },
++    {-18, RF_TxPowerTable_DEFAULT_PA_ENTRY(8, 3, 0, 3) },
++    {-15, RF_TxPowerTable_DEFAULT_PA_ENTRY(10, 3, 0, 3) },
++    {-12, RF_TxPowerTable_DEFAULT_PA_ENTRY(12, 3, 0, 5) },
++    {-10, RF_TxPowerTable_DEFAULT_PA_ENTRY(15, 3, 0, 5) },
++    {-9, RF_TxPowerTable_DEFAULT_PA_ENTRY(16, 3, 0, 5) },
++    {-6, RF_TxPowerTable_DEFAULT_PA_ENTRY(20, 3, 0, 8) },
++    {-5, RF_TxPowerTable_DEFAULT_PA_ENTRY(22, 3, 0, 9) },
++    {-3, RF_TxPowerTable_DEFAULT_PA_ENTRY(19, 2, 0, 12) },
++    {0, RF_TxPowerTable_DEFAULT_PA_ENTRY(19, 1, 0, 20) },
++    {1, RF_TxPowerTable_DEFAULT_PA_ENTRY(22, 1, 0, 20) },
++    {2, RF_TxPowerTable_DEFAULT_PA_ENTRY(25, 1, 0, 25) },
++    {3, RF_TxPowerTable_DEFAULT_PA_ENTRY(29, 1, 0, 28) },
++    {4, RF_TxPowerTable_DEFAULT_PA_ENTRY(35, 1, 0, 39) },
++    {5, RF_TxPowerTable_DEFAULT_PA_ENTRY(23, 0, 0, 57) },
++    RF_TxPowerTable_TERMINATION_ENTRY
++};
++
++// 2400 MHz, 5 + 20 dBm
++RF_TxPowerTable_Entry txPowerTable_2400_pa5_20[TXPOWERTABLE_2400_PA5_20_SIZE] =
++{
++    {-20, RF_TxPowerTable_DEFAULT_PA_ENTRY(6, 3, 0, 2) },
++    {-18, RF_TxPowerTable_DEFAULT_PA_ENTRY(8, 3, 0, 3) },
++    {-15, RF_TxPowerTable_DEFAULT_PA_ENTRY(10, 3, 0, 3) },
++    {-12, RF_TxPowerTable_DEFAULT_PA_ENTRY(12, 3, 0, 5) },
++    {-10, RF_TxPowerTable_DEFAULT_PA_ENTRY(15, 3, 0, 5) },
++    {-9, RF_TxPowerTable_DEFAULT_PA_ENTRY(16, 3, 0, 5) },
++    {-6, RF_TxPowerTable_DEFAULT_PA_ENTRY(20, 3, 0, 8) },
++    {-5, RF_TxPowerTable_DEFAULT_PA_ENTRY(22, 3, 0, 9) },
++    {-3, RF_TxPowerTable_DEFAULT_PA_ENTRY(19, 2, 0, 12) },
++    {0, RF_TxPowerTable_DEFAULT_PA_ENTRY(19, 1, 0, 20) },
++    {1, RF_TxPowerTable_DEFAULT_PA_ENTRY(22, 1, 0, 20) },
++    {2, RF_TxPowerTable_DEFAULT_PA_ENTRY(25, 1, 0, 25) },
++    {3, RF_TxPowerTable_DEFAULT_PA_ENTRY(29, 1, 0, 28) },
++    {4, RF_TxPowerTable_DEFAULT_PA_ENTRY(35, 1, 0, 39) },
++    {5, RF_TxPowerTable_DEFAULT_PA_ENTRY(23, 0, 0, 57) },
++    {14, RF_TxPowerTable_HIGH_PA_ENTRY(22, 3, 1, 19, 27) },
++    {15, RF_TxPowerTable_HIGH_PA_ENTRY(26, 3, 1, 23, 27) },
++    {16, RF_TxPowerTable_HIGH_PA_ENTRY(30, 3, 1, 28, 27) },
++    {17, RF_TxPowerTable_HIGH_PA_ENTRY(37, 3, 1, 39, 27) },
++    {18, RF_TxPowerTable_HIGH_PA_ENTRY(32, 3, 1, 35, 48) },
++    {19, RF_TxPowerTable_HIGH_PA_ENTRY(34, 3, 1, 48, 63) },
++    {20, RF_TxPowerTable_HIGH_PA_ENTRY(53, 3, 1, 58, 63) },
++    RF_TxPowerTable_TERMINATION_ENTRY
++};
++
++
++
++//*********************************************************************************
++//  RF Setting:   IEEE 802.15.4 O-QPSK DSSS PHY (250 kbps) at 2450 MHz band
++//
++//  PHY:          ieee154
++//  Setting file: setting_ieee_802_15_4.json
++//*********************************************************************************
++
++// PARAMETER SUMMARY
++// Channel - Frequency (MHz): 2405
++// TX Power (dBm): 0
++
++// TI-RTOS RF Mode Object
++RF_Mode RF_prop_ieee154 =
++{
++    .rfMode = RF_MODE_AUTO,
++    .cpePatchFxn = &rf_patch_cpe_ieee_802_15_4,
++    .mcePatchFxn = 0,
++    .rfePatchFxn = 0
++};
++
++// Overrides for CMD_RADIO_SETUP_PA
++uint32_t pOverrides_ieee154[] =
++{
++    // override_ieee_802_15_4.json
++    // Rx: Set LNA bias current offset to +15 to saturate trim to max (default: 0)
++    (uint32_t)0x000F8883,
++    // Tx: Set DCDC settings IPEAK=3, dither = off
++    (uint32_t)0x00F388D3,
++    (uint32_t)0xFFFFFFFF
++};
++
++
++
++// CMD_RADIO_SETUP_PA
++// Radio Setup Command for Pre-Defined Schemes
++const rfc_CMD_RADIO_SETUP_PA_t RF_cmdRadioSetup_ieee154 =
++{
++    .commandNo = 0x0802,
++    .status = 0x0000,
++    .pNextOp = 0,
++    .startTime = 0x00000000,
++    .startTrigger.triggerType = 0x0,
++    .startTrigger.bEnaCmd = 0x0,
++    .startTrigger.triggerNo = 0x0,
++    .startTrigger.pastTrig = 0x0,
++    .condition.rule = 0x1,
++    .condition.nSkip = 0x0,
++    .mode = 0x01,
++    .loDivider = 0x00,
++    .config.frontEndMode = 0x0,
++    .config.biasMode = 0x1,
++    .config.analogCfgMode = 0x0,
++    .config.bNoFsPowerUp = 0x0,
++    .txPower = 0x2853,
++    .pRegOverride = pOverrides_ieee154,
++    .pRegOverrideTxStd = 0,
++    .pRegOverrideTx20 = 0
++};
++
++// CMD_FS
++// Frequency Synthesizer Programming Command
++const rfc_CMD_FS_t RF_cmdFs_ieee154 =
++{
++    .commandNo = 0x0803,
++    .status = 0x0000,
++    .pNextOp = 0,
++    .startTime = 0x00000000,
++    .startTrigger.triggerType = 0x0,
++    .startTrigger.bEnaCmd = 0x0,
++    .startTrigger.triggerNo = 0x0,
++    .startTrigger.pastTrig = 0x0,
++    .condition.rule = 0x1,
++    .condition.nSkip = 0x0,
++    .frequency = 0x0965,
++    .fractFreq = 0x0000,
++    .synthConf.bTxMode = 0x0,
++    .synthConf.refFreq = 0x0,
++    .__dummy0 = 0x00,
++    .__dummy1 = 0x00,
++    .__dummy2 = 0x00,
++    .__dummy3 = 0x0000
++};
++
++// CMD_IEEE_TX
++// IEEE 802.15.4 Transmit Command
++const rfc_CMD_IEEE_TX_t RF_cmdIeeeTx_ieee154 =
++{
++    .commandNo = 0x2C01,
++    .status = 0x0000,
++    .pNextOp = 0,
++    .startTime = 0x00000000,
++    .startTrigger.triggerType = 0x0,
++    .startTrigger.bEnaCmd = 0x0,
++    .startTrigger.triggerNo = 0x0,
++    .startTrigger.pastTrig = 0x0,
++    .condition.rule = 0x1,
++    .condition.nSkip = 0x0,
++    .txOpt.bIncludePhyHdr = 0x0,
++    .txOpt.bIncludeCrc = 0x0,
++    .txOpt.payloadLenMsb = 0x0,
++    .payloadLen = 0x1E,
++    .pPayload = 0,
++    .timeStamp = 0x00000000
++};
++
++// CMD_IEEE_RX
++// IEEE 802.15.4 Receive Command
++const rfc_CMD_IEEE_RX_t RF_cmdIeeeRx_ieee154 =
++{
++    .commandNo = 0x2801,
++    .status = 0x0000,
++    .pNextOp = 0,
++    .startTime = 0x00000000,
++    .startTrigger.triggerType = 0x0,
++    .startTrigger.bEnaCmd = 0x0,
++    .startTrigger.triggerNo = 0x0,
++    .startTrigger.pastTrig = 0x0,
++    .condition.rule = 0x1,
++    .condition.nSkip = 0x0,
++    .channel = 0x00,
++    .rxConfig.bAutoFlushCrc = 0x0,
++    .rxConfig.bAutoFlushIgn = 0x0,
++    .rxConfig.bIncludePhyHdr = 0x0,
++    .rxConfig.bIncludeCrc = 0x0,
++    .rxConfig.bAppendRssi = 0x1,
++    .rxConfig.bAppendCorrCrc = 0x1,
++    .rxConfig.bAppendSrcInd = 0x0,
++    .rxConfig.bAppendTimestamp = 0x0,
++    .pRxQ = 0,
++    .pOutput = 0,
++    .frameFiltOpt.frameFiltEn = 0x0,
++    .frameFiltOpt.frameFiltStop = 0x0,
++    .frameFiltOpt.autoAckEn = 0x0,
++    .frameFiltOpt.slottedAckEn = 0x0,
++    .frameFiltOpt.autoPendEn = 0x0,
++    .frameFiltOpt.defaultPend = 0x0,
++    .frameFiltOpt.bPendDataReqOnly = 0x0,
++    .frameFiltOpt.bPanCoord = 0x0,
++    .frameFiltOpt.maxFrameVersion = 0x3,
++    .frameFiltOpt.fcfReservedMask = 0x0,
++    .frameFiltOpt.modifyFtFilter = 0x0,
++    .frameFiltOpt.bStrictLenFilter = 0x0,
++    .frameTypes.bAcceptFt0Beacon = 0x1,
++    .frameTypes.bAcceptFt1Data = 0x1,
++    .frameTypes.bAcceptFt2Ack = 0x1,
++    .frameTypes.bAcceptFt3MacCmd = 0x1,
++    .frameTypes.bAcceptFt4Reserved = 0x1,
++    .frameTypes.bAcceptFt5Reserved = 0x1,
++    .frameTypes.bAcceptFt6Reserved = 0x1,
++    .frameTypes.bAcceptFt7Reserved = 0x1,
++    .ccaOpt.ccaEnEnergy = 0x0,
++    .ccaOpt.ccaEnCorr = 0x0,
++    .ccaOpt.ccaEnSync = 0x0,
++    .ccaOpt.ccaCorrOp = 0x1,
++    .ccaOpt.ccaSyncOp = 0x1,
++    .ccaOpt.ccaCorrThr = 0x0,
++    .ccaRssiThr = 0x64,
++    .__dummy0 = 0x00,
++    .numExtEntries = 0x00,
++    .numShortEntries = 0x00,
++    .pExtEntryList = 0,
++    .pShortEntryList = 0,
++    .localExtAddr = 0x12345678,
++    .localShortAddr = 0xABBA,
++    .localPanID = 0x0000,
++    .__dummy1 = 0x000000,
++    .endTrigger.triggerType = 0x1,
++    .endTrigger.bEnaCmd = 0x0,
++    .endTrigger.triggerNo = 0x0,
++    .endTrigger.pastTrig = 0x0,
++    .endTime = 0x00000000
++};
++
++// CMD_IEEE_CSMA
++// IEEE 802.15.4 CSMA-CA Command
++const rfc_CMD_IEEE_CSMA_t RF_cmdIeeeCsma_ieee154 =
++{
++    .commandNo = 0x2C02,
++    .status = 0x0000,
++    .pNextOp = 0,
++    .startTime = 0x00000000,
++    .startTrigger.triggerType = 0x0,
++    .startTrigger.bEnaCmd = 0x0,
++    .startTrigger.triggerNo = 0x0,
++    .startTrigger.pastTrig = 0x0,
++    .condition.rule = 0x0,
++    .condition.nSkip = 0x0,
++    .randomState = 0x0000,
++    .macMaxBE = 0x00,
++    .macMaxCSMABackoffs = 0x00,
++    .csmaConfig.initCW = 0x0,
++    .csmaConfig.bSlotted = 0x0,
++    .csmaConfig.rxOffMode = 0x0,
++    .NB = 0x00,
++    .BE = 0x00,
++    .remainingPeriods = 0x00,
++    .lastRssi = 0x00,
++    .endTrigger.triggerType = 0x0,
++    .endTrigger.bEnaCmd = 0x0,
++    .endTrigger.triggerNo = 0x0,
++    .endTrigger.pastTrig = 0x0,
++    .lastTimeStamp = 0x00000000,
++    .endTime = 0x00000000
++};
++
++// CMD_IEEE_RX_ACK
++// IEEE 802.15.4 Receive Acknowledgement Command
++const rfc_CMD_IEEE_RX_ACK_t RF_cmdIeeeRxAck_ieee154 =
++{
++    .commandNo = 0x2C03,
++    .status = 0x0000,
++    .pNextOp = 0,
++    .startTime = 0x00000000,
++    .startTrigger.triggerType = 0x0,
++    .startTrigger.bEnaCmd = 0x0,
++    .startTrigger.triggerNo = 0x0,
++    .startTrigger.pastTrig = 0x0,
++    .condition.rule = 0x0,
++    .condition.nSkip = 0x0,
++    .seqNo = 0x00,
++    .endTrigger.triggerType = 0x0,
++    .endTrigger.bEnaCmd = 0x0,
++    .endTrigger.triggerNo = 0x0,
++    .endTrigger.pastTrig = 0x0,
++    .endTime = 0x00000000
++};
++
++
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
+new file mode 100644
+index 0000000..d234031
+--- /dev/null
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
+@@ -0,0 +1,77 @@
++/*
++ *  ======== ti_radio_config.h ========
++ *  Configured RadioConfig module definitions
++ *
++ *  DO NOT EDIT - This file is generated for the CC1352P1F3RGZ
++ *  by the SysConfig tool.
++ *
++ *  Radio Config module version : 1.7
++ *  SmartRF Studio data version : 2.19.0
++ */
++#ifndef _TI_RADIO_CONFIG_H_
++#define _TI_RADIO_CONFIG_H_
++
++#include <ti/devices/DeviceFamily.h>
++#include DeviceFamily_constructPath(driverlib/rf_mailbox.h)
++#include DeviceFamily_constructPath(driverlib/rf_common_cmd.h)
++#include DeviceFamily_constructPath(driverlib/rf_ieee_cmd.h)
++#include <ti/drivers/rf/RF.h>
++
++// *********************************************************************************
++//   RF Frontend configuration
++// *********************************************************************************
++// RF design based on: LAUNCHXL-CC1352P-2
++#define LAUNCHXL_CC1352P_2
++
++// High-Power Amplifier supported
++#define SUPPORT_HIGH_PA
++
++// RF frontend configuration
++#define FRONTEND_SUB1G_DIFF_RF
++#define FRONTEND_SUB1G_EXT_BIAS
++#define FRONTEND_24G_DIFF_RF
++#define FRONTEND_24G_EXT_BIAS
++
++// Supported frequency bands
++#define SUPPORT_FREQBAND_868
++#define SUPPORT_FREQBAND_2400
++
++// TX power table size definitions
++#define TXPOWERTABLE_868_PA13_SIZE 20 // 868 MHz, 13 dBm
++#define TXPOWERTABLE_2400_PA5_SIZE 16 // 2400 MHz, 5 dBm
++#define TXPOWERTABLE_2400_PA5_20_SIZE 23 // 2400 MHz, 5 + 20 dBm
++
++// TX power tables
++extern RF_TxPowerTable_Entry txPowerTable_868_pa13[]; // 868 MHz, 13 dBm
++extern RF_TxPowerTable_Entry txPowerTable_2400_pa5[]; // 2400 MHz, 5 dBm
++extern RF_TxPowerTable_Entry txPowerTable_2400_pa5_20[]; // 2400 MHz, 5 + 20 dBm
++
++
++
++//*********************************************************************************
++//  RF Setting:   IEEE 802.15.4 O-QPSK DSSS PHY (250 kbps) at 2450 MHz band
++//
++//  PHY:          ieee154
++//  Setting file: setting_ieee_802_15_4.json
++//*********************************************************************************
++
++// PA table usage
++#define TX_POWER_TABLE_SIZE_ieee154 TXPOWERTABLE_2400_PA5_SIZE
++
++#define txPowerTable_ieee154 txPowerTable_2400_pa5
++
++// TI-RTOS RF Mode object
++extern RF_Mode RF_prop_ieee154;
++
++// RF Core API commands
++extern const rfc_CMD_RADIO_SETUP_PA_t RF_cmdRadioSetup_ieee154;
++extern const rfc_CMD_FS_t RF_cmdFs_ieee154;
++extern const rfc_CMD_IEEE_TX_t RF_cmdIeeeTx_ieee154;
++extern const rfc_CMD_IEEE_RX_t RF_cmdIeeeRx_ieee154;
++extern const rfc_CMD_IEEE_CSMA_t RF_cmdIeeeCsma_ieee154;
++extern const rfc_CMD_IEEE_RX_ACK_t RF_cmdIeeeRxAck_ieee154;
++
++// RF Core API overrides
++extern uint32_t pOverrides_ieee154[];
++
++#endif // _TI_RADIO_CONFIG_H_
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs
+new file mode 100644
+index 0000000..fa697e6
+--- /dev/null
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs
+@@ -0,0 +1,35 @@
++/*
++ *  ======== ti_utils_build_linker.cmd.genlibs ========
++ *  Libraries needed to link this application's configuration
++ *
++ *  NOTE, this feature requires software components configured in your
++ *  system to correctly indicate their dependencies and report the
++ *  libraries needed for your specific configuration.  If you find
++ *  errors, please report them on TI's E2E forums
++ *  (https://e2e.ti.com/) so they can be addressed in a future
++ *  release.
++ *
++ *  This file allows one to portably link applications that use SysConfig
++ *  _without_ having to make changes to build rules when moving to a new
++ *  device OR when upgrading to a new version of a SysConfig enabled
++ *  product.
++ *
++ *  DO NOT EDIT - This file is generated by the SysConfig tool for the
++ *                TI C/C++ toolchain
++ */
++
++/* libraries required for /third_party/spiffs */
++-l"third_party/spiffs/lib/ccs/m4f/spiffs.a"
++
++/* libraries required for /ti/drivers/RF */
++-l"ti/drivers/rf/lib/rf_multiMode_cc13x2.aem4f"
++
++/* libraries required for /ti/drivers */
++-l"ti/drivers/lib/ccs/m4f/drivers_cc13x2.a"
++-l"ti/grlib/lib/ccs/m4f/grlib.a"
++-l"ti/dpl/lib/ccs/m4f/dpl_cc13x2.a"
++
++/* libraries required for /ti/zstack */
++-l"ti/ti154stack/library/tirtos/ccs/bin/maclib_nosecure_cc13x2_2_4g.a"
++-l"ti/zstack/lib/ccs/libZStack_nwk_all_ccs.a"
++
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
+new file mode 100644
+index 0000000..177f7a3
+--- /dev/null
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
+@@ -0,0 +1,215 @@
++/*
++ * Copyright (c) 2018, Texas Instruments Incorporated
++ * All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ *
++ * *  Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ *
++ * *  Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * *  Neither the name of Texas Instruments Incorporated nor the names of
++ *    its contributors may be used to endorse or promote products derived
++ *    from this software without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
++ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
++ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
++ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
++ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
++ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
++ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
++ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
++ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
++ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ *
++ */
++
++/*
++ *                           ti_zstack_config.h
++ *
++ *  DO NOT EDIT - This file was generated by the SysConfig tool.
++ *
++ *  Macros used to define a TI Z-Stack ZigBee device. New user defined
++ *  options may be added to this file, as necessary.
++ *
++ */
++
++#ifndef TI_ZSTACK_CONFIG_H
++#define TI_ZSTACK_CONFIG_H
++
++/* Default (primary) and secondary channel masks. Secondary mask is used when the
++ * default channels fail.
++ * Channels are defined in the following:
++ *        11 - 26 : 2.4 GHz     0x07FFF800
++ */
++#ifndef DEFAULT_CHANLIST
++#define DEFAULT_CHANLIST              0x00000800
++#endif
++
++#ifndef SECONDARY_CHANLIST
++#define SECONDARY_CHANLIST            0x00000000
++#endif
++
++/* Define the default PAN ID.
++ *
++ * Setting this to a value other than 0xFFFF causes
++ * ZDO_COORD to use this value as its PAN ID and
++ * Routers and end devices to join PAN with this ID
++ */
++#ifndef ZDAPP_CONFIG_PAN_ID
++#define ZDAPP_CONFIG_PAN_ID           0xFFFF
++#endif
++
++/* Specifiy whether to set the EPID to the Extended Address, or to use the
++ * custom Extended Pan ID (EPID) defined by ZDAPP_CONFIG_EPID
++ */
++#ifndef SET_EPID_AS_EXT_ADDR
++#define SET_EPID_AS_EXT_ADDR          TRUE
++#endif
++
++/* Define the default Extended Pan ID (EPID)
++ * ZDAPP_CONFIG_EPID is only used if SET_EPID_AS_EXT_ADDR is FALSE. Otherwise,
++ * the EPID is set to the Extended Address.
++ */
++#ifndef ZDAPP_CONFIG_EPID
++#define ZDAPP_CONFIG_EPID             {0x01,0x23,0x45,0x67,0x89,0xAB,0xCD,0xEF}
++#endif
++
++/* in seconds; set to 0 to turn off route expiry */
++#ifndef ROUTE_EXPIRY_TIME
++#define ROUTE_EXPIRY_TIME             30
++#endif
++
++/* This number is used by polled devices, since the spec'd formula
++ * doesn't work for sleeping end devices.  For non-polled devices,
++ * a formula is used. Value is in 2 milliseconds periods
++ */
++#ifndef APSC_ACK_WAIT_DURATION_POLLED
++#define APSC_ACK_WAIT_DURATION_POLLED 500
++#endif
++
++/*  Default indirect message holding timeout value:
++ *  1-65535 (0 -> 65536) X CNT_RTG_TIMER X RTG_TIMER_INTERVAL
++ */
++#ifndef NWK_INDIRECT_MSG_TIMEOUT
++#define NWK_INDIRECT_MSG_TIMEOUT      7
++#endif
++
++/* The number of simultaneous route discoveries in network */
++#ifndef MAX_RREQ_ENTRIES
++#define MAX_RREQ_ENTRIES              8
++#endif
++
++/* The maximum number of MAC frame transmission attempts allowed */
++#ifndef APSC_MAX_FRAME_RETRIES
++#define APSC_MAX_FRAME_RETRIES        3
++#endif
++
++/* Max number of times attempts looking for the next hop address of a message */
++#ifndef NWK_MAX_DATA_RETRIES
++#define NWK_MAX_DATA_RETRIES          2
++#endif
++
++/* The maximum number of groups in the groups table */
++#ifndef APS_MAX_GROUPS
++#define APS_MAX_GROUPS                16
++#endif
++
++/* Number of entries in the regular routing table plus additional
++ * entries for route repair
++ */
++#ifndef MAX_RTG_ENTRIES
++#define MAX_RTG_ENTRIES               40
++#endif
++
++/* Maximum number of entries in the Binding table. */
++#ifndef NWK_MAX_BINDING_ENTRIES
++#define NWK_MAX_BINDING_ENTRIES       4
++#endif
++
++/* Default security key. */
++#ifndef DEFAULT_KEY
++#define DEFAULT_KEY                   {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
++#endif
++
++/* ZigBee Alliance Pre-configured Distributed Link Key (for Distributed networks) */
++#ifndef DISTRIBUTED_GLOBAL_LINK_KEY
++#define DISTRIBUTED_GLOBAL_LINK_KEY   {0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF}
++#endif
++
++/* ZigBee Alliance Pre-configured TC Link Key - 'ZigBeeAlliance09' (for Centralized networks) */
++#ifndef DEFAULT_TC_LINK_KEY
++#define DEFAULT_TC_LINK_KEY           {0x5a,0x69,0x67,0x42,0x65,0x65,0x41,0x6c,0x6c,0x69,0x61,0x6e,0x63,0x65,0x30,0x39}
++#endif
++
++/* The number of milliseconds to wait between data request polls to the coordinator. */
++#ifndef TXPOWER
++#define TXPOWER                     0
++#endif
++
++/****************************************
++ * The following are for End Devices only
++ ***************************************/
++
++/* Determine whether the radio on an End Device is always on */
++#ifndef RFD_RCVC_ALWAYS_ON
++#define RFD_RCVC_ALWAYS_ON            FALSE
++#endif
++
++/* The minimum poll rate. */
++#ifndef MINIMUM_APP_POLL_RATE
++#define MINIMUM_APP_POLL_RATE                     100
++#endif
++
++/* The number of milliseconds to wait between data request polls to the coordinator. */
++#ifndef POLL_RATE
++#define POLL_RATE                     3000
++#endif
++
++/* This is used after receiving a data indication to poll immediately
++ * for queued messages...in milliseconds.
++ */
++#ifndef QUEUED_POLL_RATE
++#define QUEUED_POLL_RATE              100
++#endif
++
++/* This is used after receiving a data confirmation to poll immediately
++ * for response messages...in milliseconds
++ */
++#ifndef RESPONSE_POLL_RATE
++#define RESPONSE_POLL_RATE            100
++#endif
++
++/* This is used as an alternate response poll rate only for rejoin request.
++ * This rate is determined by the response time of the parent that the device
++ * is trying to join.
++ */
++#ifndef REJOIN_POLL_RATE
++#define REJOIN_POLL_RATE              440
++#endif
++
++/* Maximum number of devices in the Assoc/Device list. */
++#ifndef NWK_MAX_DEVICE_LIST
++#define NWK_MAX_DEVICE_LIST           20
++#endif
++
++/* Total Number of APS keys that a TC can manage. This is equal to the number of devices a ZC can allow to join the network */
++#ifndef ZDSECMGR_TC_DEVICE_MAX
++#define ZDSECMGR_TC_DEVICE_MAX        40
++#endif
++
++/* Value used by end device when sending End Device Timeout Request */
++/* This is an index into table timeoutValue[] defined in nwk_globals.c */
++#ifndef END_DEV_TIMEOUT_VALUE
++#define END_DEV_TIMEOUT_VALUE        8
++#endif
++
++
++#endif /* TI_ZSTACK_CONFIG_H */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
 index 9680070..508b792 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
