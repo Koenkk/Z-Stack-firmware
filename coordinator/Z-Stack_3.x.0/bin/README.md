@@ -92,7 +92,7 @@
     <td>DIO_15</td>
     <td>No</td>
     <td>DIO_5: 20dBm PA<br>DIO_6: 2.4GHz</td>
-    <td>DIO_7 (Green)<br>DIO_8 (Red)<br></td>
+    <td>DIO_8 (Green)<br>DIO_7 (Red)<br></td>
   </tr>
 </tbody>
 </table>
