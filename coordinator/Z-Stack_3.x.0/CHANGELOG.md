@@ -1,3 +1,8 @@
+# 20201113
+- Optimize network parameters according to https://www.ti.com/lit/an/swra650b/swra650b.pdf
+- Change default CC2652R/CC2652RB transmit power from 0dBm to 5dBm
+- Change default CC1352P/CC2652P transmit power from 0dBm to 20dBm
+
 # 20201026
 - SimpleLink SDK 4.30.00.54 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/4.30.00.54/exports/changelog.html))
 - Expose `AssocAdd` function

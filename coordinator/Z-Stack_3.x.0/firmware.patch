@@ -1,4 +1,4 @@
-From be86effce181ab253c7a6238cf7eda62ca2e86ce Mon Sep 17 00:00:00 2001
+From 0366f33f4ce1f2132741a1a3aaec780fdd25c31e Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Fri, 13 Nov 2020 14:36:02 +0100
 Subject: [PATCH 1/1] Own changes
@@ -16,8 +16,8 @@ Subject: [PATCH 1/1] Own changes
  .../syscfg/ti_devices_config.c                |  103 ++
  .../syscfg/ti_drivers_config.c                | 1050 +++++++++++++++++
  .../syscfg/ti_drivers_config.h                |  283 +++++
- .../syscfg/ti_radio_config.c                  |  339 ++++++
- .../syscfg/ti_radio_config.h                  |   77 ++
+ .../syscfg/ti_radio_config.c                  |  379 ++++++
+ .../syscfg/ti_radio_config.h                  |   79 ++
  .../syscfg/ti_utils_build_linker.cmd.genlibs  |   35 +
  .../syscfg/ti_zstack_config.h                 |  215 ++++
  .../Application/mt/mt.h                       |    2 +
@@ -29,7 +29,7 @@ Subject: [PATCH 1/1] Own changes
  .../Stack/sys/zglobals.c                      |    6 +-
  .../Stack/zdo/zd_app.c                        |   22 +-
  znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |   12 +-
- znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   |   30 +-
+ znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   |   31 +-
  .../Application/mt/mt.h                       |    2 +
  .../Application/mt/mt_util.c                  |   64 +
  .../Application/mt/mt_version.c               |    8 +-
@@ -39,8 +39,8 @@ Subject: [PATCH 1/1] Own changes
  .../Stack/sys/zglobals.c                      |    6 +-
  .../Stack/zdo/zd_app.c                        |   22 +-
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |    6 +-
- znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |   30 +-
- 36 files changed, 2621 insertions(+), 100 deletions(-)
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |   31 +-
+ 36 files changed, 2665 insertions(+), 100 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
@@ -155,14 +155,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..da6cb80 100644
+index 63c143b..9c8295c 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20201103
++#define CODE_REVISION_NUMBER 20201113
 +
  /******************************************************************************
   * CONSTANTS
@@ -183,7 +183,7 @@ index 63c143b..da6cb80 100644
  /******************************************************************************
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..820b470
+index 0000000..3332194
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,65 @@
@@ -231,7 +231,7 @@ index 0000000..820b470
 + */
 +#define APSC_ACK_WAIT_DURATION_POLLED 500
 +
-+// From https://www.ti.com/lit/an/swra650b/swra650b.pdf?ts=1604389355381
++// From https://www.ti.com/lit/an/swra650b/swra650b.pdf
 +#define LINK_DOWN_TRIGGER 12
 +#define NWK_ROUTE_AGE_LIMIT 5
 +#define DEF_NWK_RADIUS 15
@@ -1837,10 +1837,10 @@ index 0000000..abf128f
 +#endif /* include guard */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
 new file mode 100644
-index 0000000..b8d609a
+index 0000000..34ea7bd
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
-@@ -0,0 +1,339 @@
+@@ -0,0 +1,379 @@
 +/*
 + *  ======== ti_radio_config.c ========
 + *  Configured RadioConfig module definitions
@@ -1961,7 +1961,7 @@ index 0000000..b8d609a
 +
 +// PARAMETER SUMMARY
 +// Channel - Frequency (MHz): 2405
-+// TX Power (dBm): 0
++// TX Power (dBm): 20
 +
 +// TI-RTOS RF Mode Object
 +RF_Mode RF_prop_ieee154 =
@@ -1980,6 +1980,46 @@ index 0000000..b8d609a
 +    (uint32_t)0x000F8883,
 +    // Tx: Set DCDC settings IPEAK=3, dither = off
 +    (uint32_t)0x00F388D3,
++    (uint32_t)0xFFFFFFFF
++};
++
++// Overrides for CMD_RADIO_SETUP_PA
++uint32_t pOverrides_ieee154TxStd[] =
++{
++    // override_txstd_placeholder.json
++    // TX Standard power override
++    TX_STD_POWER_OVERRIDE(0x7217),
++    // The ANADIV radio parameter based on LO divider and front end settings
++    (uint32_t)0x05320703,
++    // override_txstd_settings.json
++    // Set RTIM offset to default for standard PA
++    (uint32_t)0x00008783,
++    // Set synth mux to default value for standard PA
++    (uint32_t)0x050206C3,
++    // Set TXRX pin to 0 in RX and high impedance in idle/TX. 
++    HW_REG_OVERRIDE(0x60A8,0x0401),
++    // Tx: Set DCDC settings IPEAK=3, dither = off
++    (uint32_t)0x00F388D3,
++    (uint32_t)0xFFFFFFFF
++};
++
++// Overrides for CMD_RADIO_SETUP_PA
++uint32_t pOverrides_ieee154Tx20[] =
++{
++    // override_tx20_placeholder.json
++    // TX HighPA power override
++    TX20_POWER_OVERRIDE(0x003F75F5),
++    // The ANADIV radio parameter based on LO divider and front end settings
++    (uint32_t)0x01C20703,
++    // override_tx20_settings.json
++    // Set RTIM offset to 3 for high power PA
++    (uint32_t)0x00038783,
++    // Set synth mux for high power PA
++    (uint32_t)0x010206C3,
++    // Set TXRX pin to 0 in RX/TX and high impedance in idle. 
++    HW_REG_OVERRIDE(0x60A8,0x0001),
++    // Tx: Set DCDC settings IPEAK=7, dither = off
++    (uint32_t)0x00F788D3,
 +    (uint32_t)0xFFFFFFFF
 +};
 +
@@ -2005,10 +2045,10 @@ index 0000000..b8d609a
 +    .config.biasMode = 0x1,
 +    .config.analogCfgMode = 0x0,
 +    .config.bNoFsPowerUp = 0x0,
-+    .txPower = 0x2853,
++    .txPower = 0xFFFF,
 +    .pRegOverride = pOverrides_ieee154,
-+    .pRegOverrideTxStd = 0,
-+    .pRegOverrideTx20 = 0
++    .pRegOverrideTxStd = pOverrides_ieee154TxStd,
++    .pRegOverrideTx20 = pOverrides_ieee154Tx20
 +};
 +
 +// CMD_FS
@@ -2182,10 +2222,10 @@ index 0000000..b8d609a
 +
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
 new file mode 100644
-index 0000000..d234031
+index 0000000..4d1697c
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,79 @@
 +/*
 + *  ======== ti_radio_config.h ========
 + *  Configured RadioConfig module definitions
@@ -2244,9 +2284,9 @@ index 0000000..d234031
 +//*********************************************************************************
 +
 +// PA table usage
-+#define TX_POWER_TABLE_SIZE_ieee154 TXPOWERTABLE_2400_PA5_SIZE
++#define TX_POWER_TABLE_SIZE_ieee154 TXPOWERTABLE_2400_PA5_20_SIZE
 +
-+#define txPowerTable_ieee154 txPowerTable_2400_pa5
++#define txPowerTable_ieee154 txPowerTable_2400_pa5_20
 +
 +// TI-RTOS RF Mode object
 +extern RF_Mode RF_prop_ieee154;
@@ -2261,6 +2301,8 @@ index 0000000..d234031
 +
 +// RF Core API overrides
 +extern uint32_t pOverrides_ieee154[];
++extern uint32_t pOverrides_ieee154TxStd[];
++extern uint32_t pOverrides_ieee154Tx20[];
 +
 +#endif // _TI_RADIO_CONFIG_H_
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs
@@ -2306,7 +2348,7 @@ index 0000000..fa697e6
 +
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
 new file mode 100644
-index 0000000..d42f24e
+index 0000000..22ca879
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
 @@ -0,0 +1,215 @@
@@ -2463,7 +2505,7 @@ index 0000000..d42f24e
 +
 +/* The number of milliseconds to wait between data request polls to the coordinator. */
 +#ifndef TXPOWER
-+#define TXPOWER                     0
++#define TXPOWER                     20
 +#endif
 +
 +/****************************************
@@ -2628,14 +2670,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..da6cb80 100644
+index 63c143b..9c8295c 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20201103
++#define CODE_REVISION_NUMBER 20201113
 +
  /******************************************************************************
   * CONSTANTS
@@ -2656,7 +2698,7 @@ index 63c143b..da6cb80 100644
  /******************************************************************************
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..495ace0
+index 0000000..7017d6f
 --- /dev/null
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,52 @@
@@ -2704,7 +2746,7 @@ index 0000000..495ace0
 + */
 +#define APSC_ACK_WAIT_DURATION_POLLED 500
 +
-+// From https://www.ti.com/lit/an/swra650b/swra650b.pdf?ts=1604389355381
++// From https://www.ti.com/lit/an/swra650b/swra650b.pdf
 +#define LINK_DOWN_TRIGGER 12
 +#define NWK_ROUTE_AGE_LIMIT 5
 +#define DEF_NWK_RADIUS 15
@@ -2848,7 +2890,7 @@ index 2b19342..b448752 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-index 58838a8..54012e0 100644
+index 58838a8..4001ba2 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -50,6 +50,7 @@ CCFG.enableBootloaderBackdoor = true;
@@ -2870,7 +2912,7 @@ index 58838a8..54012e0 100644
  
  NVS2.$name                          = "CONFIG_NVSEXTERNAL";
  NVS2.nvsType                        = "External";
-@@ -122,18 +123,19 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
+@@ -122,18 +123,20 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
  SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
  SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
  
@@ -2891,6 +2933,7 @@ index 58838a8..54012e0 100644
 +zstack.touchlink.$name                                 = "ti_zstack_touchlink_zstack_touchlink0";
 +zstack.pm.$name                                        = "ti_zstack_pm_zstack_pm0";
 +zstack.rf.$name                                        = "ti_zstack_rf_zstack_rf0";
++zstack.rf.txPower                                      = "5";
 +zstack.rf.radioConfig.$name                            = "ti_devices_radioconfig_settings_ieee_15_40";
 +zstack.rf.radioConfig.codeExportConfig.$name           = "ti_devices_radioconfig_code_export_param0";
 +zstack.network.$name                                   = "ti_zstack_network_zstack_network0";
@@ -3005,14 +3048,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..da6cb80 100644
+index 63c143b..9c8295c 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20201103
++#define CODE_REVISION_NUMBER 20201113
 +
  /******************************************************************************
   * CONSTANTS
@@ -3033,7 +3076,7 @@ index 63c143b..da6cb80 100644
  /******************************************************************************
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..495ace0
+index 0000000..7017d6f
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 @@ -0,0 +1,52 @@
@@ -3081,7 +3124,7 @@ index 0000000..495ace0
 + */
 +#define APSC_ACK_WAIT_DURATION_POLLED 500
 +
-+// From https://www.ti.com/lit/an/swra650b/swra650b.pdf?ts=1604389355381
++// From https://www.ti.com/lit/an/swra650b/swra650b.pdf
 +#define LINK_DOWN_TRIGGER 12
 +#define NWK_ROUTE_AGE_LIMIT 5
 +#define DEF_NWK_RADIUS 15
@@ -3219,7 +3262,7 @@ index e3fea91..b448752 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-index a44107b..722142c 100644
+index a44107b..193e085 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -49,6 +49,7 @@ CCFG.enableBootloader         = true;
@@ -3241,7 +3284,7 @@ index a44107b..722142c 100644
  
  NVS2.$name                          = "CONFIG_NVSEXTERNAL";
  NVS2.nvsType                        = "External";
-@@ -121,18 +122,19 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
+@@ -121,18 +122,20 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
  SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
  SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
  
@@ -3262,6 +3305,7 @@ index a44107b..722142c 100644
 +zstack.touchlink.$name                                 = "ti_zstack_touchlink_zstack_touchlink0";
 +zstack.pm.$name                                        = "ti_zstack_pm_zstack_pm0";
 +zstack.rf.$name                                        = "ti_zstack_rf_zstack_rf0";
++zstack.rf.txPower                                      = "5";
 +zstack.rf.radioConfig.$name                            = "ti_devices_radioconfig_settings_ieee_15_40";
 +zstack.rf.radioConfig.codeExportConfig.$name           = "ti_devices_radioconfig_code_export_param0";
 +zstack.network.$name                                   = "ti_zstack_network_zstack_network0";
