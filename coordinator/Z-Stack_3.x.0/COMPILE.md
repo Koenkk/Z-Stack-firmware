@@ -13,8 +13,8 @@
 1. **Only** for `znp_CC1352P_2_LAUNCHXL_tirtos_css`:
     - Right click on `znp.syscfg` -> *Delete*
     - Right click on `znp_CC1352P_2_LAUNCHXL_tirtos_css` -> *Properties*.
-        - Go to *CCS Build* - *ARM Linker* - *File Search Path* -> Under *Include library file or command file as input (--library, -l)* change `${PROJECT_BUILD_DIR}/syscfg/ti_utils_build_linker.cmd.genlibs` to `${PROJECT_ROOT}/syscfg/ti_utils_build_linker.cmd.genlibs`
-        - Go to *CCS Build* - *ARM Compiler* - *Include Options* -> Under *Add dir to #include search path (--include_path, -l)* add `${PROJECT_ROOT}/syscfg` as the **last** entry.
+        - Go to *(CCS) Build* - *ARM Compiler* - *Include Options* -> Under *Add dir to #include search path (--include_path, -l)* add `${PROJECT_ROOT}/syscfg` as the **last** entry.
+        - Go to *(CCS) Build* - *ARM Linker* - *File Search Path* -> Under *Include library file or command file as input (--library, -l)* change `${PROJECT_BUILD_DIR}/syscfg/ti_utils_build_linker.cmd.genlibs` to `${PROJECT_ROOT}/syscfg/ti_utils_build_linker.cmd.genlibs`
 1. Build the 3 projects; right click -> *Build project*.
-    - **Important:** by default the **launchpad** variant of the CC1352P2_CC2652P (= `znp_CC1352P_2_LAUNCHXL_tirtos_ccs`) is build. To build the **other** variant comment `#define LAUNCHPAD_CONFIG 1` in `preinclude.h`.
+    - **Important:** by default the **launchpad** variant of the CC1352P2_CC2652P (= `znp_CC1352P_2_LAUNCHXL_tirtos_ccs`) is build. To build the **other** variant comment `#define LAUNCHPAD_CONFIG 1` in `preinclude.h` (located under `Stack/Config/`), don't forget to save.
 1. Once finished, the firmware can be found under `znp_[CC26X2R1/CC1352P_2/CC2652RB]_LAUNCHXL_tirtos_ccs/default/znp_[CC26X2R1/CC2652RB/CC1352P_2]_LAUNCHXL_tirtos_ccs.hex`
