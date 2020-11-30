@@ -1,1 +1,1 @@
-Firmwares are hosted [here](https://github.com/jethome-ru/zigbee-firmware/tree/master/ti/coordinator/cc2538_cc2592#modkam-v3-differences-form-the-original-ti-znp-z-stack-302).
+Firmwares are hosted [here](https://github.com/jethome-ru/zigbee-firmware/tree/master/ti/coordinator/cc2538_cc2592).
