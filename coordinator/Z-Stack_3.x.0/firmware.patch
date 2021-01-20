@@ -1,4 +1,4 @@
-From 6894f2affad32a180ea298c04579287532c1f618 Mon Sep 17 00:00:00 2001
+From fad3180b73f7c8a913ca9473100395c05718bc27 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Fri, 13 Nov 2020 14:36:02 +0100
 Subject: [PATCH 1/1] Own changes
@@ -13,14 +13,14 @@ Subject: [PATCH 1/1] Own changes
  .../Stack/nwk/nwk_globals.c                   |    8 +-
  .../Stack/sys/zglobals.c                      |    6 +-
  .../Stack/zdo/zd_app.c                        |   30 +-
- .../cc13x2lp.cmd                              |    6 +-
+ .../cc13x2_cc26x2.cmd                         |    6 +-
  .../syscfg/ti_devices_config.c                |  103 ++
- .../syscfg/ti_drivers_config.c                | 1050 +++++++++++++++++
+ .../syscfg/ti_drivers_config.c                | 1060 +++++++++++++++++
  .../syscfg/ti_drivers_config.h                |  283 +++++
- .../syscfg/ti_radio_config.c                  |  339 ++++++
+ .../syscfg/ti_radio_config.c                  |  340 ++++++
  .../syscfg/ti_radio_config.h                  |   77 ++
  .../syscfg/ti_utils_build_linker.cmd.genlibs  |   35 +
- .../syscfg/ti_zstack_config.h                 |  215 ++++
+ .../syscfg/ti_zstack_config.h                 |  226 ++++
  .../Application/mt/mt.h                       |    2 +
  .../Application/mt/mt_util.c                  |   64 +
  .../Application/mt/mt_version.c               |    8 +-
@@ -30,7 +30,7 @@ Subject: [PATCH 1/1] Own changes
  .../Stack/nwk/nwk_globals.c                   |    8 +-
  .../Stack/sys/zglobals.c                      |    6 +-
  .../Stack/zdo/zd_app.c                        |   30 +-
- znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |   12 +-
+ .../cc13x2_cc26x2.cmd                         |    6 +-
  znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   |   31 +-
  .../Application/mt/mt.h                       |    2 +
  .../Application/mt/mt_util.c                  |   64 +
@@ -41,9 +41,9 @@ Subject: [PATCH 1/1] Own changes
  .../Stack/nwk/nwk_globals.c                   |    8 +-
  .../Stack/sys/zglobals.c                      |    6 +-
  .../Stack/zdo/zd_app.c                        |   30 +-
- znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd |    6 +-
+ .../cc13x2_cc26x2.cmd                         |    6 +-
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |   31 +-
- 39 files changed, 2659 insertions(+), 112 deletions(-)
+ 39 files changed, 2681 insertions(+), 106 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
@@ -158,14 +158,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..2b821f4 100644
+index 63c143b..11325fd 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210107
++#define CODE_REVISION_NUMBER 20210120
 +
  /******************************************************************************
   * CONSTANTS
@@ -304,7 +304,7 @@ index 3a7afa3..e3a2706 100644
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-index 62c0605..f9be30a 100644
+index a78ad3c..bfe7884 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -323,7 +323,7 @@ index 62c0605..f9be30a 100644
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index e716024..f8d8404 100644
+index 8ea2ac3..4879330 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 @@ -104,7 +104,7 @@ uint8_t zgSecurePermitJoin = TRUE;
@@ -347,7 +347,7 @@ index e716024..f8d8404 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index 17ac2f5..aca29b0 100644
+index 1f807ca..b935b6a 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 @@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
@@ -368,7 +368,7 @@ index 17ac2f5..aca29b0 100644
        }
        else
        {
-@@ -882,12 +881,11 @@ void ZDApp_NetworkStartEvt( void )
+@@ -885,12 +884,11 @@ void ZDApp_NetworkStartEvt( void )
          bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
        }
  
@@ -386,7 +386,7 @@ index 17ac2f5..aca29b0 100644
      }
      else
      {
-@@ -3133,6 +3131,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3132,6 +3130,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -401,10 +401,10 @@ index 17ac2f5..aca29b0 100644
  }
  
  /******************************************************************************
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
-index 2b5d2ae..c12e296 100755
---- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2lp.cmd
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
+index 2dcc711..2c23e66 100755
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
 @@ -70,9 +70,9 @@
  /* must be located at the beginning of the application.                      */
  
@@ -529,10 +529,10 @@ index 0000000..b66a3f9
 +#include DeviceFamily_constructPath(startup_files/ccfg.c)
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
 new file mode 100644
-index 0000000..327efbf
+index 0000000..db9821f
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
-@@ -0,0 +1,1050 @@
+@@ -0,0 +1,1060 @@
 +/*
 + *  ======== ti_drivers_config.c ========
 + *  Configured TI-Drivers module definitions
@@ -1312,6 +1312,16 @@ index 0000000..327efbf
 +const uint_least8_t TRNG_count = CONFIG_TRNG_COUNT;
 +
 +/*
++ *  =============================== Temperature ===============================
++ */
++#include <ti/drivers/Temperature.h>
++#include <ti/drivers/temperature/TemperatureCC26X2.h>
++
++const TemperatureCC26X2_Config TemperatureCC26X2_config = {
++    .intPriority = (~0),
++};
++
++/*
 + *  =============================== UART ===============================
 + */
 +
@@ -1568,13 +1578,13 @@ index 0000000..327efbf
 +    /* ==== /ti/drivers/Power initialization ==== */
 +    Power_init();
 +
++    /* ==== /ti/devices/CCFGTemplate initialization ==== */
++
 +    /* ==== /ti/drivers/PIN initialization ==== */
 +    if (PIN_init(BoardGpioInitTable) != PIN_SUCCESS) {
 +        /* Error with PIN_init */
 +        while (1);
 +    }
-+    /* ==== /ti/devices/CCFGTemplate initialization ==== */
-+
 +    /* ==== /ti/drivers/RF initialization ==== */
 +
 +
@@ -1874,10 +1884,10 @@ index 0000000..abf128f
 +#endif /* include guard */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
 new file mode 100644
-index 0000000..098f101
+index 0000000..ac1e16f
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
-@@ -0,0 +1,339 @@
+@@ -0,0 +1,340 @@
 +/*
 + *  ======== ti_radio_config.c ========
 + *  Configured RadioConfig module definitions
@@ -1885,8 +1895,8 @@ index 0000000..098f101
 + *  DO NOT EDIT - This file is generated for the CC1352P1F3RGZ
 + *  by the SysConfig tool.
 + *
-+ *  Radio Config module version : 1.7
-+ *  SmartRF Studio data version : 2.19.0
++ *  Radio Config module version : 1.8
++ *  SmartRF Studio data version : 2.20.0
 + */
 +
 +#include <ti/devices/DeviceFamily.h>
@@ -1901,6 +1911,7 @@ index 0000000..098f101
 +// *********************************************************************************
 +//   RF Frontend configuration
 +// *********************************************************************************
++// RF design based on: LAUNCHXL-CC1352P-2 (CC1352PEM-XD4251-XD24-PA24_10dBm)
 +
 +// TX Power tables
 +// The RF_TxPowerTable_DEFAULT_PA_ENTRY and RF_TxPowerTable_HIGH_PA_ENTRY macros are defined in RF.h.
@@ -1990,7 +2001,7 @@ index 0000000..098f101
 +
 +
 +//*********************************************************************************
-+//  RF Setting:   IEEE 802.15.4 O-QPSK DSSS PHY (250 kbps) at 2450 MHz band
++//  RF Setting:   IEEE 802.15.4-2006, 250 kbps, OQPSK, DSSS = 1:8
 +//
 +//  PHY:          ieee154
 +//  Setting file: setting_ieee_802_15_4.json
@@ -2219,7 +2230,7 @@ index 0000000..098f101
 +
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
 new file mode 100644
-index 0000000..d234031
+index 0000000..1e63c91
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
 @@ -0,0 +1,77 @@
@@ -2230,8 +2241,8 @@ index 0000000..d234031
 + *  DO NOT EDIT - This file is generated for the CC1352P1F3RGZ
 + *  by the SysConfig tool.
 + *
-+ *  Radio Config module version : 1.7
-+ *  SmartRF Studio data version : 2.19.0
++ *  Radio Config module version : 1.8
++ *  SmartRF Studio data version : 2.20.0
 + */
 +#ifndef _TI_RADIO_CONFIG_H_
 +#define _TI_RADIO_CONFIG_H_
@@ -2245,7 +2256,7 @@ index 0000000..d234031
 +// *********************************************************************************
 +//   RF Frontend configuration
 +// *********************************************************************************
-+// RF design based on: LAUNCHXL-CC1352P-2
++// RF design based on: LAUNCHXL-CC1352P-2 (CC1352PEM-XD4251-XD24-PA24_10dBm)
 +#define LAUNCHXL_CC1352P_2
 +
 +// High-Power Amplifier supported
@@ -2274,7 +2285,7 @@ index 0000000..d234031
 +
 +
 +//*********************************************************************************
-+//  RF Setting:   IEEE 802.15.4 O-QPSK DSSS PHY (250 kbps) at 2450 MHz band
++//  RF Setting:   IEEE 802.15.4-2006, 250 kbps, OQPSK, DSSS = 1:8
 +//
 +//  PHY:          ieee154
 +//  Setting file: setting_ieee_802_15_4.json
@@ -2343,10 +2354,10 @@ index 0000000..fa697e6
 +
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
 new file mode 100644
-index 0000000..89dad74
+index 0000000..69447c1
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
-@@ -0,0 +1,215 @@
+@@ -0,0 +1,226 @@
 +/*
 + * Copyright (c) 2018, Texas Instruments Incorporated
 + * All rights reserved.
@@ -2431,17 +2442,9 @@ index 0000000..89dad74
 +#define ZDAPP_CONFIG_EPID             {0x01,0x23,0x45,0x67,0x89,0xAB,0xCD,0xEF}
 +#endif
 +
-+/* in seconds; set to 0 to turn off route expiry */
++/* in seconds; set to 255 to turn off route expiry */
 +#ifndef ROUTE_EXPIRY_TIME
 +#define ROUTE_EXPIRY_TIME             30
-+#endif
-+
-+/* This number is used by polled devices, since the spec'd formula
-+ * doesn't work for sleeping end devices.  For non-polled devices,
-+ * a formula is used. Value is in 2 milliseconds periods
-+ */
-+#ifndef APSC_ACK_WAIT_DURATION_POLLED
-+#define APSC_ACK_WAIT_DURATION_POLLED 3000
 +#endif
 +
 +/*  Default indirect message holding timeout value:
@@ -2457,13 +2460,26 @@ index 0000000..89dad74
 +#endif
 +
 +/* The maximum number of MAC frame transmission attempts allowed */
-+#ifndef APSC_MAX_FRAME_RETRIES
-+#define APSC_MAX_FRAME_RETRIES        3
++#ifndef ZMAC_MAX_FRAME_RETRIES
++#define ZMAC_MAX_FRAME_RETRIES          3
 +#endif
 +
 +/* Max number of times attempts looking for the next hop address of a message */
 +#ifndef NWK_MAX_DATA_RETRIES
 +#define NWK_MAX_DATA_RETRIES          2
++#endif
++
++/* The maximum number of times APS frames are retried after not receiving an APS ACK */
++#ifndef APSC_MAX_FRAME_RETRIES
++#define APSC_MAX_FRAME_RETRIES        3
++#endif
++
++/* This number is used by polled devices, since the spec'd formula
++ * doesn't work for sleeping end devices.  For non-polled devices,
++ * a formula is used. Value is in 2 milliseconds periods
++ */
++#ifndef APSC_ACK_WAIT_DURATION_POLLED
++#define APSC_ACK_WAIT_DURATION_POLLED 3000
 +#endif
 +
 +/* The maximum number of groups in the groups table */
@@ -2508,8 +2524,12 @@ index 0000000..89dad74
 + ***************************************/
 +
 +/* Determine whether the radio on an End Device is always on */
-+#ifndef RFD_RCVC_ALWAYS_ON
-+#define RFD_RCVC_ALWAYS_ON            FALSE
++#ifndef RFD_RX_ALWAYS_ON_CAPABLE
++#define RFD_RX_ALWAYS_ON_CAPABLE            TRUE
++#endif
++
++#ifndef RFD_RX_ALWAYS_ON
++#define RFD_RX_ALWAYS_ON                    FALSE
 +#endif
 +
 +/* The minimum poll rate. */
@@ -2559,6 +2579,8 @@ index 0000000..89dad74
 +#ifndef END_DEV_TIMEOUT_VALUE
 +#define END_DEV_TIMEOUT_VALUE        8
 +#endif
++
++
 +
 +
 +#endif /* TI_ZSTACK_CONFIG_H */
@@ -2665,14 +2687,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..2b821f4 100644
+index 63c143b..11325fd 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210107
++#define CODE_REVISION_NUMBER 20210120
 +
  /******************************************************************************
   * CONSTANTS
@@ -2798,7 +2820,7 @@ index 3a7afa3..e3a2706 100644
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-index 62c0605..f9be30a 100644
+index a78ad3c..bfe7884 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -2817,7 +2839,7 @@ index 62c0605..f9be30a 100644
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index e716024..f8d8404 100644
+index 8ea2ac3..4879330 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 @@ -104,7 +104,7 @@ uint8_t zgSecurePermitJoin = TRUE;
@@ -2841,7 +2863,7 @@ index e716024..f8d8404 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index 17ac2f5..aca29b0 100644
+index 1f807ca..b935b6a 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 @@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
@@ -2862,7 +2884,7 @@ index 17ac2f5..aca29b0 100644
        }
        else
        {
-@@ -882,12 +881,11 @@ void ZDApp_NetworkStartEvt( void )
+@@ -885,12 +884,11 @@ void ZDApp_NetworkStartEvt( void )
          bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
        }
  
@@ -2880,7 +2902,7 @@ index 17ac2f5..aca29b0 100644
      }
      else
      {
-@@ -3133,6 +3131,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3132,6 +3130,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -2895,23 +2917,17 @@ index 17ac2f5..aca29b0 100644
  }
  
  /******************************************************************************
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
-index 2b19342..b448752 100755
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
-@@ -70,15 +70,9 @@
+diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
+index 2dcc711..2c23e66 100755
+--- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
++++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
+@@ -70,9 +70,9 @@
  /* must be located at the beginning of the application.                      */
  
  #define FLASH_BASE              0x00000000
--#ifdef ONE_PAGE_NV
--#define FLASH_SIZE              0x54000
--#define FLASH_NV_BASE           0x54000
--#define FLASH_NV_SIZE           0x2000
--#else
 -#define FLASH_SIZE              0x52000
 -#define FLASH_NV_BASE           0x52000
 -#define FLASH_NV_SIZE           0x4000
--#endif
 +#define FLASH_SIZE              0x50000
 +#define FLASH_NV_BASE           0x50000
 +#define FLASH_NV_SIZE           0x6000
@@ -2919,7 +2935,7 @@ index 2b19342..b448752 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-index 58838a8..4001ba2 100644
+index 6c98f84..d43aefe 100644
 --- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -50,6 +50,7 @@ CCFG.enableBootloaderBackdoor = true;
@@ -3077,14 +3093,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..2b821f4 100644
+index 63c143b..11325fd 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210107
++#define CODE_REVISION_NUMBER 20210120
 +
  /******************************************************************************
   * CONSTANTS
@@ -3210,7 +3226,7 @@ index 3a7afa3..e3a2706 100644
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-index 62c0605..f9be30a 100644
+index a78ad3c..bfe7884 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -3229,7 +3245,7 @@ index 62c0605..f9be30a 100644
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index e716024..f8d8404 100644
+index 8ea2ac3..4879330 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 @@ -104,7 +104,7 @@ uint8_t zgSecurePermitJoin = TRUE;
@@ -3253,7 +3269,7 @@ index e716024..f8d8404 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index 17ac2f5..aca29b0 100644
+index 1f807ca..b935b6a 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 @@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
@@ -3274,7 +3290,7 @@ index 17ac2f5..aca29b0 100644
        }
        else
        {
-@@ -882,12 +881,11 @@ void ZDApp_NetworkStartEvt( void )
+@@ -885,12 +884,11 @@ void ZDApp_NetworkStartEvt( void )
          bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
        }
  
@@ -3292,7 +3308,7 @@ index 17ac2f5..aca29b0 100644
      }
      else
      {
-@@ -3133,6 +3131,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3132,6 +3130,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -3307,10 +3323,10 @@ index 17ac2f5..aca29b0 100644
  }
  
  /******************************************************************************
-diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
-index e3fea91..b448752 100755
---- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
-+++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc26x2lp.cmd
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
+index 2dcc711..2c23e66 100755
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
 @@ -70,9 +70,9 @@
  /* must be located at the beginning of the application.                      */
  
@@ -3325,7 +3341,7 @@ index e3fea91..b448752 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-index a44107b..193e085 100644
+index e7dd877..2b49fcc 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -49,6 +49,7 @@ CCFG.enableBootloader         = true;
