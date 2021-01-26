@@ -1,5 +1,7 @@
 # Tested adapters
 
+**WARNING:** Make sure you flash the correct firmware! Flashing the **wrong** firmware might lock your bootloader preventing future flashing. If you are a Zigbee2MQTT user and don't know what to pick click the **Coordinator firmware** link of your adapter on: https://www.zigbee2mqtt.io/information/supported_adapters.html.
+
 <table>
 <thead>
   <tr>
@@ -16,7 +18,7 @@
   <tr>
     <td>TI LAUNCHXL-CC26xR1</td>
     <td>CC2652R</td>
-    <td>CC26X2R1_*.zip<br></td>
+    <td>CC2652R_*.zip<br></td>
     <td>DIO_13</td>
     <td>No</td>
     <td>N/A</td>
@@ -34,7 +36,7 @@
   <tr>
     <td>Electrolama zzh</td>
     <td>CC2652R</td>
-    <td>CC26X2R1_*.zip</td>
+    <td>CC2652R_*.zip</td>
     <td>DIO_13</td>
     <td>No</td>
     <td>N/A</td>

@@ -1,6 +1,6 @@
 # 20210120
 - Optimize network parameters (according to https://www.ti.com/lit/an/swra650b/swra650b.pdf)
-- Change default CC2652R/CC2652RB/CC1352P/CC2652P transmit power from 0dBm to 5dBm
+- Change default CC2652R/CC2652RB/CC1352P-2/CC2652P transmit power from 0dBm to 5dBm
 - Potential fix for Hue end devices disconnecting
 - SimpleLink SDK 4.40.00.44 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/4.40.00.44/exports/changelog.html))
 

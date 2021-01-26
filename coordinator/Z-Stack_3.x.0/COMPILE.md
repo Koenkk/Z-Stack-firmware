@@ -18,3 +18,7 @@
 1. Build the 3 projects; right click -> *Build project*.
     - **Important:** by default the **launchpad** variant of the CC1352P2_CC2652P (= `znp_CC1352P_2_LAUNCHXL_tirtos_ccs`) is build. To build the **other** variant comment `#define LAUNCHPAD_CONFIG 1` in `preinclude.h` (located under `Stack/Config/`), don't forget to save.
 1. Once finished, the firmware can be found under `znp_[CC26X2R1/CC1352P_2/CC2652RB]_LAUNCHXL_tirtos_ccs/default/znp_[CC26X2R1/CC2652RB/CC1352P_2]_LAUNCHXL_tirtos_ccs.hex`
+    - `znp_CC26X2R1_LAUNCHXL_tirtos_ccs.hex` -> CC2652R
+    - `znp_CC2652RB_LAUNCHXL_tirtos_ccs.hex` -> CC2652RB
+    - `znp_CC1352P_2_LAUNCHXL_tirtos_ccs.hex` -> CC1352P-2 and CC2652P
+

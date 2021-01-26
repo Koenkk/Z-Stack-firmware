@@ -1,5 +1,5 @@
 # Z-Stack coordinator firmwares
-This repository contains various Z-Stack coordinator firmwares.
+This directory contains various Z-Stack coordinator firmwares.
 
 ## Overiew
 <table>
@@ -70,7 +70,7 @@ This repository contains various Z-Stack coordinator firmwares.
   </tr>
   <tr>
     <td rowspan="2">Z-Stack_3.x.0</td>
-    <td>CC26X2R1, CC1352P_2</td>
+    <td>CC2652R, CC2652RB, CC1352P-2</td>
     <td>3.0</td>
     <td>50</td>
     <td>100/200</td>
@@ -82,11 +82,11 @@ This repository contains various Z-Stack coordinator firmwares.
   </tr>
 </table>
 
-### I'm a Zigbee2MQTT user, which one should I use?
+### I'm using a CC2530 or CC2531, which firmware should I use?
 This depends:
-- Zigbee 3.0 coordinators are only recommended for CC26X2R1 and CC1352P_2 (other devices might not be powerful enough)
-- If you have a network of 1 - 30 devices, the Z-Stack_Home_1.2 **default** firmware is recommended.
-- If you have a network of 30+ devices, the Z-Stack_Home_1.2 **source routing** firmware is recommended.
+- Zigbee 3.0 firmwares are **not** recommended for the CC2530 and CC2531 (since those are not powerful enough)
+- If you have a network of 1 - 15 devices, the Z-Stack_Home_1.2 **default** firmware is recommended.
+- If you have a network of 15+ devices, the Z-Stack_Home_1.2 **source routing** firmware is recommended.
 - Note that the **source routing** firmware only supports 5 direct children, therefore you need to have routers in range of the coordinator.
 
 ### Legend
