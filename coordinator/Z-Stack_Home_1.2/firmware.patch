@@ -1,3 +1,23 @@
+From 79b43ef6bb5d3ab40e60c26f1419ba6143559d48 Mon Sep 17 00:00:00 2001
+From: Koen Kanters <koenkanters94@gmail.com>
+Date: Tue, 28 Jul 2020 19:39:55 +0200
+Subject: [PATCH 1/1] Own changes
+
+---
+ .../hal/target/CC2530ZNP/hal_board_cfg.h      |   6 +-
+ Components/mt/MT_SYS.c                        |  16 +++
+ Components/mt/revision_info.h                 |   1 +
+ Components/stack/af/AF.c                      |  26 +++-
+ Components/stack/zdo/ZDApp.c                  |  10 +-
+ Components/stack/zdo/ZDSecMgr.c               |  17 +++
+ Projects/zstack/ZMain/TI2530ZNP/OnBoard.c     |   9 ++
+ .../zstack/ZNP/CC253x/Source/preinclude.h     | 123 ++++++++++++++++++
+ Projects/zstack/ZNP/Source/znp.cfg            |   4 +-
+ Projects/zstack/ZNP/Source/znp_app.c          |  22 +++-
+ 10 files changed, 223 insertions(+), 11 deletions(-)
+ create mode 100644 Components/mt/revision_info.h
+ create mode 100644 Projects/zstack/ZNP/CC253x/Source/preinclude.h
+
 diff --git a/Components/hal/target/CC2530ZNP/hal_board_cfg.h b/Components/hal/target/CC2530ZNP/hal_board_cfg.h
 index 0459c86..1e40362 100644
 --- a/Components/hal/target/CC2530ZNP/hal_board_cfg.h
@@ -65,13 +85,13 @@ index 35aae57..1f8ee82 100644
  
 diff --git a/Components/mt/revision_info.h b/Components/mt/revision_info.h
 new file mode 100644
-index 0000000..abe513b
+index 0000000..f9343d6
 --- /dev/null
 +++ b/Components/mt/revision_info.h
 @@ -0,0 +1 @@
-+#define CODE_REVISION_NUMBER 20190619
++#define CODE_REVISION_NUMBER 20201128
 diff --git a/Components/stack/af/AF.c b/Components/stack/af/AF.c
-index c6183b6..2b885b6 100644
+index c6183b6..128b194 100644
 --- a/Components/stack/af/AF.c
 +++ b/Components/stack/af/AF.c
 @@ -372,10 +372,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16 Src
@@ -110,11 +130,37 @@ index c6183b6..2b885b6 100644
    else if ( (epDesc = afFindEndPointDesc( aff->DstEndPoint )) )
    {
      pList = afFindEndPointDescList( epDesc->endPoint );
+@@ -422,7 +436,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16 Src
+     // if the Wildcard ProfileID is received the message should not be sent to ZDO endpoint
+     if ( (aff->ProfileID == epProfileID) ||
+          ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
+-         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) )
++         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) ||
++         // Fix below is to support PGC410EU: https://github.com/Koenkk/zigbee2mqtt/issues/4055
++         ((epDesc->endPoint == 2) && ( aff->ProfileID == 0xFC01 )) )
+     {
+       // Save original endpoint
+       uint8 endpoint = aff->DstEndPoint;
 diff --git a/Components/stack/zdo/ZDApp.c b/Components/stack/zdo/ZDApp.c
-index 242be04..cca4781 100644
+index 242be04..cfad5e9 100644
 --- a/Components/stack/zdo/ZDApp.c
 +++ b/Components/stack/zdo/ZDApp.c
-@@ -3463,7 +3463,7 @@ void ZDApp_NVUpdate( void )
+@@ -3148,6 +3148,14 @@ void ZDO_NetworkStatusCB( uint16 nwkDstAddr, uint8 statusCode, uint16 dstAddr )
+     // Routing error for dstAddr, this is informational and a Route
+     // Request should happen automatically.
+   }
++
++  if ( (nwkDstAddr == NLME_GetShortAddr())
++      && (statusCode == NWKSTAT_SOURCE_ROUTE_FAILURE) )
++  {
++    // Received a source route failure, remove route and rediscover.
++    RTG_RemoveRtgEntry( dstAddr, 0 );
++    NLME_RouteDiscoveryRequest( dstAddr, 0, 30 );
++  }
+ }
+ 
+ /******************************************************************************
+@@ -3463,7 +3471,7 @@ void ZDApp_NVUpdate( void )
   */
  uint16 ZDApp_CoordStartPANIDConflictCB( uint16 panid )
  {
@@ -123,6 +169,68 @@ index 242be04..cca4781 100644
  }
  
  /*********************************************************************
+diff --git a/Components/stack/zdo/ZDSecMgr.c b/Components/stack/zdo/ZDSecMgr.c
+index 2eacc11..a910a06 100644
+--- a/Components/stack/zdo/ZDSecMgr.c
++++ b/Components/stack/zdo/ZDSecMgr.c
+@@ -42,6 +42,8 @@ extern "C"
+ {
+ #endif
+ 
++#define SLEEP(_count) do {volatile uint32 count = (_count); while (count--);} while (0)
++
+ /******************************************************************************
+  * INCLUDES
+  */
+@@ -1114,14 +1116,22 @@ ZStatus_t ZDSecMgrDeviceJoin( ZDSecMgrDevice_t* device )
+   ZStatus_t status = ZSuccess;
+   uint16    ami;
+ 
++  // Add sleeps, see https://github.com/Koenkk/zigbee2mqtt/issues/3177
++  SLEEP(0x3E8);
++
+   // attempt to validate device that joined/rejoined without security
+   if ( device->secure == FALSE )
+   {
++    SLEEP(0x3E8);
+     status = ZDSecMgrDeviceValidate( device );
+   }
++  
++  SLEEP(0x3E8);
+ 
+   if ( status == ZSuccess )
+   {
++    SLEEP(0x3E8);
++
+     // Add the device to the address manager
+     ZDSecMgrAddrStore( device->nwkAddr, device->extAddr, &ami );
+ 
+@@ -1129,18 +1139,25 @@ ZStatus_t ZDSecMgrDeviceJoin( ZDSecMgrDevice_t* device )
+     if ( ( device->devStatus & DEV_SEC_INIT_STATUS ) &&
+          ( device->secure == FALSE ) )
+     {
++      SLEEP(0x3E8);
+       //send the nwk key data to the joining device
+       status = ZDSecMgrSendNwkKey( device );
+     }
++    
++    SLEEP(0x3E8);
+ 
+     if ( status != ZSuccess )
+     {
++      SLEEP(0x3E8);
+       ZDSecMgrAddrClear( device->extAddr );
+     }
+   }
++  
++  SLEEP(0x3E8);
+ 
+   if ( status != ZSuccess )
+   {
++    SLEEP(0x3E8);
+     // not allowed or transport key failed, remove the device
+     ZDSecMgrDeviceRemove( device );
+   }
 diff --git a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c b/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
 index 7c6c77e..8265ff1 100644
 --- a/Projects/zstack/ZMain/TI2530ZNP/OnBoard.c
@@ -333,3 +441,6 @@ index 470ff12..e42ac65 100644
    }
    else
    {
+-- 
+2.18.0.windows.1
+

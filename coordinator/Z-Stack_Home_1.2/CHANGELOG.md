@@ -1,3 +1,8 @@
+# 20201127/20201128
+- Fix join failing after some uptime
+- Support PGC410EU
+- Fix incorrect route usage with source routing firmware
+
 # 20190619
 - Make source routing firmware identical to 20190315 MAX_STABILITY
 
