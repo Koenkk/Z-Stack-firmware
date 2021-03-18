@@ -70,13 +70,13 @@
     <td>DIO_7 (Pink)</td>
   </tr>
   <tr>
-    <td>slaesh's CC2652RB stick</td>
+    <td>Slaesh's CC2652RB stick</td>
     <td>CC2652RB</td>
     <td>CC2652RB_*.zip</td>
     <td>DIO_13</td>
     <td>Yes</td>
     <td>N/A</td>
-    <td>DIO_7</td>
+    <td>DIO_7 (Blue)</td>
   </tr>
   <tr>
     <td>ZigStar<br></td>
