@@ -1,41 +1,30 @@
-From fad3180b73f7c8a913ca9473100395c05718bc27 Mon Sep 17 00:00:00 2001
+From 0ec6906f23752f5e239f4339be6572a2a084cfea Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
-Date: Fri, 13 Nov 2020 14:36:02 +0100
+Date: Fri, 30 Apr 2021 17:56:13 +0200
 Subject: [PATCH 1/1] Own changes
 
 ---
- .../Application/mt/mt.h                       |    2 +
- .../Application/mt/mt_util.c                  |   64 +
+ .../Application/mt/mt.h                       |    4 +
+ .../Application/mt/mt_util.c                  |  106 ++
  .../Application/mt/mt_version.c               |    8 +-
- .../Stack/Config/preinclude.h                 |   65 +
+ .../Stack/Config/preinclude.h                 |   73 ++
  .../Stack/Config/znp_cnf.opts                 |    2 +
  .../Stack/af/af.c                             |   18 +-
  .../Stack/nwk/nwk_globals.c                   |    8 +-
  .../Stack/sys/zglobals.c                      |    6 +-
  .../Stack/zdo/zd_app.c                        |   30 +-
  .../cc13x2_cc26x2.cmd                         |    6 +-
- .../syscfg/ti_devices_config.c                |  103 ++
+ .../syscfg/ti_devices_config.c                |  104 ++
  .../syscfg/ti_drivers_config.c                | 1060 +++++++++++++++++
  .../syscfg/ti_drivers_config.h                |  283 +++++
  .../syscfg/ti_radio_config.c                  |  340 ++++++
  .../syscfg/ti_radio_config.h                  |   77 ++
  .../syscfg/ti_utils_build_linker.cmd.genlibs  |   35 +
  .../syscfg/ti_zstack_config.h                 |  226 ++++
- .../Application/mt/mt.h                       |    2 +
- .../Application/mt/mt_util.c                  |   64 +
+ .../Application/mt/mt.h                       |    4 +
+ .../Application/mt/mt_util.c                  |  106 ++
  .../Application/mt/mt_version.c               |    8 +-
- .../Stack/Config/preinclude.h                 |   52 +
- .../Stack/Config/znp_cnf.opts                 |    2 +
- .../Stack/af/af.c                             |   18 +-
- .../Stack/nwk/nwk_globals.c                   |    8 +-
- .../Stack/sys/zglobals.c                      |    6 +-
- .../Stack/zdo/zd_app.c                        |   30 +-
- .../cc13x2_cc26x2.cmd                         |    6 +-
- znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg   |   31 +-
- .../Application/mt/mt.h                       |    2 +
- .../Application/mt/mt_util.c                  |   64 +
- .../Application/mt/mt_version.c               |    8 +-
- .../Stack/Config/preinclude.h                 |   52 +
+ .../Stack/Config/preinclude.h                 |   60 +
  .../Stack/Config/znp_cnf.opts                 |    2 +
  .../Stack/af/af.c                             |   18 +-
  .../Stack/nwk/nwk_globals.c                   |    8 +-
@@ -43,7 +32,18 @@ Subject: [PATCH 1/1] Own changes
  .../Stack/zdo/zd_app.c                        |   30 +-
  .../cc13x2_cc26x2.cmd                         |    6 +-
  znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |   31 +-
- 39 files changed, 2681 insertions(+), 106 deletions(-)
+ .../Application/mt/mt.h                       |    4 +
+ .../Application/mt/mt_util.c                  |  106 ++
+ .../Application/mt/mt_version.c               |    8 +-
+ .../Stack/Config/preinclude.h                 |   60 +
+ .../Stack/Config/znp_cnf.opts                 |    2 +
+ znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c      |   18 +-
+ .../Stack/nwk/nwk_globals.c                   |    8 +-
+ .../Stack/sys/zglobals.c                      |    6 +-
+ znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c |   30 +-
+ znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd  |    6 +-
+ znp_LP_CC2652RB_tirtos_ccs/znp.syscfg         |   31 +-
+ 39 files changed, 2838 insertions(+), 106 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
@@ -52,14 +52,23 @@ Subject: [PATCH 1/1] Own changes
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
- create mode 100644 znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
+ create mode 100644 znp_LP_CC2652RB_tirtos_ccs/Stack/Config/preinclude.h
 
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-index 2c5073c..8732c65 100644
+index 2c5073c..48f050b 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-@@ -441,6 +441,8 @@ extern "C"
+@@ -415,6 +415,8 @@ extern "C"
+ #define MT_UTIL_CALLBACK_SUB_CMD             0x06
+ #define MT_UTIL_TIME_ALIVE                   0x09
+ 
++#define MT_UTIL_LED_CONTROL                  0x0A
++
+ #define MT_UTIL_TEST_LOOPBACK                0x10
+ #define MT_UTIL_DATA_REQ                     0x11
+ 
+@@ -441,6 +443,8 @@ extern "C"
  #define MT_UTIL_SRNG_GENERATE                0x4C
  #endif
  #define MT_UTIL_BIND_ADD_ENTRY               0x4D
@@ -69,19 +78,50 @@ index 2c5073c..8732c65 100644
  #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
  #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-index 90d6d4a..4d50083 100644
+index 90d6d4a..4f416e8 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-@@ -128,6 +128,8 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+@@ -53,6 +53,9 @@
+ #include "mt_zdo.h"
+ #include "ssp.h"
+ 
++#include <ti/drivers/apps/LED.h>
++#include "ti_drivers_config.h"
++
+ #if !defined NONWK
+ 
+ #include "mt_nwk.h"
+@@ -95,6 +98,8 @@ static void MT_UtilSpi2Addr( zAddrType_t *pDst, uint8_t *pSrc );
+ #endif
+ 
+ #if defined (MT_UTIL_FUNC)
++static LED_Handle gLedHandle;
++
+ static void MT_UtilGetDeviceInfo(void);
+ static void MT_UtilGetNvInfo(void);
+ static void MT_UtilSetPanID(uint8_t *pBuf);
+@@ -128,6 +133,9 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
  #endif //MT_SYS_KEY_MANAGEMENT
  static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
  static void MT_UtilAssocCount(uint8_t *pBuf);
++static void MT_UtilLedControl(uint8_t *pBuf);
 +static void MT_UtilAssocRemove(uint8_t *pBuf);
 +static void MT_UtilAssocAdd(uint8_t *pBuf);
  static void MT_UtilAssocFindDevice(uint8_t *pBuf);
  static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
  static void MT_UtilBindAddEntry(uint8_t *pBuf);
-@@ -272,6 +274,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -260,6 +268,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+     MT_UtilAssocCount(pBuf);
+     break;
+ 
++  case MT_UTIL_LED_CONTROL:
++    MT_UtilLedControl(pBuf);
++    break;
++
+   case MT_UTIL_ASSOC_FIND_DEVICE:
+     MT_UtilAssocFindDevice(pBuf);
+     break;
+@@ -272,6 +284,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilBindAddEntry(pBuf);
      break;
  
@@ -96,10 +136,42 @@ index 90d6d4a..4d50083 100644
    case MT_UTIL_SYNC_REQ:
      MT_UtilSync();
      break;
-@@ -1375,6 +1385,60 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+@@ -1375,6 +1395,92 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
    MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
  }
  
++/***************************************************************************************************
++ * @fn      MT_UtilLedControl
++ *
++ * @brief   Proxy the LedControl() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilLedControl(uint8_t *pBuf)
++{
++  uint8_t cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  uint8_t mode =  pBuf[1];
++
++  if (gLedHandle == NULL) {
++    LED_Params ledParams;
++    LED_Params_init(&ledParams);
++    gLedHandle = LED_open(CONFIG_LED_GREEN, &ledParams);
++  }
++
++  if (mode==0) {
++    LED_setOff(gLedHandle);
++  } else {
++    LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
++  }
++
++  uint8_t retValue = 0;
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
 +/***************************************************************************************************
 + * @fn      MT_UtilAssocRemove
 + *
@@ -158,14 +230,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..11325fd 100644
+index 63c143b..4ab09ab 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210120
++#define CODE_REVISION_NUMBER 20210430
 +
  /******************************************************************************
   * CONSTANTS
@@ -186,12 +258,20 @@ index 63c143b..11325fd 100644
  /******************************************************************************
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..3332194
+index 0000000..ed4ba66
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,65 @@
+@@ -0,0 +1,73 @@
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
++
++// Increase MAC buffers
++#undef MAC_CFG_TX_DATA_MAX
++#define MAC_CFG_TX_DATA_MAX 20
++#undef MAC_CFG_TX_MAX
++#define MAC_CFG_TX_MAX 32
++#undef MAC_CFG_RX_MAX
++#define MAC_CFG_RX_MAX 20
 +
 +// Save memory
 +#undef NWK_MAX_BINDING_ENTRIES
@@ -256,7 +336,7 @@ index 0000000..3332194
 +#define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA  0xfa
 +#endif
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-index 6e3cb6a..1f90cc6 100644
+index 6e3cb6a..886d0b4 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 @@ -32,3 +32,5 @@
@@ -267,7 +347,7 @@ index 6e3cb6a..1f90cc6 100644
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index 3a7afa3..e3a2706 100644
+index 3a7afa3..112f6a1 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 @@ -407,10 +407,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
@@ -304,7 +384,7 @@ index 3a7afa3..e3a2706 100644
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-index a78ad3c..bfe7884 100644
+index 2b63c06..3d540c2 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -323,10 +403,10 @@ index a78ad3c..bfe7884 100644
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index 8ea2ac3..4879330 100644
+index 764dabd..e9135fb 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-@@ -104,7 +104,7 @@ uint8_t zgSecurePermitJoin = TRUE;
+@@ -105,7 +105,7 @@ uint8_t zgSecurePermitJoin = TRUE;
  // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
  // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
  // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
@@ -335,7 +415,7 @@ index 8ea2ac3..4879330 100644
  
  //allowInstallCodes
  uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
-@@ -198,7 +198,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
+@@ -199,7 +199,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
  //
  // NOTICE:  Before enabling Child Aging make sure to review all the related
  // definitions in this file, especially zgNwkParentInformation.
@@ -347,7 +427,7 @@ index 8ea2ac3..4879330 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index 1f807ca..b935b6a 100644
+index 1f807ca..b3e2694 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 @@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
@@ -402,7 +482,7 @@ index 1f807ca..b935b6a 100644
  
  /******************************************************************************
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
-index 2dcc711..2c23e66 100755
+index 2dcc711..a8b8d93 100755
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
 @@ -70,9 +70,9 @@
@@ -420,10 +500,10 @@ index 2dcc711..2c23e66 100755
  
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
 new file mode 100644
-index 0000000..b66a3f9
+index 0000000..05c6fc1
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
-@@ -0,0 +1,103 @@
+@@ -0,0 +1,104 @@
 +/*
 + *  ======== ti_devices_config.c ========
 + *  Customer Configuration for CC26XX and CC13XX devices.
@@ -438,7 +518,7 @@ index 0000000..b66a3f9
 +//#####################################
 +
 +// Force VDDR voltage to the factory HH setting (FCFG1..VDDR_TRIM_HH)
-+#define CCFG_FORCE_VDDR_HH                              0x1        
++#define CCFG_FORCE_VDDR_HH                              0x1
 +
 +
 +//#####################################
@@ -468,7 +548,7 @@ index 0000000..b66a3f9
 +//#####################################
 +
 +// HF source is a 48 MHz xtal
-+#define SET_CCFG_MODE_CONF_XOSC_FREQ                    0x2    
++#define SET_CCFG_MODE_CONF_XOSC_FREQ                    0x2
 +
 +//#####################################
 +// Bootloader settings
@@ -486,6 +566,9 @@ index 0000000..b66a3f9
 +// Active low to open boot loader backdoor
 +#define SET_CCFG_BL_CONFIG_BL_LEVEL                     0x0
 +
++
++// Default address in IMAGE_VALID_CONF register
++#define SET_CCFG_IMAGE_VALID_CONF_IMAGE_VALID           0x00000000
 +
 +//#####################################
 +// Debug access settings
@@ -512,14 +595,12 @@ index 0000000..b66a3f9
 +// Access disabled
 +#define SET_CCFG_CCFG_TAP_DAP_1_AON_TAP_ENABLE          0x00
 +
-+
 +//#####################################
 +// Select between cache or GPRAM
 +//#####################################
++
 +// Cache is enabled and GPRAM is disabled (unavailable)
 +#define SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_GPRAM           0x1
-+
-+
 +
 +/*
 + *  ======== Include Base Settings for device ========
@@ -1884,7 +1965,7 @@ index 0000000..abf128f
 +#endif /* include guard */
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
 new file mode 100644
-index 0000000..ac1e16f
+index 0000000..e40350d
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
 @@ -0,0 +1,340 @@
@@ -1895,8 +1976,8 @@ index 0000000..ac1e16f
 + *  DO NOT EDIT - This file is generated for the CC1352P1F3RGZ
 + *  by the SysConfig tool.
 + *
-+ *  Radio Config module version : 1.8
-+ *  SmartRF Studio data version : 2.20.0
++ *  Radio Config module version : 1.9
++ *  SmartRF Studio data version : 2.21.0
 + */
 +
 +#include <ti/devices/DeviceFamily.h>
@@ -2230,7 +2311,7 @@ index 0000000..ac1e16f
 +
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
 new file mode 100644
-index 0000000..1e63c91
+index 0000000..2477c99
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
 @@ -0,0 +1,77 @@
@@ -2241,8 +2322,8 @@ index 0000000..1e63c91
 + *  DO NOT EDIT - This file is generated for the CC1352P1F3RGZ
 + *  by the SysConfig tool.
 + *
-+ *  Radio Config module version : 1.8
-+ *  SmartRF Studio data version : 2.20.0
++ *  Radio Config module version : 1.9
++ *  SmartRF Studio data version : 2.21.0
 + */
 +#ifndef _TI_RADIO_CONFIG_H_
 +#define _TI_RADIO_CONFIG_H_
@@ -2584,417 +2665,20 @@ index 0000000..69447c1
 +
 +
 +#endif /* TI_ZSTACK_CONFIG_H */
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-index 2c5073c..8732c65 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-@@ -441,6 +441,8 @@ extern "C"
- #define MT_UTIL_SRNG_GENERATE                0x4C
- #endif
- #define MT_UTIL_BIND_ADD_ENTRY               0x4D
-+#define MT_UTIL_ASSOC_REMOVE                 0x63 // Custom command
-+#define MT_UTIL_ASSOC_ADD                    0x64 // Custom command
- 
- #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
- #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-index 90d6d4a..4d50083 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-@@ -128,6 +128,8 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
- #endif //MT_SYS_KEY_MANAGEMENT
- static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
- static void MT_UtilAssocCount(uint8_t *pBuf);
-+static void MT_UtilAssocRemove(uint8_t *pBuf);
-+static void MT_UtilAssocAdd(uint8_t *pBuf);
- static void MT_UtilAssocFindDevice(uint8_t *pBuf);
- static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
- static void MT_UtilBindAddEntry(uint8_t *pBuf);
-@@ -272,6 +274,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
-     MT_UtilBindAddEntry(pBuf);
-     break;
- 
-+  case MT_UTIL_ASSOC_REMOVE:
-+    MT_UtilAssocRemove(pBuf);
-+    break;
-+
-+  case MT_UTIL_ASSOC_ADD:
-+    MT_UtilAssocAdd(pBuf);
-+    break;
-+
-   case MT_UTIL_SYNC_REQ:
-     MT_UtilSync();
-     break;
-@@ -1375,6 +1385,60 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
-   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
- }
- 
-+/***************************************************************************************************
-+ * @fn      MT_UtilAssocRemove
-+ *
-+ * @brief   Proxy the AssocRemove() function.
-+ *
-+ * @param   pBuf - pointer to the received buffer
-+ *
-+ * @return  void
-+ ***************************************************************************************************/
-+static void MT_UtilAssocRemove(uint8_t *pBuf)
-+{
-+  uint8_t cmdId;
-+  uint8_t ieeeAddr[Z_EXTADDR_LEN];
-+  uint8_t retValue = 0;
-+
-+  // parse header
-+  cmdId = pBuf[MT_RPC_POS_CMD1];
-+  pBuf += MT_RPC_FRAME_HDR_SZ;
-+
-+  /* IeeAddress */
-+  OsalPort_memcpy(ieeeAddr, pBuf, Z_EXTADDR_LEN);
-+
-+  AssocRemove(ieeeAddr);
-+
-+  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
-+}
-+
-+/***************************************************************************************************
-+ * @fn      MT_UtilAssocAdd
-+ *
-+ * @brief   Proxy the AssocAdd() function.
-+ *
-+ * @param   pBuf - pointer to the received buffer
-+ *
-+ * @return  void
-+ ***************************************************************************************************/
-+static void MT_UtilAssocAdd(uint8_t *pBuf)
-+{
-+  uint8_t cmdId;
-+  uint8_t retValue = 0;
-+
-+  // parse header
-+  cmdId = pBuf[MT_RPC_POS_CMD1];
-+  pBuf += MT_RPC_FRAME_HDR_SZ;
-+
-+  AssocAddNew(
-+    BUILD_UINT16(pBuf[Z_EXTADDR_LEN], pBuf[Z_EXTADDR_LEN + 1]),
-+    pBuf,
-+    pBuf[Z_EXTADDR_LEN + 2]
-+  );
-+
-+  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
-+}
-+
- /***************************************************************************************************
-  * @fn      MT_UtilAssocFindDevice
-  *
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..11325fd 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-@@ -43,15 +43,21 @@
- #include "zcomdef.h"
- #include "mt_version.h"
- 
-+#define CODE_REVISION_NUMBER 20210120
-+
- /******************************************************************************
-  * CONSTANTS
-  *****************************************************************************/
- const uint8_t MTVersionString[] = {
-                                    2,  /* Transport protocol revision */
--                                   0,  /* Product ID */
-+                                   1,  /* Product ID */
-                                    2,  /* Software major release number */
-                                    7,  /* Software minor release number */
-                                    1,  /* Software maintenance release number */
-+                                   ((CODE_REVISION_NUMBER >> 0)  & 0xFF),
-+                                   ((CODE_REVISION_NUMBER >> 8)  & 0xFF),
-+                                   ((CODE_REVISION_NUMBER >> 16) & 0xFF),
-+                                   ((CODE_REVISION_NUMBER >> 24) & 0xFF),
-                                  };
- 
- /******************************************************************************
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-new file mode 100644
-index 0000000..7017d6f
---- /dev/null
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,52 @@
-+#define MT_SYS_KEY_MANAGEMENT 1
-+#define FEATURE_NVEXID 1
-+
-+// Save memory
-+#undef NWK_MAX_BINDING_ENTRIES
-+#define NWK_MAX_BINDING_ENTRIES 1
-+#undef APS_MAX_GROUPS
-+#define APS_MAX_GROUPS 1
-+
-+// Increase NV pages to 3 to allow for bigger device tables
-+#undef NVOCMP_NVPAGES
-+#define NVOCMP_NVPAGES 3
-+
-+// Disabling MULTICAST is required in order for proper group support.
-+// If MULTICAST is not disabled, the group adress is not included in the APS header
-+#define MULTICAST_ENABLED FALSE
-+
-+// Increase the max number of boardcasts, the default broadcast delivery time is 3 seconds
-+// with the value below this will allow for 1 broadcast every 0.15 second
-+#define MAX_BCAST 30
-+
-+/**
-+ * Enable MTO routing
-+ */
-+#define CONCENTRATOR_ENABLE TRUE
-+#define CONCENTRATOR_DISCOVERY_TIME 100
-+#define CONCENTRATOR_ROUTE_CACHE TRUE
-+#define MAX_RTG_SRC_ENTRIES 200
-+#define SRC_RTG_EXPIRY_TIME 2
-+
-+/**
-+ * Scale other device tables appropriately
-+ */
-+#define NWK_MAX_DEVICE_LIST 50
-+#define ZDSECMGR_TC_DEVICE_MAX 200
-+#define MAX_NEIGHBOR_ENTRIES 20
-+#define MAX_RTG_ENTRIES 100
-+
-+/**
-+ * Reduce the APS ack wait duration from 6000 ms to 1000 ms (value * 2 = value in ms).
-+ * This will make requests timeout quicker, in pratice the default timeout of 6000ms is too long.
-+ */
-+#define APSC_ACK_WAIT_DURATION_POLLED 500
-+
-+// From https://www.ti.com/lit/an/swra650b/swra650b.pdf
-+#define LINK_DOWN_TRIGGER 12
-+#define NWK_ROUTE_AGE_LIMIT 5
-+#define DEF_NWK_RADIUS 15
-+#define DEFAULT_ROUTE_REQUEST_RADIUS 8
-+#define ZDNWKMGR_MIN_TRANSMISSIONS 0
-+#define ROUTE_DISCOVERY_TIME 13
-+#define MTO_RREQ_LIMIT_TIME 5000
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-index 6e3cb6a..1f90cc6 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-@@ -32,3 +32,5 @@
- -DMT_GP_CB_FUNC
- 
- -DMT_APP_CNF_FUNC
-+
-+--preinclude=preinclude.h
-\ No newline at end of file
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index 3a7afa3..e3a2706 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-@@ -407,10 +407,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
- #if !defined ( APS_NO_GROUPS )
-     // Find the first endpoint for this group
-     grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
--    if ( grpEp == APS_GROUPS_EP_NOT_FOUND )
--      return;   // No endpoint found
-+    if ( grpEp == APS_GROUPS_EP_NOT_FOUND ) {
-+      // No endpoint found, default to endpoint 1.
-+      // In the original source code there is a return here.
-+      // This prevent the messags from being forwarded.
-+      // For our use-case we want to capture all messages.
-+      // Even if the coordinator is not in the group.
-+      epDesc = afFindEndPointDesc( 1 );
-+    }
-+    else {
-+      epDesc = afFindEndPointDesc( grpEp );
-+    }
- 
--    epDesc = afFindEndPointDesc( grpEp );
-     if ( epDesc == NULL )
-       return;   // Endpoint descriptor not found
- 
-@@ -457,7 +465,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
-     // if the Wildcard ProfileID is received the message should not be sent to ZDO endpoint
-     if ( (aff->ProfileID == epProfileID) ||
-          ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
--         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) )
-+         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) ||
-+         // Fix below is to support PGC410EU: https://github.com/Koenkk/zigbee2mqtt/issues/4055
-+         ((epDesc->endPoint == 2) && ( aff->ProfileID == 0xFC01 )) )
-     {
-       // Save original endpoint
-       uint8_t endpoint = aff->DstEndPoint;
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-index a78ad3c..bfe7884 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-@@ -65,10 +65,10 @@
-  * CONSTANTS
-  */
- // Maximums for the data buffer queue
--#define NWK_MAX_DATABUFS_WAITING    8     // Waiting to be sent to MAC
--#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
--#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
--#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
-+#define NWK_MAX_DATABUFS_WAITING    16     // Waiting to be sent to MAC
-+#define NWK_MAX_DATABUFS_SCHEDULED  10     // Timed messages to be sent
-+#define NWK_MAX_DATABUFS_CONFIRMED  10     // Held after MAC confirms
-+#define NWK_MAX_DATABUFS_TOTAL      24    // Total number of buffers
- 
- // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
- // A known shortcoming is that when a message is enqueued as "hold" for a
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index 8ea2ac3..4879330 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-@@ -104,7 +104,7 @@ uint8_t zgSecurePermitJoin = TRUE;
- // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
- // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
- // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
--uint8_t zgAllowRejoinsWithWellKnownKey = FALSE;
-+uint8_t zgAllowRejoinsWithWellKnownKey = TRUE; // https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/882650/3265311#3265311
- 
- //allowInstallCodes
- uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
-@@ -198,7 +198,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
- //
- // NOTICE:  Before enabling Child Aging make sure to review all the related
- // definitions in this file, especially zgNwkParentInformation.
--uint8_t zgChildAgingEnable = TRUE;
-+
-+// Disable child aging, otherwise Xiaomi devices are being kicked off the network.
-+uint8_t zgChildAgingEnable = FALSE;
- 
- //==========    TouchLink NWK configuration    ===============
- // Values used by Router when starts a network as initiator
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index 1f807ca..b935b6a 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
-           ZDApp_ChangeState( DEV_ROUTER );
-         }
- 
--        if ( zgChildAgingEnable == TRUE )
--        {
--          // Once the device has changed its state to a ROUTER set the timer to send
--          // Parent annce
--          ZDApp_SetParentAnnceTimer();
--        }
-+        // As we cannot enable child aging as Xiaomi devices will drop off
-+        // but we stil want to have the parent announces we always enable it here.
-+        // Otherwise some end devices could be unreachable when they changed parent
-+        // while the coordinator was powered off.
-+        ZDApp_SetParentAnnceTimer();
-       }
-       else
-       {
-@@ -885,12 +884,11 @@ void ZDApp_NetworkStartEvt( void )
-         bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
-       }
- 
--      if ( zgChildAgingEnable == TRUE )
--      {
--        // Once the device has changed its state to a COORDINATOR set the timer to send
--        // Parent annce
--        ZDApp_SetParentAnnceTimer();
--      }
-+      // As we cannot enable child aging as Xiaomi devices will drop off
-+      // but we stil want to have the parent announces we always enable it here.
-+      // Otherwise some end devices could be unreachable when they changed parent
-+      // while the coordinator was powered off.
-+      ZDApp_SetParentAnnceTimer();
-     }
-     else
-     {
-@@ -3132,6 +3130,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
-     // Routing error for dstAddr, this is informational and a Route
-     // Request should happen automatically.
-   }
-+
-+  if ( (nwkDstAddr == NLME_GetShortAddr())
-+        && (statusCode == NWKSTAT_SOURCE_ROUTE_FAILURE) )
-+  {
-+    // Received a source route failure, remove route and rediscover.
-+    RTG_RemoveRtgEntry( dstAddr, 0 );
-+    NLME_RouteDiscoveryRequest( dstAddr, 0, 30 );
-+  }
- }
- 
- /******************************************************************************
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
-index 2dcc711..2c23e66 100755
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
-@@ -70,9 +70,9 @@
- /* must be located at the beginning of the application.                      */
- 
- #define FLASH_BASE              0x00000000
--#define FLASH_SIZE              0x52000
--#define FLASH_NV_BASE           0x52000
--#define FLASH_NV_SIZE           0x4000
-+#define FLASH_SIZE              0x50000
-+#define FLASH_NV_BASE           0x50000
-+#define FLASH_NV_SIZE           0x6000
- #define FLASH_LAST_BASE         0x56000
- #define FLASH_LAST_SIZE         0x2000
- 
-diff --git a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-index 6c98f84..d43aefe 100644
---- a/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-+++ b/znp_CC2652RB_LAUNCHXL_tirtos_ccs/znp.syscfg
-@@ -50,6 +50,7 @@ CCFG.enableBootloaderBackdoor = true;
- CCFG.dioBootloaderBackdoor    = 13;
- CCFG.levelBootloaderBackdoor  = "Active low";
- CCFG.srcClkLF                 = "Derived from HF XOSC";
-+CCFG.enableDCDC               = false;
- CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
- 
- AESCBC1.$name = "CONFIG_AESCBC_0";
-@@ -68,8 +69,8 @@ ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
- 
- NVS1.$name                    = "CONFIG_NVSINTERNAL";
- NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
--NVS1.internalFlash.regionBase = 0x52000;
--NVS1.internalFlash.regionSize = 0x4000;
-+NVS1.internalFlash.regionBase = 0x50000;
-+NVS1.internalFlash.regionSize = 0x6000;
- 
- NVS2.$name                          = "CONFIG_NVSEXTERNAL";
- NVS2.nvsType                        = "External";
-@@ -122,18 +123,20 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
- SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
- SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
- 
--zstack.deviceType                            = "znp";
--zstack.deviceTypeReadOnly                    = true;
--zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
--zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
--zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
--zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
--zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
--zstack.network.$name                         = "ti_zstack_network_zstack_network0";
--zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanced0";
--zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
--zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
--zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
-+zstack.deviceType                                      = "znp";
-+zstack.deviceTypeReadOnly                              = true;
-+zstack.touchlink.$name                                 = "ti_zstack_touchlink_zstack_touchlink0";
-+zstack.pm.$name                                        = "ti_zstack_pm_zstack_pm0";
-+zstack.rf.$name                                        = "ti_zstack_rf_zstack_rf0";
-+zstack.rf.txPower                                      = "5";
-+zstack.rf.radioConfig.$name                            = "ti_devices_radioconfig_settings_ieee_15_40";
-+zstack.rf.radioConfig.codeExportConfig.$name           = "ti_devices_radioconfig_code_export_param0";
-+zstack.network.$name                                   = "ti_zstack_network_zstack_network0";
-+zstack.advanced.$name                                  = "ti_zstack_advanced_zstack_advanced0";
-+zstack.advanced.routing.$name                          = "ti_zstack_advanced_zstack_routing0";
-+zstack.advanced.packetSending.$name                    = "ti_zstack_advanced_zstack_packet_sending0";
-+zstack.advanced.packetSending.apsAckWaitDurationPolled = 1000;
-+zstack.advanced.tableSize.$name                        = "ti_zstack_advanced_zstack_table_size0";
- 
- /**
-  * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-index 2c5073c..8732c65 100644
+index 2c5073c..48f050b 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-@@ -441,6 +441,8 @@ extern "C"
+@@ -415,6 +415,8 @@ extern "C"
+ #define MT_UTIL_CALLBACK_SUB_CMD             0x06
+ #define MT_UTIL_TIME_ALIVE                   0x09
+ 
++#define MT_UTIL_LED_CONTROL                  0x0A
++
+ #define MT_UTIL_TEST_LOOPBACK                0x10
+ #define MT_UTIL_DATA_REQ                     0x11
+ 
+@@ -441,6 +443,8 @@ extern "C"
  #define MT_UTIL_SRNG_GENERATE                0x4C
  #endif
  #define MT_UTIL_BIND_ADD_ENTRY               0x4D
@@ -3004,19 +2688,50 @@ index 2c5073c..8732c65 100644
  #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
  #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-index 90d6d4a..4d50083 100644
+index 90d6d4a..4f416e8 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-@@ -128,6 +128,8 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+@@ -53,6 +53,9 @@
+ #include "mt_zdo.h"
+ #include "ssp.h"
+ 
++#include <ti/drivers/apps/LED.h>
++#include "ti_drivers_config.h"
++
+ #if !defined NONWK
+ 
+ #include "mt_nwk.h"
+@@ -95,6 +98,8 @@ static void MT_UtilSpi2Addr( zAddrType_t *pDst, uint8_t *pSrc );
+ #endif
+ 
+ #if defined (MT_UTIL_FUNC)
++static LED_Handle gLedHandle;
++
+ static void MT_UtilGetDeviceInfo(void);
+ static void MT_UtilGetNvInfo(void);
+ static void MT_UtilSetPanID(uint8_t *pBuf);
+@@ -128,6 +133,9 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
  #endif //MT_SYS_KEY_MANAGEMENT
  static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
  static void MT_UtilAssocCount(uint8_t *pBuf);
++static void MT_UtilLedControl(uint8_t *pBuf);
 +static void MT_UtilAssocRemove(uint8_t *pBuf);
 +static void MT_UtilAssocAdd(uint8_t *pBuf);
  static void MT_UtilAssocFindDevice(uint8_t *pBuf);
  static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
  static void MT_UtilBindAddEntry(uint8_t *pBuf);
-@@ -272,6 +274,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -260,6 +268,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+     MT_UtilAssocCount(pBuf);
+     break;
+ 
++  case MT_UTIL_LED_CONTROL:
++    MT_UtilLedControl(pBuf);
++    break;
++
+   case MT_UTIL_ASSOC_FIND_DEVICE:
+     MT_UtilAssocFindDevice(pBuf);
+     break;
+@@ -272,6 +284,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilBindAddEntry(pBuf);
      break;
  
@@ -3031,10 +2746,42 @@ index 90d6d4a..4d50083 100644
    case MT_UTIL_SYNC_REQ:
      MT_UtilSync();
      break;
-@@ -1375,6 +1385,60 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+@@ -1375,6 +1395,92 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
    MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
  }
  
++/***************************************************************************************************
++ * @fn      MT_UtilLedControl
++ *
++ * @brief   Proxy the LedControl() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilLedControl(uint8_t *pBuf)
++{
++  uint8_t cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  uint8_t mode =  pBuf[1];
++
++  if (gLedHandle == NULL) {
++    LED_Params ledParams;
++    LED_Params_init(&ledParams);
++    gLedHandle = LED_open(CONFIG_LED_GREEN, &ledParams);
++  }
++
++  if (mode==0) {
++    LED_setOff(gLedHandle);
++  } else {
++    LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
++  }
++
++  uint8_t retValue = 0;
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
 +/***************************************************************************************************
 + * @fn      MT_UtilAssocRemove
 + *
@@ -3093,14 +2840,14 @@ index 90d6d4a..4d50083 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..11325fd 100644
+index 63c143b..4ab09ab 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210120
++#define CODE_REVISION_NUMBER 20210430
 +
  /******************************************************************************
   * CONSTANTS
@@ -3121,12 +2868,20 @@ index 63c143b..11325fd 100644
  /******************************************************************************
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..7017d6f
+index 0000000..a19e37a
 --- /dev/null
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,52 @@
+@@ -0,0 +1,60 @@
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
++
++// Increase MAC buffers
++#undef MAC_CFG_TX_DATA_MAX
++#define MAC_CFG_TX_DATA_MAX 20
++#undef MAC_CFG_TX_MAX
++#define MAC_CFG_TX_MAX 32
++#undef MAC_CFG_RX_MAX
++#define MAC_CFG_RX_MAX 20
 +
 +// Save memory
 +#undef NWK_MAX_BINDING_ENTRIES
@@ -3178,7 +2933,7 @@ index 0000000..7017d6f
 +#define ROUTE_DISCOVERY_TIME 13
 +#define MTO_RREQ_LIMIT_TIME 5000
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
-index 6e3cb6a..1f90cc6 100644
+index 6e3cb6a..886d0b4 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
 @@ -32,3 +32,5 @@
@@ -3189,7 +2944,7 @@ index 6e3cb6a..1f90cc6 100644
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index 3a7afa3..e3a2706 100644
+index 3a7afa3..112f6a1 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 @@ -407,10 +407,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
@@ -3226,7 +2981,7 @@ index 3a7afa3..e3a2706 100644
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-index a78ad3c..bfe7884 100644
+index 2b63c06..3d540c2 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -3245,10 +3000,10 @@ index a78ad3c..bfe7884 100644
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index 8ea2ac3..4879330 100644
+index 764dabd..e9135fb 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-@@ -104,7 +104,7 @@ uint8_t zgSecurePermitJoin = TRUE;
+@@ -105,7 +105,7 @@ uint8_t zgSecurePermitJoin = TRUE;
  // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
  // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
  // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
@@ -3257,7 +3012,7 @@ index 8ea2ac3..4879330 100644
  
  //allowInstallCodes
  uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
-@@ -198,7 +198,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
+@@ -199,7 +199,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
  //
  // NOTICE:  Before enabling Child Aging make sure to review all the related
  // definitions in this file, especially zgNwkParentInformation.
@@ -3269,7 +3024,7 @@ index 8ea2ac3..4879330 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index 1f807ca..b935b6a 100644
+index 1f807ca..b3e2694 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 @@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
@@ -3324,7 +3079,7 @@ index 1f807ca..b935b6a 100644
  
  /******************************************************************************
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
-index 2dcc711..2c23e66 100755
+index 2dcc711..a8b8d93 100755
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
 @@ -70,9 +70,9 @@
@@ -3341,7 +3096,7 @@ index 2dcc711..2c23e66 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-index e7dd877..2b49fcc 100644
+index 352db90..fae442b 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 @@ -49,6 +49,7 @@ CCFG.enableBootloader         = true;
@@ -3364,6 +3119,492 @@ index e7dd877..2b49fcc 100644
  NVS2.$name                          = "CONFIG_NVSEXTERNAL";
  NVS2.nvsType                        = "External";
 @@ -121,18 +122,20 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
+ SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
+ SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
+ 
+-zstack.deviceType                            = "znp";
+-zstack.deviceTypeReadOnly                    = true;
+-zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+-zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+-zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
+-zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+-zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+-zstack.network.$name                         = "ti_zstack_network_zstack_network0";
+-zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanced0";
+-zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
+-zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
+-zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
++zstack.deviceType                                      = "znp";
++zstack.deviceTypeReadOnly                              = true;
++zstack.touchlink.$name                                 = "ti_zstack_touchlink_zstack_touchlink0";
++zstack.pm.$name                                        = "ti_zstack_pm_zstack_pm0";
++zstack.rf.$name                                        = "ti_zstack_rf_zstack_rf0";
++zstack.rf.txPower                                      = "5";
++zstack.rf.radioConfig.$name                            = "ti_devices_radioconfig_settings_ieee_15_40";
++zstack.rf.radioConfig.codeExportConfig.$name           = "ti_devices_radioconfig_code_export_param0";
++zstack.network.$name                                   = "ti_zstack_network_zstack_network0";
++zstack.advanced.$name                                  = "ti_zstack_advanced_zstack_advanced0";
++zstack.advanced.routing.$name                          = "ti_zstack_advanced_zstack_routing0";
++zstack.advanced.packetSending.$name                    = "ti_zstack_advanced_zstack_packet_sending0";
++zstack.advanced.packetSending.apsAckWaitDurationPolled = 1000;
++zstack.advanced.tableSize.$name                        = "ti_zstack_advanced_zstack_table_size0";
+ 
+ /**
+  * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt.h b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt.h
+index 2c5073c..48f050b 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt.h
++++ b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt.h
+@@ -415,6 +415,8 @@ extern "C"
+ #define MT_UTIL_CALLBACK_SUB_CMD             0x06
+ #define MT_UTIL_TIME_ALIVE                   0x09
+ 
++#define MT_UTIL_LED_CONTROL                  0x0A
++
+ #define MT_UTIL_TEST_LOOPBACK                0x10
+ #define MT_UTIL_DATA_REQ                     0x11
+ 
+@@ -441,6 +443,8 @@ extern "C"
+ #define MT_UTIL_SRNG_GENERATE                0x4C
+ #endif
+ #define MT_UTIL_BIND_ADD_ENTRY               0x4D
++#define MT_UTIL_ASSOC_REMOVE                 0x63 // Custom command
++#define MT_UTIL_ASSOC_ADD                    0x64 // Custom command
+ 
+ #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
+ #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_util.c b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_util.c
+index 90d6d4a..4f416e8 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_util.c
++++ b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_util.c
+@@ -53,6 +53,9 @@
+ #include "mt_zdo.h"
+ #include "ssp.h"
+ 
++#include <ti/drivers/apps/LED.h>
++#include "ti_drivers_config.h"
++
+ #if !defined NONWK
+ 
+ #include "mt_nwk.h"
+@@ -95,6 +98,8 @@ static void MT_UtilSpi2Addr( zAddrType_t *pDst, uint8_t *pSrc );
+ #endif
+ 
+ #if defined (MT_UTIL_FUNC)
++static LED_Handle gLedHandle;
++
+ static void MT_UtilGetDeviceInfo(void);
+ static void MT_UtilGetNvInfo(void);
+ static void MT_UtilSetPanID(uint8_t *pBuf);
+@@ -128,6 +133,9 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+ #endif //MT_SYS_KEY_MANAGEMENT
+ static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
+ static void MT_UtilAssocCount(uint8_t *pBuf);
++static void MT_UtilLedControl(uint8_t *pBuf);
++static void MT_UtilAssocRemove(uint8_t *pBuf);
++static void MT_UtilAssocAdd(uint8_t *pBuf);
+ static void MT_UtilAssocFindDevice(uint8_t *pBuf);
+ static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
+ static void MT_UtilBindAddEntry(uint8_t *pBuf);
+@@ -260,6 +268,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+     MT_UtilAssocCount(pBuf);
+     break;
+ 
++  case MT_UTIL_LED_CONTROL:
++    MT_UtilLedControl(pBuf);
++    break;
++
+   case MT_UTIL_ASSOC_FIND_DEVICE:
+     MT_UtilAssocFindDevice(pBuf);
+     break;
+@@ -272,6 +284,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+     MT_UtilBindAddEntry(pBuf);
+     break;
+ 
++  case MT_UTIL_ASSOC_REMOVE:
++    MT_UtilAssocRemove(pBuf);
++    break;
++
++  case MT_UTIL_ASSOC_ADD:
++    MT_UtilAssocAdd(pBuf);
++    break;
++
+   case MT_UTIL_SYNC_REQ:
+     MT_UtilSync();
+     break;
+@@ -1375,6 +1395,92 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
+ }
+ 
++/***************************************************************************************************
++ * @fn      MT_UtilLedControl
++ *
++ * @brief   Proxy the LedControl() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilLedControl(uint8_t *pBuf)
++{
++  uint8_t cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  uint8_t mode =  pBuf[1];
++
++  if (gLedHandle == NULL) {
++    LED_Params ledParams;
++    LED_Params_init(&ledParams);
++    gLedHandle = LED_open(CONFIG_LED_GREEN, &ledParams);
++  }
++
++  if (mode==0) {
++    LED_setOff(gLedHandle);
++  } else {
++    LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
++  }
++
++  uint8_t retValue = 0;
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
++/***************************************************************************************************
++ * @fn      MT_UtilAssocRemove
++ *
++ * @brief   Proxy the AssocRemove() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilAssocRemove(uint8_t *pBuf)
++{
++  uint8_t cmdId;
++  uint8_t ieeeAddr[Z_EXTADDR_LEN];
++  uint8_t retValue = 0;
++
++  // parse header
++  cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  /* IeeAddress */
++  OsalPort_memcpy(ieeeAddr, pBuf, Z_EXTADDR_LEN);
++
++  AssocRemove(ieeeAddr);
++
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
++/***************************************************************************************************
++ * @fn      MT_UtilAssocAdd
++ *
++ * @brief   Proxy the AssocAdd() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilAssocAdd(uint8_t *pBuf)
++{
++  uint8_t cmdId;
++  uint8_t retValue = 0;
++
++  // parse header
++  cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  AssocAddNew(
++    BUILD_UINT16(pBuf[Z_EXTADDR_LEN], pBuf[Z_EXTADDR_LEN + 1]),
++    pBuf,
++    pBuf[Z_EXTADDR_LEN + 2]
++  );
++
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
+ /***************************************************************************************************
+  * @fn      MT_UtilAssocFindDevice
+  *
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c
+index 63c143b..4ab09ab 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c
++++ b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c
+@@ -43,15 +43,21 @@
+ #include "zcomdef.h"
+ #include "mt_version.h"
+ 
++#define CODE_REVISION_NUMBER 20210430
++
+ /******************************************************************************
+  * CONSTANTS
+  *****************************************************************************/
+ const uint8_t MTVersionString[] = {
+                                    2,  /* Transport protocol revision */
+-                                   0,  /* Product ID */
++                                   1,  /* Product ID */
+                                    2,  /* Software major release number */
+                                    7,  /* Software minor release number */
+                                    1,  /* Software maintenance release number */
++                                   ((CODE_REVISION_NUMBER >> 0)  & 0xFF),
++                                   ((CODE_REVISION_NUMBER >> 8)  & 0xFF),
++                                   ((CODE_REVISION_NUMBER >> 16) & 0xFF),
++                                   ((CODE_REVISION_NUMBER >> 24) & 0xFF),
+                                  };
+ 
+ /******************************************************************************
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/Config/preinclude.h b/znp_LP_CC2652RB_tirtos_ccs/Stack/Config/preinclude.h
+new file mode 100644
+index 0000000..a19e37a
+--- /dev/null
++++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/Config/preinclude.h
+@@ -0,0 +1,60 @@
++#define MT_SYS_KEY_MANAGEMENT 1
++#define FEATURE_NVEXID 1
++
++// Increase MAC buffers
++#undef MAC_CFG_TX_DATA_MAX
++#define MAC_CFG_TX_DATA_MAX 20
++#undef MAC_CFG_TX_MAX
++#define MAC_CFG_TX_MAX 32
++#undef MAC_CFG_RX_MAX
++#define MAC_CFG_RX_MAX 20
++
++// Save memory
++#undef NWK_MAX_BINDING_ENTRIES
++#define NWK_MAX_BINDING_ENTRIES 1
++#undef APS_MAX_GROUPS
++#define APS_MAX_GROUPS 1
++
++// Increase NV pages to 3 to allow for bigger device tables
++#undef NVOCMP_NVPAGES
++#define NVOCMP_NVPAGES 3
++
++// Disabling MULTICAST is required in order for proper group support.
++// If MULTICAST is not disabled, the group adress is not included in the APS header
++#define MULTICAST_ENABLED FALSE
++
++// Increase the max number of boardcasts, the default broadcast delivery time is 3 seconds
++// with the value below this will allow for 1 broadcast every 0.15 second
++#define MAX_BCAST 30
++
++/**
++ * Enable MTO routing
++ */
++#define CONCENTRATOR_ENABLE TRUE
++#define CONCENTRATOR_DISCOVERY_TIME 100
++#define CONCENTRATOR_ROUTE_CACHE TRUE
++#define MAX_RTG_SRC_ENTRIES 200
++#define SRC_RTG_EXPIRY_TIME 2
++
++/**
++ * Scale other device tables appropriately
++ */
++#define NWK_MAX_DEVICE_LIST 50
++#define ZDSECMGR_TC_DEVICE_MAX 200
++#define MAX_NEIGHBOR_ENTRIES 20
++#define MAX_RTG_ENTRIES 100
++
++/**
++ * Reduce the APS ack wait duration from 6000 ms to 1000 ms (value * 2 = value in ms).
++ * This will make requests timeout quicker, in pratice the default timeout of 6000ms is too long.
++ */
++#define APSC_ACK_WAIT_DURATION_POLLED 500
++
++// From https://www.ti.com/lit/an/swra650b/swra650b.pdf
++#define LINK_DOWN_TRIGGER 12
++#define NWK_ROUTE_AGE_LIMIT 5
++#define DEF_NWK_RADIUS 15
++#define DEFAULT_ROUTE_REQUEST_RADIUS 8
++#define ZDNWKMGR_MIN_TRANSMISSIONS 0
++#define ROUTE_DISCOVERY_TIME 13
++#define MTO_RREQ_LIMIT_TIME 5000
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/Config/znp_cnf.opts b/znp_LP_CC2652RB_tirtos_ccs/Stack/Config/znp_cnf.opts
+index 6e3cb6a..886d0b4 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Stack/Config/znp_cnf.opts
++++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/Config/znp_cnf.opts
+@@ -32,3 +32,5 @@
+ -DMT_GP_CB_FUNC
+ 
+ -DMT_APP_CNF_FUNC
++
++--preinclude=preinclude.h
+\ No newline at end of file
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c
+index 3a7afa3..112f6a1 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c
++++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c
+@@ -407,10 +407,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+ #if !defined ( APS_NO_GROUPS )
+     // Find the first endpoint for this group
+     grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
+-    if ( grpEp == APS_GROUPS_EP_NOT_FOUND )
+-      return;   // No endpoint found
++    if ( grpEp == APS_GROUPS_EP_NOT_FOUND ) {
++      // No endpoint found, default to endpoint 1.
++      // In the original source code there is a return here.
++      // This prevent the messags from being forwarded.
++      // For our use-case we want to capture all messages.
++      // Even if the coordinator is not in the group.
++      epDesc = afFindEndPointDesc( 1 );
++    }
++    else {
++      epDesc = afFindEndPointDesc( grpEp );
++    }
+ 
+-    epDesc = afFindEndPointDesc( grpEp );
+     if ( epDesc == NULL )
+       return;   // Endpoint descriptor not found
+ 
+@@ -457,7 +465,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+     // if the Wildcard ProfileID is received the message should not be sent to ZDO endpoint
+     if ( (aff->ProfileID == epProfileID) ||
+          ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
+-         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) )
++         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) ||
++         // Fix below is to support PGC410EU: https://github.com/Koenkk/zigbee2mqtt/issues/4055
++         ((epDesc->endPoint == 2) && ( aff->ProfileID == 0xFC01 )) )
+     {
+       // Save original endpoint
+       uint8_t endpoint = aff->DstEndPoint;
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c
+index 2b63c06..3d540c2 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c
++++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c
+@@ -65,10 +65,10 @@
+  * CONSTANTS
+  */
+ // Maximums for the data buffer queue
+-#define NWK_MAX_DATABUFS_WAITING    8     // Waiting to be sent to MAC
+-#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
+-#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
+-#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
++#define NWK_MAX_DATABUFS_WAITING    16     // Waiting to be sent to MAC
++#define NWK_MAX_DATABUFS_SCHEDULED  10     // Timed messages to be sent
++#define NWK_MAX_DATABUFS_CONFIRMED  10     // Held after MAC confirms
++#define NWK_MAX_DATABUFS_TOTAL      24    // Total number of buffers
+ 
+ // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
+ // A known shortcoming is that when a message is enqueued as "hold" for a
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/sys/zglobals.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/sys/zglobals.c
+index 764dabd..e9135fb 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Stack/sys/zglobals.c
++++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/sys/zglobals.c
+@@ -105,7 +105,7 @@ uint8_t zgSecurePermitJoin = TRUE;
+ // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
+ // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
+ // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
+-uint8_t zgAllowRejoinsWithWellKnownKey = FALSE;
++uint8_t zgAllowRejoinsWithWellKnownKey = TRUE; // https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/882650/3265311#3265311
+ 
+ //allowInstallCodes
+ uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
+@@ -199,7 +199,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
+ //
+ // NOTICE:  Before enabling Child Aging make sure to review all the related
+ // definitions in this file, especially zgNwkParentInformation.
+-uint8_t zgChildAgingEnable = TRUE;
++
++// Disable child aging, otherwise Xiaomi devices are being kicked off the network.
++uint8_t zgChildAgingEnable = FALSE;
+ 
+ //==========    TouchLink NWK configuration    ===============
+ // Values used by Router when starts a network as initiator
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c
+index 1f807ca..b3e2694 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c
++++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c
+@@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
+           ZDApp_ChangeState( DEV_ROUTER );
+         }
+ 
+-        if ( zgChildAgingEnable == TRUE )
+-        {
+-          // Once the device has changed its state to a ROUTER set the timer to send
+-          // Parent annce
+-          ZDApp_SetParentAnnceTimer();
+-        }
++        // As we cannot enable child aging as Xiaomi devices will drop off
++        // but we stil want to have the parent announces we always enable it here.
++        // Otherwise some end devices could be unreachable when they changed parent
++        // while the coordinator was powered off.
++        ZDApp_SetParentAnnceTimer();
+       }
+       else
+       {
+@@ -885,12 +884,11 @@ void ZDApp_NetworkStartEvt( void )
+         bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
+       }
+ 
+-      if ( zgChildAgingEnable == TRUE )
+-      {
+-        // Once the device has changed its state to a COORDINATOR set the timer to send
+-        // Parent annce
+-        ZDApp_SetParentAnnceTimer();
+-      }
++      // As we cannot enable child aging as Xiaomi devices will drop off
++      // but we stil want to have the parent announces we always enable it here.
++      // Otherwise some end devices could be unreachable when they changed parent
++      // while the coordinator was powered off.
++      ZDApp_SetParentAnnceTimer();
+     }
+     else
+     {
+@@ -3132,6 +3130,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+     // Routing error for dstAddr, this is informational and a Route
+     // Request should happen automatically.
+   }
++
++  if ( (nwkDstAddr == NLME_GetShortAddr())
++        && (statusCode == NWKSTAT_SOURCE_ROUTE_FAILURE) )
++  {
++    // Received a source route failure, remove route and rediscover.
++    RTG_RemoveRtgEntry( dstAddr, 0 );
++    NLME_RouteDiscoveryRequest( dstAddr, 0, 30 );
++  }
+ }
+ 
+ /******************************************************************************
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd b/znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd
+index 2dcc711..a8b8d93 100755
+--- a/znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd
++++ b/znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd
+@@ -70,9 +70,9 @@
+ /* must be located at the beginning of the application.                      */
+ 
+ #define FLASH_BASE              0x00000000
+-#define FLASH_SIZE              0x52000
+-#define FLASH_NV_BASE           0x52000
+-#define FLASH_NV_SIZE           0x4000
++#define FLASH_SIZE              0x50000
++#define FLASH_NV_BASE           0x50000
++#define FLASH_NV_SIZE           0x6000
+ #define FLASH_LAST_BASE         0x56000
+ #define FLASH_LAST_SIZE         0x2000
+ 
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg b/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg
+index 479fe1a..4736eb1 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg
++++ b/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg
+@@ -50,6 +50,7 @@ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 13;
+ CCFG.levelBootloaderBackdoor  = "Active low";
+ CCFG.srcClkLF                 = "Derived from HF XOSC";
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
+ 
+ AESCBC1.$name = "CONFIG_AESCBC_0";
+@@ -68,8 +69,8 @@ ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
+-NVS1.internalFlash.regionBase = 0x52000;
+-NVS1.internalFlash.regionSize = 0x4000;
++NVS1.internalFlash.regionBase = 0x50000;
++NVS1.internalFlash.regionSize = 0x6000;
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
+@@ -122,18 +123,20 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
  SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
  SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
  
