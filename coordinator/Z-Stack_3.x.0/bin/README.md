@@ -106,13 +106,22 @@
     <td>N/A</td>
   </tr>
   <tr>
-    <td>Zigbeer E72 by Egony</td>
-    <td>CC2652P<br>(Ebyte E72)</td>
+    <td>Egony Stick V4<br>(Ebyte ver.)</td>
+    <td>CC2652P<br>(Ebyte E72-2G4M20S1E)</td>
     <td>CC1352P2_CC2652P_other_*.zip</td>
     <td>DIO_15</td>
-    <td>No</td>
+    <td>Yes<br>(from Rev.2.0)</td>
     <td>DIO_5: 20dBm PA<br>DIO_6: 2.4GHz</td>
     <td>DIO_8 (Green)<br>DIO_7 (Red)<br></td>
+  </tr>
+  <tr>
+    <td>Egony Stick V4<br>(RFSTAR ver.)</td>
+    <td>CC2652P<br>(RFSTAR RF-BM-2652P2)</td>
+    <td>CC1352P2_CC2652P_launchpad_*.zip</td>
+    <td>DIO_15</td>
+    <td>Yes</td>
+    <td>DIO_28: 2.4Ghz<br>DIO_29: 20dBm PA</td>
+    <td>DIO_7 (Green)<br>DIO_6 (Red)<br></td>
   </tr>
 </tbody>
 </table>
