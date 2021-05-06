@@ -88,6 +88,24 @@
     <td>DIO_6 (Green)<br>DIO_7 (Red)<br></td>
   </tr>
   <tr>
+    <td>Tube's CC2652P2 USB Coordinator<br></td>
+    <td>CC2652P<br>(RFSTAR RF-BM-2652P2)<br></td>
+    <td>CC1352P2_CC2652P_launchpad_*.zip</td>
+    <td>DIO_15</td>
+    <td>N/A</td>
+    <td>DIO_28: 2.4Ghz<br>DIO_29: 20dBm PA</td>
+    <td>N/A</td>
+  </tr>
+  <tr>
+    <td>Tube's Zigbee Gateways (CC2652P2 variant)<br></td>
+    <td>CC2652P<br>(RFSTAR RF-BM-2652P2)<br></td>
+    <td>CC1352P2_CC2652P_launchpad_*.zip</td>
+    <td>DIO_15</td>
+    <td>N/A</td>
+    <td>DIO_28: 2.4Ghz<br>DIO_29: 20dBm PA</td>
+    <td>N/A</td>
+  </tr>
+  <tr>
     <td>Egony Stick V4<br>(Ebyte ver.)</td>
     <td>CC2652P<br>(Ebyte E72-2G4M20S1E)</td>
     <td>CC1352P2_CC2652P_other_*.zip</td>
