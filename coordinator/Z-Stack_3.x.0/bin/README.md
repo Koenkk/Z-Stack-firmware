@@ -88,7 +88,7 @@
     <td>DIO_6 (Green)<br>DIO_7 (Red)<br></td>
   </tr>
   <tr>
-    <td>Egony Stick V4<br>(Ebyte)</td>
+    <td>Egony Stick V4<br>(Ebyte ver.)</td>
     <td>CC2652P<br>(Ebyte E72-2G4M20S1E)</td>
     <td>CC1352P2_CC2652P_other_*.zip</td>
     <td>DIO_15</td>
@@ -97,7 +97,7 @@
     <td>DIO_8 (Green)<br>DIO_7 (Red)<br></td>
   </tr>
   <tr>
-    <td>Egony Stick V4<br>(RFSTAR)</td>
+    <td>Egony Stick V4<br>(RFSTAR ver.)</td>
     <td>CC2652P<br>(RFSTAR RF-BM-2652P2)</td>
     <td>CC1352P2_CC2652P_launchpad_*.zip</td>
     <td>DIO_15</td>
