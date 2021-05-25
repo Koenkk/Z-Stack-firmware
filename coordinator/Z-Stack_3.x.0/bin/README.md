@@ -79,7 +79,9 @@
     <td>DIO_7 (Blue)</td>
   </tr>
   <tr>
-    <td>ZigStar<br></td>
+	<td>
+		<a href="https://zig-star.com">ZigStar Stick v4</a>
+	</td>
     <td>CC2652P<br>(RFSTAR RF-BM-2652P2)<br></td>
     <td>CC1352P2_CC2652P_launchpad_*.zip</td>
     <td>DIO_15</td>
