@@ -88,6 +88,15 @@
     <td>DIO_6 (Green)<br>DIO_7 (Red)<br></td>
   </tr>
   <tr>
+    <td>CircuitSetup.us Zigbee Stick</a></td>
+    <td>CC2652P<br>(RFSTAR RF-BM-2652P2 PCB Ant.)<br></td>
+    <td>CC1352P2_CC2652P_launchpad_*.zip</td>
+    <td>DIO_15</td>
+    <td>No</td>
+    <td>DIO_28: 2.4Ghz<br>DIO_29: 20dBm PA</td>
+    <td>DIO_6 (Green)<br>DIO_7 (Red)<br></td>
+  </tr>
+  <tr>
     <td>Tube's CC2652P2 USB Coordinator<br></td>
     <td>CC2652P<br>(RFSTAR RF-BM-2652P2)<br></td>
     <td>CC1352P2_CC2652P_launchpad_*.zip</td>
