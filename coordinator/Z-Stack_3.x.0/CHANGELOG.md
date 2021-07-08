@@ -1,7 +1,9 @@
-# 20210430
+# 20210708
 - SimpleLink SDK 5.10.00.48 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/5.10.00.48/exports/changelog.html))
 - Increase MAC buffers, increases performance on message burst and reduces MAC_TRANSACTION_OVERFLOW errors
 - LED control
+- Fix joining not working when joining is only permitted on specific router
+- Forward message to host even when profileID does not match
 
 # 20210120
 - Optimize network parameters (according to https://www.ti.com/lit/an/swra650b/swra650b.pdf)

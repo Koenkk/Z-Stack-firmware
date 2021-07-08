@@ -1,12 +1,13 @@
-From 0ec6906f23752f5e239f4339be6572a2a084cfea Mon Sep 17 00:00:00 2001
+From cf8872816e83c572a513843bed947bc79ae8b8ad Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
-Date: Fri, 30 Apr 2021 17:56:13 +0200
+Date: Thu, 8 Jul 2021 19:44:28 +0200
 Subject: [PATCH 1/1] Own changes
 
 ---
  .../Application/mt/mt.h                       |    4 +
  .../Application/mt/mt_util.c                  |  106 ++
  .../Application/mt/mt_version.c               |    8 +-
+ .../Application/mt/mt_zdo.c                   |    5 +
  .../Stack/Config/preinclude.h                 |   73 ++
  .../Stack/Config/znp_cnf.opts                 |    2 +
  .../Stack/af/af.c                             |   18 +-
@@ -24,6 +25,7 @@ Subject: [PATCH 1/1] Own changes
  .../Application/mt/mt.h                       |    4 +
  .../Application/mt/mt_util.c                  |  106 ++
  .../Application/mt/mt_version.c               |    8 +-
+ .../Application/mt/mt_zdo.c                   |    5 +
  .../Stack/Config/preinclude.h                 |   60 +
  .../Stack/Config/znp_cnf.opts                 |    2 +
  .../Stack/af/af.c                             |   18 +-
@@ -35,6 +37,7 @@ Subject: [PATCH 1/1] Own changes
  .../Application/mt/mt.h                       |    4 +
  .../Application/mt/mt_util.c                  |  106 ++
  .../Application/mt/mt_version.c               |    8 +-
+ .../Application/mt/mt_zdo.c                   |    5 +
  .../Stack/Config/preinclude.h                 |   60 +
  .../Stack/Config/znp_cnf.opts                 |    2 +
  znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c      |   18 +-
@@ -43,8 +46,10 @@ Subject: [PATCH 1/1] Own changes
  znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c |   30 +-
  znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd  |    6 +-
  znp_LP_CC2652RB_tirtos_ccs/znp.syscfg         |   31 +-
- 39 files changed, 2838 insertions(+), 106 deletions(-)
+ 42 files changed, 2853 insertions(+), 106 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
+ mode change 100644 => 100755 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
+ mode change 100644 => 100755 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.h
@@ -230,14 +235,14 @@ index 90d6d4a..4f416e8 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..4ab09ab 100644
+index 63c143b..590ec09 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210430
++#define CODE_REVISION_NUMBER 20210708
 +
  /******************************************************************************
   * CONSTANTS
@@ -256,6 +261,22 @@ index 63c143b..4ab09ab 100644
                                   };
  
  /******************************************************************************
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
+index 9755b1d..3f8e60a 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
+@@ -1658,6 +1658,11 @@ static void MT_ZdoMgmtPermitJoinRequest(uint8_t *pBuf)
+   ignoreIndication = TRUE;
+   retValue = (uint8_t)ZDP_MgmtPermitJoinReq( &destAddr, duration, tcSignificance, 0);
+   ignoreIndication = FALSE;
++  
++  // If joining is enabled via a router, ZDO_ProcessMgmtPermitJoinReq is never triggered thus
++  // ZDSecMgrPermitJoining is never called. Joining via a router would always fail now since 
++  // ZDSecMgrPermitJoiningEnabled in zd_sec_mgr.c stays FALSE
++  ZDSecMgrPermitJoining(duration);
+ 
+   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_ZDO), cmdId, 1, &retValue);
+ }
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
 index 0000000..ed4ba66
@@ -347,7 +368,9 @@ index 6e3cb6a..886d0b4 100644
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index 3a7afa3..112f6a1 100644
+old mode 100644
+new mode 100755
+index 3a7afa3..2dcef5a
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 @@ -407,10 +407,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
@@ -378,13 +401,15 @@ index 3a7afa3..112f6a1 100644
           ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
 -         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) )
 +         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) ||
-+         // Fix below is to support PGC410EU: https://github.com/Koenkk/zigbee2mqtt/issues/4055
-+         ((epDesc->endPoint == 2) && ( aff->ProfileID == 0xFC01 )) )
++         // Forward messages to endpoint even with profileID mismatches
++         ((aff->ProfileID >= 0x100) && (aff->ProfileID <= 0xFC01)) )
      {
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-index 2b63c06..3d540c2 100644
+old mode 100644
+new mode 100755
+index 2b63c06..6ac3fb2
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -395,10 +420,10 @@ index 2b63c06..3d540c2 100644
 -#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
 -#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
 -#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
-+#define NWK_MAX_DATABUFS_WAITING    16     // Waiting to be sent to MAC
-+#define NWK_MAX_DATABUFS_SCHEDULED  10     // Timed messages to be sent
-+#define NWK_MAX_DATABUFS_CONFIRMED  10     // Held after MAC confirms
-+#define NWK_MAX_DATABUFS_TOTAL      24    // Total number of buffers
++#define NWK_MAX_DATABUFS_WAITING    32     // Waiting to be sent to MAC
++#define NWK_MAX_DATABUFS_SCHEDULED  20     // Timed messages to be sent
++#define NWK_MAX_DATABUFS_CONFIRMED  20     // Held after MAC confirms
++#define NWK_MAX_DATABUFS_TOTAL      48    // Total number of buffers
  
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
@@ -2840,14 +2865,14 @@ index 90d6d4a..4f416e8 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..4ab09ab 100644
+index 63c143b..590ec09 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210430
++#define CODE_REVISION_NUMBER 20210708
 +
  /******************************************************************************
   * CONSTANTS
@@ -2866,6 +2891,22 @@ index 63c143b..4ab09ab 100644
                                   };
  
  /******************************************************************************
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
+index 9755b1d..1571e2b 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
+@@ -1659,6 +1659,11 @@ static void MT_ZdoMgmtPermitJoinRequest(uint8_t *pBuf)
+   retValue = (uint8_t)ZDP_MgmtPermitJoinReq( &destAddr, duration, tcSignificance, 0);
+   ignoreIndication = FALSE;
+ 
++  // If joining is enabled via a router, ZDO_ProcessMgmtPermitJoinReq is never triggered thus
++  // ZDSecMgrPermitJoining is never called. Joining via a router would always fail now since
++  // ZDSecMgrPermitJoiningEnabled in zd_sec_mgr.c stays FALSE
++  ZDSecMgrPermitJoining(duration);
++
+   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_ZDO), cmdId, 1, &retValue);
+ }
+ 
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
 index 0000000..a19e37a
@@ -2944,7 +2985,7 @@ index 6e3cb6a..886d0b4 100644
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
-index 3a7afa3..112f6a1 100644
+index 3a7afa3..2dcef5a 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
 @@ -407,10 +407,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
@@ -2975,13 +3016,13 @@ index 3a7afa3..112f6a1 100644
           ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
 -         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) )
 +         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) ||
-+         // Fix below is to support PGC410EU: https://github.com/Koenkk/zigbee2mqtt/issues/4055
-+         ((epDesc->endPoint == 2) && ( aff->ProfileID == 0xFC01 )) )
++         // Forward messages to endpoint even with profileID mismatches
++         ((aff->ProfileID >= 0x100) && (aff->ProfileID <= 0xFC01)) )
      {
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-index 2b63c06..3d540c2 100644
+index 2b63c06..6ac3fb2 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -2992,10 +3033,10 @@ index 2b63c06..3d540c2 100644
 -#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
 -#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
 -#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
-+#define NWK_MAX_DATABUFS_WAITING    16     // Waiting to be sent to MAC
-+#define NWK_MAX_DATABUFS_SCHEDULED  10     // Timed messages to be sent
-+#define NWK_MAX_DATABUFS_CONFIRMED  10     // Held after MAC confirms
-+#define NWK_MAX_DATABUFS_TOTAL      24    // Total number of buffers
++#define NWK_MAX_DATABUFS_WAITING    32     // Waiting to be sent to MAC
++#define NWK_MAX_DATABUFS_SCHEDULED  20     // Timed messages to be sent
++#define NWK_MAX_DATABUFS_CONFIRMED  20     // Held after MAC confirms
++#define NWK_MAX_DATABUFS_TOTAL      48    // Total number of buffers
  
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
@@ -3326,14 +3367,14 @@ index 90d6d4a..4f416e8 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..4ab09ab 100644
+index 63c143b..590ec09 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210430
++#define CODE_REVISION_NUMBER 20210708
 +
  /******************************************************************************
   * CONSTANTS
@@ -3352,6 +3393,22 @@ index 63c143b..4ab09ab 100644
                                   };
  
  /******************************************************************************
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_zdo.c b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_zdo.c
+index 9755b1d..1571e2b 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_zdo.c
++++ b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_zdo.c
+@@ -1659,6 +1659,11 @@ static void MT_ZdoMgmtPermitJoinRequest(uint8_t *pBuf)
+   retValue = (uint8_t)ZDP_MgmtPermitJoinReq( &destAddr, duration, tcSignificance, 0);
+   ignoreIndication = FALSE;
+ 
++  // If joining is enabled via a router, ZDO_ProcessMgmtPermitJoinReq is never triggered thus
++  // ZDSecMgrPermitJoining is never called. Joining via a router would always fail now since
++  // ZDSecMgrPermitJoiningEnabled in zd_sec_mgr.c stays FALSE
++  ZDSecMgrPermitJoining(duration);
++
+   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_ZDO), cmdId, 1, &retValue);
+ }
+ 
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/Config/preinclude.h b/znp_LP_CC2652RB_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
 index 0000000..a19e37a
@@ -3430,7 +3487,7 @@ index 6e3cb6a..886d0b4 100644
 +--preinclude=preinclude.h
 \ No newline at end of file
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c
-index 3a7afa3..112f6a1 100644
+index 3a7afa3..2dcef5a 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c
 +++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c
 @@ -407,10 +407,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
@@ -3461,13 +3518,13 @@ index 3a7afa3..112f6a1 100644
           ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
 -         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) )
 +         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) ||
-+         // Fix below is to support PGC410EU: https://github.com/Koenkk/zigbee2mqtt/issues/4055
-+         ((epDesc->endPoint == 2) && ( aff->ProfileID == 0xFC01 )) )
++         // Forward messages to endpoint even with profileID mismatches
++         ((aff->ProfileID >= 0x100) && (aff->ProfileID <= 0xFC01)) )
      {
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c
-index 2b63c06..3d540c2 100644
+index 2b63c06..6ac3fb2 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -3478,10 +3535,10 @@ index 2b63c06..3d540c2 100644
 -#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
 -#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
 -#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
-+#define NWK_MAX_DATABUFS_WAITING    16     // Waiting to be sent to MAC
-+#define NWK_MAX_DATABUFS_SCHEDULED  10     // Timed messages to be sent
-+#define NWK_MAX_DATABUFS_CONFIRMED  10     // Held after MAC confirms
-+#define NWK_MAX_DATABUFS_TOTAL      24    // Total number of buffers
++#define NWK_MAX_DATABUFS_WAITING    32     // Waiting to be sent to MAC
++#define NWK_MAX_DATABUFS_SCHEDULED  20     // Timed messages to be sent
++#define NWK_MAX_DATABUFS_CONFIRMED  20     // Held after MAC confirms
++#define NWK_MAX_DATABUFS_TOTAL      48    // Total number of buffers
  
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
@@ -3582,7 +3639,7 @@ index 2dcc711..a8b8d93 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg b/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg
-index 479fe1a..4736eb1 100644
+index a63cc20..95397f1 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg
 +++ b/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg
 @@ -50,6 +50,7 @@ CCFG.enableBootloaderBackdoor = true;
@@ -3638,5 +3695,5 @@ index 479fe1a..4736eb1 100644
  /**
   * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
 -- 
-2.24.3 (Apple Git-128)
+2.32.0
 
