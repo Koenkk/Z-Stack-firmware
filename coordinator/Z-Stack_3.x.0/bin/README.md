@@ -159,6 +159,15 @@
     <td>DIO_5: 20dBm PA<br>DIO_6: 2.4GHz</td>
     <td>DIO_8 (Green)<br>DIO_7 (Red)<br></td>
   </tr>
+  <tr>
+    <td>cyijun <a href="https://github.com/cyijun/OpenZ3Gateway">OpenZ3Gateway</a></td>
+    <td>CC2652P<br>(RFSTAR RF-BM-2652P2 SMA Ant.)<br></td>
+    <td>CC1352P2_CC2652P_launchpad_*.zip</td>
+    <td>DIO_15</td>
+    <td>No</td>
+    <td>DIO_28: 2.4Ghz<br>DIO_29: 20dBm PA</td>
+    <td>DIO_7 (Green)<br>DIO_6 (Red)<br></td>
+  </tr>
 </tbody>
 </table>
 
