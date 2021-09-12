@@ -1,0 +1,39 @@
+{
+  "index_version":"1631448902",
+  
+  "firmware_type":{
+    "coordinator":{
+      "stack":[
+        {
+          "Z-Stack_3.0.x":"20190523"
+        },
+        {
+          "Z-Stack_3.x.0":"20210708"
+        }
+      ],
+      "stack_default":"Z-Stack_3.x.0"
+    },
+    "router":{
+      "stack":[
+        [
+          "Z-Stack_3.x.0",
+          "20210128"
+        ]
+      ],
+      "stack_default":"Z-Stack_3.x.0"
+    }
+  },
+  
+  "boards":{
+    "LAUNCHXL-CC26xR1":"CC2652R",
+    "LAUNCHXL-CC1352P-2":"CC1352P2_CC2652P_launchpad",
+    "zzh":"CC2652R",
+    "zzhp":"CC1352P2_CC2652P_other",
+    "zzhp-lite":"CC1352P2_CC2652P_other"
+  },
+  
+  "bsl-config":{
+    "CC2652R":"0x00057FD8:0xC50DFEC5",
+    "CC1352P2_CC2652P_launchpad":"0x00057FD8:0xC50FFEC5"
+  }
+}
