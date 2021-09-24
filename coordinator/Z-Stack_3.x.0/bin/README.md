@@ -168,6 +168,15 @@
     <td>DIO_28: 2.4Ghz<br>DIO_29: 20dBm PA</td>
     <td>DIO_7 (Green)<br>DIO_6 (Red)<br></td>
   </tr>
+  <tr>
+    <td>ITead Sonoff Zigbee 3.0 USB Dongle Plus</td>
+    <td>CC2652P</td>
+    <td>CC1352P2_CC2652P_launchpad_*.zip</td>
+    <td>?</td>
+    <td>?</td>
+    <td>?</td>
+    <td>?</td>
+  </tr>
 </tbody>
 </table>
 
