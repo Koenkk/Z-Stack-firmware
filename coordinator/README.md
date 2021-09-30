@@ -70,7 +70,7 @@ This directory contains various Z-Stack coordinator firmwares.
   </tr>
   <tr>
     <td rowspan="2">Z-Stack_3.x.0</td>
-    <td>CC2652R, CC2652RB, CC1352P-2</td>
+    <td>CC2652P, CC2652R, CC2652RB, CC1352P-2</td>
     <td>3.0</td>
     <td>50</td>
     <td>100/200</td>
