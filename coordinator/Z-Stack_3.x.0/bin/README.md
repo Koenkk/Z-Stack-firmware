@@ -191,7 +191,7 @@
     <td>CC2652P</td>
     <td>CC1352P2_CC2652P_launchpad_*.zip</td>
     <td>?</td>
-    <td>No</td>
+    <td>Yes</td>
     <td>DIO_29: 20dBm PA</td>
     <td>?</td>
     <td>DIO13: TX<br>DIO12:RC<br>DIO19: CTS<br>DIO18: RTS</td>
