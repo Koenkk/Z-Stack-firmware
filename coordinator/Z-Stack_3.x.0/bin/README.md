@@ -190,11 +190,11 @@
     <td>SONOFF Zigbee 3.0 USB Dongle Plus by ITead</td>
     <td>CC2652P</td>
     <td>CC1352P2_CC2652P_launchpad_*.zip</td>
-    <td>?</td>
-    <td>No</td>
+    <td>DIO_15</td>
+    <td>Yes</td>
     <td>DIO_29: 20dBm PA</td>
-    <td>?</td>
-    <td>DIO13: TX<br>DIO12:RC<br>DIO19: CTS<br>DIO18: RTS</td>
+    <td>DIO_7(Not welded)<br>Power LED(Red)</td>
+    <td>DIO13: TX<br>DIO12:RC<br>DIO19: CTS(DIP switch ON)<br>DIO18: RTS(DIP switch ON)</td>
   </tr>
 </tbody>
 </table>
