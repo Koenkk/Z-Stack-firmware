@@ -1,3 +1,10 @@
+# 20211115/20211116
+- Fix joining not working when joining is only permitted on specific router
+- Forward message to host even when profileID does not match
+- Turn on/off leds when joining is enabled/disabled
+- Fix CC2530 crashing when sending large messages via UART
+- Fix Xiaomi E1 devices not (fully) working
+
 # 20201127/20201128
 - Fix join failing after some uptime
 - Support PGC410EU
