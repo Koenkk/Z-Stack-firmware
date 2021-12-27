@@ -167,7 +167,17 @@
     <td>?</td>
   </tr>
   <tr>
-    <td>Gio-dot Z-Bee Duo with CC2652P</td>
+    <td><a href="https://github.com/Gio-dot/Z-Bee-Duo">Gio-dot Z-Bee Duo with CC2652P</a></td>
+    <td>CC2652P<br>(RFSTAR RF-BM-2652P2)<br></td>
+    <td>CC1352P2_CC2652P_launchpad_*.zip</td>
+    <td>DIO_15</td>
+    <td>Yes</td>
+    <td>DIO_28: 2.4Ghz<br>DIO_29: 20dBm PA</td>
+    <td>DIO_7 (Green)<br>DIO_6 (Red)<br></td>
+    <td>?</td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/Gio-dot/Z-Bee-Duo">Gio-dot Z-Bee Duo with CC2652P</a></td>
     <td>CC2652P<br>(Ebyte E72-2G4M20S1E)</td>
     <td>CC1352P2_CC2652P_other_*.zip</td>
     <td>DIO_15</td>
