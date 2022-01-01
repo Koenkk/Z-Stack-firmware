@@ -1,67 +1,74 @@
-From cf8872816e83c572a513843bed947bc79ae8b8ad Mon Sep 17 00:00:00 2001
+From 4020572e2d11875bab0ba410b0727e8d08078c16 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
-Date: Thu, 8 Jul 2021 19:44:28 +0200
+Date: Tue, 7 Dec 2021 20:41:07 +0100
 Subject: [PATCH 1/1] Own changes
 
 ---
- .../Application/mt/mt.h                       |    4 +
- .../Application/mt/mt_util.c                  |  106 ++
- .../Application/mt/mt_version.c               |    8 +-
- .../Application/mt/mt_zdo.c                   |    5 +
- .../Stack/Config/preinclude.h                 |   73 ++
- .../Stack/Config/znp_cnf.opts                 |    2 +
- .../Stack/af/af.c                             |   18 +-
- .../Stack/nwk/nwk_globals.c                   |    8 +-
- .../Stack/sys/zglobals.c                      |    6 +-
- .../Stack/zdo/zd_app.c                        |   30 +-
- .../cc13x2_cc26x2.cmd                         |    6 +-
- .../syscfg/ti_devices_config.c                |  104 ++
- .../syscfg/ti_drivers_config.c                | 1060 +++++++++++++++++
- .../syscfg/ti_drivers_config.h                |  283 +++++
- .../syscfg/ti_radio_config.c                  |  340 ++++++
- .../syscfg/ti_radio_config.h                  |   77 ++
- .../syscfg/ti_utils_build_linker.cmd.genlibs  |   35 +
- .../syscfg/ti_zstack_config.h                 |  226 ++++
- .../Application/mt/mt.h                       |    4 +
- .../Application/mt/mt_util.c                  |  106 ++
- .../Application/mt/mt_version.c               |    8 +-
- .../Application/mt/mt_zdo.c                   |    5 +
- .../Stack/Config/preinclude.h                 |   60 +
- .../Stack/Config/znp_cnf.opts                 |    2 +
- .../Stack/af/af.c                             |   18 +-
- .../Stack/nwk/nwk_globals.c                   |    8 +-
- .../Stack/sys/zglobals.c                      |    6 +-
- .../Stack/zdo/zd_app.c                        |   30 +-
- .../cc13x2_cc26x2.cmd                         |    6 +-
- znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |   31 +-
- .../Application/mt/mt.h                       |    4 +
- .../Application/mt/mt_util.c                  |  106 ++
- .../Application/mt/mt_version.c               |    8 +-
- .../Application/mt/mt_zdo.c                   |    5 +
- .../Stack/Config/preinclude.h                 |   60 +
- .../Stack/Config/znp_cnf.opts                 |    2 +
- znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c      |   18 +-
- .../Stack/nwk/nwk_globals.c                   |    8 +-
- .../Stack/sys/zglobals.c                      |    6 +-
- znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c |   30 +-
- znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd  |    6 +-
- znp_LP_CC2652RB_tirtos_ccs/znp.syscfg         |   31 +-
- 42 files changed, 2853 insertions(+), 106 deletions(-)
+ .../Application/mt/mt.h                       |   4 +
+ .../Application/mt/mt_util.c                  | 108 +++++
+ .../Application/mt/mt_version.c               |   8 +-
+ .../Application/mt/mt_zdo.c                   |   5 +
+ .../Stack/Config/preinclude.h                 |  78 ++++
+ .../Stack/Config/znp_cnf.opts                 |   2 +
+ .../Stack/af/af.c                             |  18 +-
+ .../Stack/nwk/nwk_globals.c                   |   8 +-
+ .../Stack/sys/zglobals.c                      |   6 +-
+ .../Stack/zdo/zd_app.c                        |  30 +-
+ .../Stack/zdo/zd_object.c                     |  14 +
+ .../Stack/zdo/zd_sec_mgr.c                    |  23 ++
+ .../Stack/zdo/zd_sec_mgr.h                    |   5 +
+ znp_CC1352P_2_LAUNCHXL_tirtos_ccs/app.cfg     |   4 +-
+ .../cc13x2_cc26x2.cmd                         |   6 +-
+ .../ti_devices_config.c                       | 105 +++++
+ .../ti_drivers_config.h                       | 274 +++++++++++++
+ .../ti_radio_config.c                         | 387 ++++++++++++++++++
+ .../ti_radio_config.h                         |  83 ++++
+ znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg  |  10 +-
+ .../Application/mt/mt.h                       |   4 +
+ .../Application/mt/mt_util.c                  | 108 +++++
+ .../Application/mt/mt_version.c               |   8 +-
+ .../Application/mt/mt_zdo.c                   |   5 +
+ .../Stack/Config/preinclude.h                 |  60 +++
+ .../Stack/Config/znp_cnf.opts                 |   2 +
+ .../Stack/af/af.c                             |  18 +-
+ .../Stack/nwk/nwk_globals.c                   |   8 +-
+ .../Stack/sys/zglobals.c                      |   6 +-
+ .../Stack/zdo/zd_app.c                        |  30 +-
+ .../Stack/zdo/zd_object.c                     |  14 +
+ .../Stack/zdo/zd_sec_mgr.c                    |  23 ++
+ .../Stack/zdo/zd_sec_mgr.h                    |   5 +
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/app.cfg      |   4 +-
+ .../cc13x2_cc26x2.cmd                         |   6 +-
+ znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg   |   6 +-
+ .../Application/mt/mt.h                       |   4 +
+ .../Application/mt/mt_util.c                  | 108 +++++
+ .../Application/mt/mt_version.c               |   8 +-
+ .../Application/mt/mt_zdo.c                   |   5 +
+ .../Stack/Config/preinclude.h                 |  60 +++
+ .../Stack/Config/znp_cnf.opts                 |   2 +
+ znp_LP_CC2652RB_tirtos_ccs/Stack/af/af.c      |  18 +-
+ .../Stack/nwk/nwk_globals.c                   |   8 +-
+ .../Stack/sys/zglobals.c                      |   6 +-
+ znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c |  30 +-
+ .../Stack/zdo/zd_object.c                     |  14 +
+ .../Stack/zdo/zd_sec_mgr.c                    |  23 ++
+ .../Stack/zdo/zd_sec_mgr.h                    |   5 +
+ znp_LP_CC2652RB_tirtos_ccs/app.cfg            |   4 +-
+ znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd  |   6 +-
+ znp_LP_CC2652RB_tirtos_ccs/znp.syscfg         |   6 +-
+ 52 files changed, 1705 insertions(+), 87 deletions(-)
  create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  mode change 100644 => 100755 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/af/af.c
  mode change 100644 => 100755 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
- create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
- create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
- create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.h
- create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
- create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
- create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs
- create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_devices_config.c
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_drivers_config.h
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_radio_config.c
+ create mode 100644 znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_radio_config.h
  create mode 100644 znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
  create mode 100644 znp_LP_CC2652RB_tirtos_ccs/Stack/Config/preinclude.h
 
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-index 2c5073c..48f050b 100644
+index d4e9759..b7ff84c 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 @@ -415,6 +415,8 @@ extern "C"
@@ -83,7 +90,7 @@ index 2c5073c..48f050b 100644
  #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
  #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-index 90d6d4a..4f416e8 100644
+index 90d6d4a..a687b10 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
 @@ -53,6 +53,9 @@
@@ -96,16 +103,15 @@ index 90d6d4a..4f416e8 100644
  #if !defined NONWK
  
  #include "mt_nwk.h"
-@@ -95,6 +98,8 @@ static void MT_UtilSpi2Addr( zAddrType_t *pDst, uint8_t *pSrc );
+@@ -95,6 +98,7 @@ static void MT_UtilSpi2Addr( zAddrType_t *pDst, uint8_t *pSrc );
  #endif
  
  #if defined (MT_UTIL_FUNC)
-+static LED_Handle gLedHandle;
 +
  static void MT_UtilGetDeviceInfo(void);
  static void MT_UtilGetNvInfo(void);
  static void MT_UtilSetPanID(uint8_t *pBuf);
-@@ -128,6 +133,9 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+@@ -128,6 +132,9 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
  #endif //MT_SYS_KEY_MANAGEMENT
  static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
  static void MT_UtilAssocCount(uint8_t *pBuf);
@@ -115,7 +121,7 @@ index 90d6d4a..4f416e8 100644
  static void MT_UtilAssocFindDevice(uint8_t *pBuf);
  static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
  static void MT_UtilBindAddEntry(uint8_t *pBuf);
-@@ -260,6 +268,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -260,6 +267,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilAssocCount(pBuf);
      break;
  
@@ -126,7 +132,7 @@ index 90d6d4a..4f416e8 100644
    case MT_UTIL_ASSOC_FIND_DEVICE:
      MT_UtilAssocFindDevice(pBuf);
      break;
-@@ -272,6 +284,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -272,6 +283,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilBindAddEntry(pBuf);
      break;
  
@@ -141,7 +147,7 @@ index 90d6d4a..4f416e8 100644
    case MT_UTIL_SYNC_REQ:
      MT_UtilSync();
      break;
-@@ -1375,6 +1395,92 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+@@ -1375,6 +1394,95 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
    MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
  }
  
@@ -168,6 +174,9 @@ index 90d6d4a..4f416e8 100644
 +  }
 +
 +  if (mode==0) {
++    LED_setOff(gLedHandle);
++  } else if (mode == 5) {
++    gLedsDisabled = TRUE;
 +    LED_setOff(gLedHandle);
 +  } else {
 +    LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
@@ -235,14 +244,14 @@ index 90d6d4a..4f416e8 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..590ec09 100644
+index 63c143b..44ddc34 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210708
++#define CODE_REVISION_NUMBER 20211217
 +
  /******************************************************************************
   * CONSTANTS
@@ -262,7 +271,7 @@ index 63c143b..590ec09 100644
  
  /******************************************************************************
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
-index 9755b1d..3f8e60a 100644
+index a4b15c6..d2c3b1f 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
 @@ -1658,6 +1658,11 @@ static void MT_ZdoMgmtPermitJoinRequest(uint8_t *pBuf)
@@ -279,10 +288,10 @@ index 9755b1d..3f8e60a 100644
  }
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
 new file mode 100644
-index 0000000..ed4ba66
+index 0000000..3b3e552
 --- /dev/null
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,78 @@
 +#define MT_SYS_KEY_MANAGEMENT 1
 +#define FEATURE_NVEXID 1
 +
@@ -320,6 +329,11 @@ index 0000000..ed4ba66
 +#define CONCENTRATOR_ROUTE_CACHE TRUE
 +#define MAX_RTG_SRC_ENTRIES 200
 +#define SRC_RTG_EXPIRY_TIME 2
++
++/**
++ * Set default transmit power to 9
++ */
++#define TXPOWER 9
 +
 +/**
 + * Scale other device tables appropriately
@@ -409,7 +423,7 @@ index 3a7afa3..2dcef5a
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 old mode 100644
 new mode 100755
-index 2b63c06..6ac3fb2
+index b761da1..bc406ff
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -428,7 +442,7 @@ index 2b63c06..6ac3fb2
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index 764dabd..e9135fb 100644
+index aafb10d..8d56d78 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 @@ -105,7 +105,7 @@ uint8_t zgSecurePermitJoin = TRUE;
@@ -452,10 +466,10 @@ index 764dabd..e9135fb 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index 1f807ca..b3e2694 100644
+index 63519d6..088ad02 100644
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
+@@ -415,12 +415,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
            ZDApp_ChangeState( DEV_ROUTER );
          }
  
@@ -473,7 +487,7 @@ index 1f807ca..b3e2694 100644
        }
        else
        {
-@@ -885,12 +884,11 @@ void ZDApp_NetworkStartEvt( void )
+@@ -881,12 +880,11 @@ void ZDApp_NetworkStartEvt( void )
          bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
        }
  
@@ -491,7 +505,7 @@ index 1f807ca..b3e2694 100644
      }
      else
      {
-@@ -3132,6 +3130,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3139,6 +3137,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -506,11 +520,136 @@ index 1f807ca..b3e2694 100644
  }
  
  /******************************************************************************
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_object.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_object.c
+index 0440d04..4e08567 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_object.c
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_object.c
+@@ -650,6 +650,20 @@ void ZDO_ProcessNodeDescReq( zdoIncomingMsg_t *inMsg )
+ 
+   if ( desc != NULL )
+   {
++    uint8_t extAddr[Z_EXTADDR_LEN];
++    // Respond with Xiaomi manufacturer code when ieeAddr is withing Xiaomi address space
++    // Otherwise some devices don't work
++    // https://github.com/Koenkk/zigbee2mqtt/issues/9274
++    if (APSME_LookupExtAddr(inMsg->srcAddr.addr.shortAddr, extAddr) == TRUE &&
++         ((extAddr[7] == 0x04 && extAddr[6] == 0xcf && extAddr[5] == 0x8c) ||
++          (extAddr[7] == 0x54 && extAddr[6] == 0xef && extAddr[5] == 0x44))) {
++        desc->ManufacturerCode[0] = 0x5f;
++        desc->ManufacturerCode[1] = 0x11;
++    } else {
++        desc->ManufacturerCode[0] = 0x0;
++        desc->ManufacturerCode[1] = 0x0;
++    }
++
+     ZDP_NodeDescMsg( inMsg, aoi, desc );
+   }
+   else
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.c
+index 4ce9188..f613b6a 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.c
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.c
+@@ -62,6 +62,7 @@ extern "C"
+ 
+ #include <ti/drivers/TRNG.h>
+ #include <ti/drivers/cryptoutils/cryptokey/CryptoKeyPlaintext.h>
++#include "ti_drivers_config.h"
+ 
+ /******************************************************************************
+  * CONSTANTS
+@@ -119,6 +120,8 @@ typedef struct
+  */
+ extern CONST uint8_t gMAX_NWK_SEC_MATERIAL_TABLE_ENTRIES;
+ extern pfnZdoCb zdoCBFunc[MAX_ZDO_CB_FUNC];
++bool gLedsDisabled = FALSE;
++LED_Handle gLedHandle;
+ 
+ /******************************************************************************
+  * EXTERNAL FUNCTIONS
+@@ -1519,6 +1522,23 @@ void ZDSecMgrConfig( void )
+   }
+ }
+ 
++void updateLED( void )
++{
++    if (gLedHandle == NULL) {
++      LED_Params ledParams;
++      LED_Params_init(&ledParams);
++      gLedHandle = LED_open(CONFIG_LED_GREEN, &ledParams);
++    }
++
++    if (gLedsDisabled == FALSE && gLedHandle != NULL) {
++        if (ZDSecMgrPermitJoiningEnabled == TRUE) {
++            LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
++        } else {
++            LED_setOff(gLedHandle);
++        }
++    }
++}
++
+ /******************************************************************************
+  * @fn          ZDSecMgrPermitJoining
+  *
+@@ -1547,6 +1567,7 @@ uint8_t ZDSecMgrPermitJoining( uint8_t duration )
+     ZDSecMgrPermitJoiningEnabled = FALSE;
+   }
+ 
++  updateLED();
+   accept = TRUE;
+ 
+   return accept;
+@@ -1568,6 +1589,8 @@ void ZDSecMgrPermitJoiningTimeout( void )
+     ZDSecMgrPermitJoiningEnabled = FALSE;
+     ZDSecMgrPermitJoiningTimed   = FALSE;
+   }
++
++  updateLED();
+ }
+ 
+ /******************************************************************************
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.h
+index 6468e0d..e61c5e4 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.h
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.h
+@@ -51,6 +51,8 @@ extern "C"
+ #include "zcomdef.h"
+ #include "zd_app.h"
+ 
++#include <ti/drivers/apps/LED.h>
++
+ /******************************************************************************
+  * TYPEDEFS
+  */
+@@ -95,6 +97,9 @@ extern CONST uint16_t gZDSECMGR_TC_DEVICE_MAX;
+ extern CONST uint16_t gZDSECMGR_TC_DEVICE_IC_MAX;
+ extern uint8_t  gZDSECMGR_TC_ATTEMPT_DEFAULT_KEY;
+ 
++extern bool gLedsDisabled;
++extern LED_Handle gLedHandle;
++
+ typedef struct
+ {
+ uint32_t              FrameCounter;
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/app.cfg b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/app.cfg
+index 5089a84..146ef06 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/app.cfg
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/app.cfg
+@@ -700,7 +700,9 @@ var GateMutexPri = xdc.useModule('ti.sysbios.gates.GateMutexPri');
+  */
+ var Memory = xdc.useModule('xdc.runtime.Memory');
+ var HEAPMGR_CONFIG = 0;
+-var HEAPMGR_SIZE   = 0x1800;
++// Increase heap to 48kb
++// https://e2e.ti.com/support/wireless-connectivity/zigbee-thread-group/zigbee-and-thread/f/zigbee-thread-forum/1052120/cc2652r-mac-no-resources-0x1a-errors-complete-crash-with-simplelink-cc13xx-cc26xx-sdk_5-30-00-56/3897554#3897554
++var HEAPMGR_SIZE   = 0xc000;
+ 
+ // The following will create the #define HEAPMGR_CONFIG. It can then be used by include  <xdc/cfg/global.h>
+ Program.global.HEAPMGR_CONFIG = HEAPMGR_CONFIG;
 diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
-index 2dcc711..a8b8d93 100755
+index 2856ad2..d9a66ac 100755
 --- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
 +++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
-@@ -70,9 +70,9 @@
+@@ -67,9 +67,9 @@
  /* must be located at the beginning of the application.                      */
  
  #define FLASH_BASE              0x00000000
@@ -523,12 +662,12 @@ index 2dcc711..a8b8d93 100755
  #define FLASH_LAST_BASE         0x56000
  #define FLASH_LAST_SIZE         0x2000
  
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_devices_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_devices_config.c
 new file mode 100644
-index 0000000..05c6fc1
+index 0000000..577e5a0
 --- /dev/null
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_devices_config.c
-@@ -0,0 +1,104 @@
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_devices_config.c
+@@ -0,0 +1,105 @@
 +/*
 + *  ======== ti_devices_config.c ========
 + *  Customer Configuration for CC26XX and CC13XX devices.
@@ -565,7 +704,8 @@ index 0000000..05c6fc1
 +#define SET_CCFG_MODE_CONF_SCLK_LF_OPTION               0x2
 +
 +// Apply cap-array delta
-+#define SET_CCFG_MODE_CONF_XOSC_CAP_MOD                 0x0 
++#define SET_CCFG_MODE_CONF_XOSC_CAP_MOD                 0x0
++// CUSTOM: set in preinclude.h
 +// #define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA          0xc1
 +
 +//#####################################
@@ -633,1078 +773,12 @@ index 0000000..05c6fc1
 +
 +#include <ti/devices/DeviceFamily.h>
 +#include DeviceFamily_constructPath(startup_files/ccfg.c)
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_drivers_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_drivers_config.h
 new file mode 100644
-index 0000000..db9821f
+index 0000000..00c102a
 --- /dev/null
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.c
-@@ -0,0 +1,1060 @@
-+/*
-+ *  ======== ti_drivers_config.c ========
-+ *  Configured TI-Drivers module definitions
-+ *
-+ *  DO NOT EDIT - This file is generated for the CC1352P_2_LAUNCHXL
-+ *  by the SysConfig tool.
-+ */
-+
-+#include <stddef.h>
-+#include <stdint.h>
-+
-+#ifndef DeviceFamily_CC13X2
-+#define DeviceFamily_CC13X2
-+#endif
-+
-+#include <ti/devices/DeviceFamily.h>
-+
-+#include "ti_drivers_config.h"
-+
-+/*
-+ *  =============================== AESCBC ===============================
-+ */
-+
-+#include <ti/drivers/AESCBC.h>
-+#include <ti/drivers/aescbc/AESCBCCC26XX.h>
-+
-+#define CONFIG_AESCBC_COUNT 1
-+AESCBCCC26XX_Object aescbcCC26XXObjects[CONFIG_AESCBC_COUNT];
-+
-+/*
-+ *  ======== aescbcCC26XXHWAttrs ========
-+ */
-+const AESCBCCC26XX_HWAttrs aescbcCC26XXHWAttrs[CONFIG_AESCBC_COUNT] = {
-+    {
-+        .intPriority = (~0),
-+    },
-+};
-+
-+const AESCBC_Config AESCBC_config[CONFIG_AESCBC_COUNT] = {
-+    {   /* CONFIG_AESCBC_0 */
-+        .object  = &aescbcCC26XXObjects[CONFIG_AESCBC_0],
-+        .hwAttrs = &aescbcCC26XXHWAttrs[CONFIG_AESCBC_0]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_AESCBC_0_CONST = CONFIG_AESCBC_0;
-+const uint_least8_t AESCBC_count = CONFIG_AESCBC_COUNT;
-+
-+/*
-+ *  =============================== AESCCM ===============================
-+ */
-+
-+#include <ti/drivers/AESCCM.h>
-+#include <ti/drivers/aesccm/AESCCMCC26XX.h>
-+
-+#define CONFIG_AESCCM_COUNT 1
-+AESCCMCC26XX_Object aesccmCC26XXObjects[CONFIG_AESCCM_COUNT];
-+
-+/*
-+ *  ======== aesccmCC26XXHWAttrs ========
-+ */
-+const AESCCMCC26XX_HWAttrs aesccmCC26XXHWAttrs[CONFIG_AESCCM_COUNT] = {
-+    {
-+        .intPriority = 0x40,
-+    },
-+};
-+
-+const AESCCM_Config AESCCM_config[CONFIG_AESCCM_COUNT] = {
-+    {   /* CONFIG_AESCCM_0 */
-+        .object  = &aesccmCC26XXObjects[CONFIG_AESCCM_0],
-+        .hwAttrs = &aesccmCC26XXHWAttrs[CONFIG_AESCCM_0]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_AESCCM_0_CONST = CONFIG_AESCCM_0;
-+const uint_least8_t AESCCM_count = CONFIG_AESCCM_COUNT;
-+
-+/*
-+ *  =============================== AESECB ===============================
-+ */
-+
-+#include <ti/drivers/AESECB.h>
-+#include <ti/drivers/aesecb/AESECBCC26XX.h>
-+
-+#define CONFIG_AESECB_COUNT 1
-+AESECBCC26XX_Object aesecbCC26XXObjects[CONFIG_AESECB_COUNT];
-+
-+/*
-+ *  ======== aesecbCC26XXHWAttrs ========
-+ */
-+const AESECBCC26XX_HWAttrs aesecbCC26XXHWAttrs[CONFIG_AESECB_COUNT] = {
-+    {
-+        .intPriority = 0x20,
-+    },
-+};
-+
-+const AESECB_Config AESECB_config[CONFIG_AESECB_COUNT] = {
-+    {   /* CONFIG_AESECB_0 */
-+        .object  = &aesecbCC26XXObjects[CONFIG_AESECB_0],
-+        .hwAttrs = &aesecbCC26XXHWAttrs[CONFIG_AESECB_0]
-+    },
-+};
-+
-+
-+const uint_least8_t CONFIG_AESECB_0_CONST = CONFIG_AESECB_0;
-+const uint_least8_t AESECB_count = CONFIG_AESECB_COUNT;
-+
-+/*
-+ *  =============================== DMA ===============================
-+ */
-+
-+#include <ti/drivers/dma/UDMACC26XX.h>
-+#include <ti/devices/cc13x2_cc26x2/driverlib/udma.h>
-+#include <ti/devices/cc13x2_cc26x2/inc/hw_memmap.h>
-+
-+UDMACC26XX_Object udmaCC26XXObject;
-+
-+const UDMACC26XX_HWAttrs udmaCC26XXHWAttrs = {
-+    .baseAddr        = UDMA0_BASE,
-+    .powerMngrId     = PowerCC26XX_PERIPH_UDMA,
-+    .intNum          = INT_DMA_ERR,
-+    .intPriority     = (~0)
-+};
-+
-+const UDMACC26XX_Config UDMACC26XX_config[1] = {
-+    {
-+        .object         = &udmaCC26XXObject,
-+        .hwAttrs        = &udmaCC26XXHWAttrs,
-+    },
-+};
-+
-+/*
-+ *  =============================== ECDH ===============================
-+ */
-+
-+#include <ti/drivers/ECDH.h>
-+#include <ti/drivers/ecdh/ECDHCC26X2.h>
-+
-+#define CONFIG_ECDH_COUNT 1
-+
-+ECDHCC26X2_Object ecdhCC26X2Objects[CONFIG_ECDH_COUNT];
-+
-+/*
-+ *  ======== ecdhCC26X2HWAttrs ========
-+ */
-+const ECDHCC26X2_HWAttrs ecdhCC26X2HWAttrs[CONFIG_ECDH_COUNT] = {
-+    {
-+        .intPriority = (~0),
-+    },
-+};
-+
-+const ECDH_Config ECDH_config[CONFIG_ECDH_COUNT] = {
-+    {   /* CONFIG_ECDH_0 */
-+        .object         = &ecdhCC26X2Objects[CONFIG_ECDH_0],
-+        .hwAttrs        = &ecdhCC26X2HWAttrs[CONFIG_ECDH_0]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_ECDH_0_CONST = CONFIG_ECDH_0;
-+const uint_least8_t ECDH_count = CONFIG_ECDH_COUNT;
-+
-+/*
-+ *  =============================== ECDSA ===============================
-+ */
-+
-+#include <ti/drivers/ECDSA.h>
-+#include <ti/drivers/ecdsa/ECDSACC26X2.h>
-+
-+#define CONFIG_ECDSA_COUNT 1
-+ECDSACC26X2_Object ecdsaCC26X2Objects[CONFIG_ECDSA_COUNT];
-+
-+/*
-+ *  ======== ecdsaCC26X2HWAttrs ========
-+ */
-+const ECDSACC26X2_HWAttrs ecdsaCC26X2HWAttrs[CONFIG_ECDSA_COUNT] = {
-+    {
-+        .intPriority = (~0),
-+        .trngIntPriority = (~0),
-+    },
-+};
-+
-+const ECDSA_Config ECDSA_config[CONFIG_ECDSA_COUNT] = {
-+    {   /* CONFIG_ECDSA_0 */
-+        .object         = &ecdsaCC26X2Objects[CONFIG_ECDSA_0],
-+        .hwAttrs        = &ecdsaCC26X2HWAttrs[CONFIG_ECDSA_0]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_ECDSA_0_CONST = CONFIG_ECDSA_0;
-+const uint_least8_t ECDSA_count = CONFIG_ECDSA_COUNT;
-+
-+/*
-+ *  =============================== ECJPAKE ===============================
-+ */
-+
-+#include <ti/drivers/ECJPAKE.h>
-+#include <ti/drivers/ecjpake/ECJPAKECC26X2.h>
-+
-+#define CONFIG_ECJPAKE_COUNT 1
-+ECJPAKECC26X2_Object ecjpakeCC26X2Objects[CONFIG_ECJPAKE_COUNT];
-+
-+/*
-+ *  ======== ecjpakeCC26X2HWAttrs ========
-+ */
-+const ECJPAKECC26X2_HWAttrs ecjpakeCC26X2HWAttrs[CONFIG_ECJPAKE_COUNT] = {
-+    {
-+        .intPriority = (~0),
-+    },
-+};
-+
-+const ECJPAKE_Config ECJPAKE_config[CONFIG_ECJPAKE_COUNT] = {
-+    {   /* CONFIG_ECJPAKE_0 */
-+        .object         = &ecjpakeCC26X2Objects[CONFIG_ECJPAKE_0],
-+        .hwAttrs        = &ecjpakeCC26X2HWAttrs[CONFIG_ECJPAKE_0]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_ECJPAKE_0_CONST = CONFIG_ECJPAKE_0;
-+const uint_least8_t ECJPAKE_count = CONFIG_ECJPAKE_COUNT;
-+
-+/*
-+ *  =============================== GPIO ===============================
-+ */
-+
-+#include <ti/drivers/GPIO.h>
-+#include <ti/drivers/gpio/GPIOCC26XX.h>
-+
-+#define CONFIG_GPIO_COUNT 5
-+
-+/*
-+ *  ======== gpioPinConfigs ========
-+ *  Array of Pin configurations
-+ */
-+GPIO_PinConfig gpioPinConfigs[] = {
-+    /* CONFIG_GPIO_BTN1 : LaunchPad Button BTN-1 (Left) */
-+    GPIOCC26XX_DIO_15 | GPIO_CFG_IN_PU | GPIO_CFG_IN_INT_FALLING,
-+    /* CONFIG_GPIO_BTN2 : LaunchPad Button BTN-2 (Right) */
-+    GPIOCC26XX_DIO_14 | GPIO_CFG_IN_PU | GPIO_CFG_IN_INT_FALLING,
-+    /* CONFIG_GPIO_RLED : LaunchPad LED Red */
-+    GPIOCC26XX_DIO_06 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_LOW,
-+    /* CONFIG_GPIO_GLED : LaunchPad LED Green */
-+    GPIOCC26XX_DIO_07 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_LOW,
-+    /* SPI Flash Slave Select GPIO Instance */
-+    GPIOCC26XX_DIO_20 | GPIO_CFG_OUT_STD | GPIO_CFG_OUT_STR_MED | GPIO_CFG_OUT_HIGH,
-+};
-+
-+/*
-+ *  ======== gpioCallbackFunctions ========
-+ *  Array of callback function pointers
-+ *
-+ *  NOTE: Unused callback entries can be omitted from the callbacks array to
-+ *  reduce memory usage by enabling callback table optimization
-+ *  (GPIO.optimizeCallbackTableSize = true)
-+ */
-+GPIO_CallbackFxn gpioCallbackFunctions[] = {
-+    /* CONFIG_GPIO_BTN1 : LaunchPad Button BTN-1 (Left) */
-+    NULL,
-+    /* CONFIG_GPIO_BTN2 : LaunchPad Button BTN-2 (Right) */
-+    NULL,
-+    /* CONFIG_GPIO_RLED : LaunchPad LED Red */
-+    NULL,
-+    /* CONFIG_GPIO_GLED : LaunchPad LED Green */
-+    NULL,
-+    /* SPI Flash Slave Select GPIO Instance */
-+    NULL,
-+};
-+
-+const uint_least8_t CONFIG_GPIO_BTN1_CONST = CONFIG_GPIO_BTN1;
-+const uint_least8_t CONFIG_GPIO_BTN2_CONST = CONFIG_GPIO_BTN2;
-+const uint_least8_t CONFIG_GPIO_RLED_CONST = CONFIG_GPIO_RLED;
-+const uint_least8_t CONFIG_GPIO_GLED_CONST = CONFIG_GPIO_GLED;
-+const uint_least8_t CONFIG_GPIO_0_CONST = CONFIG_GPIO_0;
-+
-+/*
-+ *  ======== GPIOCC26XX_config ========
-+ */
-+const GPIOCC26XX_Config GPIOCC26XX_config = {
-+    .pinConfigs = (GPIO_PinConfig *)gpioPinConfigs,
-+    .callbacks = (GPIO_CallbackFxn *)gpioCallbackFunctions,
-+    .numberOfPinConfigs = 5,
-+    .numberOfCallbacks = 5,
-+    .intPriority = (~0)
-+};
-+
-+/*
-+ *  =============================== NVS ===============================
-+ */
-+
-+#include <ti/drivers/NVS.h>
-+#include <ti/drivers/nvs/NVSCC26XX.h>
-+
-+/*
-+ *  NVSCC26XX Internal NVS flash region definitions
-+ *
-+ * Place uninitialized char arrays at addresses
-+ * corresponding to the 'regionBase' addresses defined in
-+ * the configured NVS regions. These arrays are used as
-+ * place holders so that the linker will not place other
-+ * content there.
-+ *
-+ * For GCC targets, the char arrays are each placed into
-+ * the shared ".nvs" section. The user must add content to
-+ * their GCC linker command file to place the .nvs section
-+ * at the lowest 'regionBase' address specified in their NVS
-+ * regions.
-+ */
-+
-+#if defined(__TI_COMPILER_VERSION__) || defined(__clang__)
-+
-+static char flashBuf0[0x6000] __attribute__ ((retain, noinit, location(0x50000)));
-+
-+#elif defined(__IAR_SYSTEMS_ICC__)
-+
-+__no_init static char flashBuf0[0x6000] @ 0x50000;
-+
-+#elif defined(__GNUC__)
-+
-+__attribute__ ((section (".nvs")))
-+static char flashBuf0[0x6000];
-+
-+#endif
-+
-+NVSCC26XX_Object nvsCC26XXObjects[1];
-+
-+static const NVSCC26XX_HWAttrs nvsCC26XXHWAttrs[1] = {
-+    /* CONFIG_NVSINTERNAL */
-+    {
-+        .regionBase = (void *) flashBuf0,
-+        .regionSize = 0x6000
-+    },
-+};
-+
-+#include <ti/drivers/nvs/NVSSPI25X.h>
-+
-+/*
-+ *  NVSSPI25X External NVS flash region definitions
-+ */
-+
-+/*
-+ * Provide write verification buffer whose size is
-+ * the largest specified Verification Buffer Size
-+ */
-+
-+static uint8_t verifyBuf[64];
-+
-+NVSSPI25X_Object nvsSPI25XObjects[1];
-+
-+static const NVSSPI25X_HWAttrs nvsSPI25XHWAttrs[1] = {
-+    /* CONFIG_NVSEXTERNAL */
-+    /* MX25R8035F SPI Flash */
-+    {
-+        .regionBaseOffset = 0x0,
-+        .regionSize = 0x256000,
-+        .sectorSize = 0x1000,
-+        .verifyBuf = verifyBuf,
-+        .verifyBufSize = 64,
-+        /* NVS opens SPI */
-+        .spiHandle = NULL,
-+        /* SPI driver index */
-+        .spiIndex = CONFIG_SPI_0,
-+        .spiBitRate = 4000000,
-+        /* GPIO driver pin index */
-+        .spiCsnGpioIndex = CONFIG_GPIO_0,
-+        .statusPollDelayUs = 100
-+    },
-+};
-+
-+#define CONFIG_NVS_COUNT 2
-+
-+const NVS_Config NVS_config[CONFIG_NVS_COUNT] = {
-+    /* CONFIG_NVSINTERNAL */
-+    {
-+        .fxnTablePtr = &NVSCC26XX_fxnTable,
-+        .object = &nvsCC26XXObjects[0],
-+        .hwAttrs = &nvsCC26XXHWAttrs[0],
-+    },
-+    /* CONFIG_NVSEXTERNAL */
-+    /* MX25R8035F SPI Flash */
-+    {
-+        .fxnTablePtr = &NVSSPI25X_fxnTable,
-+        .object = &nvsSPI25XObjects[0],
-+        .hwAttrs = &nvsSPI25XHWAttrs[0],
-+    },
-+};
-+
-+const uint_least8_t CONFIG_NVSINTERNAL_CONST = CONFIG_NVSINTERNAL;
-+const uint_least8_t CONFIG_NVSEXTERNAL_CONST = CONFIG_NVSEXTERNAL;
-+const uint_least8_t NVS_count = CONFIG_NVS_COUNT;
-+
-+/*
-+ *  =============================== PIN ===============================
-+ */
-+#include <ti/drivers/PIN.h>
-+#include <ti/drivers/pin/PINCC26XX.h>
-+
-+#define CONFIG_PIN_COUNT 13
-+
-+const PIN_Config BoardGpioInitTable[CONFIG_PIN_COUNT + 1] = {
-+    /* XDS110 UART, Parent Signal: CONFIG_DISPLAY_UART TX, (DIO13) */
-+    CONFIG_PIN_UART_TX | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MED,
-+    /* XDS110 UART, Parent Signal: CONFIG_DISPLAY_UART RX, (DIO12) */
-+    CONFIG_PIN_UART_RX | PIN_INPUT_EN | PIN_PULLDOWN | PIN_IRQ_DIS,
-+    /* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 0, (DIO28) */
-+    CONFIG_RF_24GHZ | PIN_INPUT_EN | PIN_NOPULL | PIN_IRQ_DIS,
-+    /* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 1, (DIO29) */
-+    CONFIG_RF_HIGH_PA | PIN_INPUT_EN | PIN_NOPULL | PIN_IRQ_DIS,
-+    /* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 2, (DIO30) */
-+    CONFIG_RF_SUB1GHZ | PIN_INPUT_EN | PIN_NOPULL | PIN_IRQ_DIS,
-+    /* LaunchPad Button BTN-1 (Left), Parent Signal: CONFIG_GPIO_BTN1 GPIO Pin, (DIO15) */
-+    CONFIG_PIN_BTN1 | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_DIS,
-+    /* LaunchPad Button BTN-2 (Right), Parent Signal: CONFIG_GPIO_BTN2 GPIO Pin, (DIO14) */
-+    CONFIG_PIN_BTN2 | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_DIS,
-+    /* LaunchPad LED Red, Parent Signal: CONFIG_GPIO_RLED GPIO Pin, (DIO6) */
-+    CONFIG_PIN_RLED | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MED,
-+    /* LaunchPad LED Green, Parent Signal: CONFIG_GPIO_GLED GPIO Pin, (DIO7) */
-+    CONFIG_PIN_GLED | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MED,
-+    /* MX25R8035F SPI Flash Slave Select, Parent Signal: CONFIG_GPIO_0 GPIO Pin, (DIO20) */
-+    CONFIG_PIN_0 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MED,
-+    /* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 SCLK, (DIO10) */
-+    CONFIG_PIN_SPI_SCLK | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MED,
-+    /* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 MISO, (DIO8) */
-+    CONFIG_PIN_SPI_MISO | PIN_INPUT_EN | PIN_NOPULL | PIN_IRQ_DIS,
-+    /* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 MOSI, (DIO9) */
-+    CONFIG_PIN_SPI_MOSI | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MED,
-+
-+    PIN_TERMINATE
-+};
-+
-+const PINCC26XX_HWAttrs PINCC26XX_hwAttrs = {
-+    .intPriority = (~0),
-+    .swiPriority = 0
-+};
-+
-+/*
-+ *  =============================== Power ===============================
-+ */
-+#include <ti/drivers/Power.h>
-+#include <ti/drivers/power/PowerCC26X2.h>
-+#include "ti_drivers_config.h"
-+
-+extern void PowerCC26XX_standbyPolicy(void);
-+extern bool PowerCC26XX_calibrate(unsigned int);
-+
-+const PowerCC26X2_Config PowerCC26X2_config = {
-+    .enablePolicy             = true,
-+    .policyInitFxn            = NULL,
-+    .policyFxn                = PowerCC26XX_standbyPolicy,
-+    .calibrateFxn             = PowerCC26XX_calibrate,
-+    .calibrateRCOSC_LF        = true,
-+    .calibrateRCOSC_HF        = true,
-+    .enableTCXOFxn            = NULL
-+};
-+
-+
-+/*
-+ *  =============================== RF Driver ===============================
-+ */
-+#include <ti/drivers/rf/RF.h>
-+
-+/*
-+ * RF driver callback function, called by the driver on global driver events.
-+ */
-+static void RF_globalCallbackFunction (RF_Handle client, RF_GlobalEvent events, void* arg);
-+
-+/*
-+ * Callback function to handle custom / application specific behavior
-+ */
-+extern void __attribute__((weak)) rfDriverCallback (RF_Handle client, RF_GlobalEvent events, void *arg);
-+
-+/*
-+ * Callback function to handle antenna switching
-+ */
-+extern void __attribute__((weak)) rfDriverCallbackAntennaSwitching (RF_Handle client, RF_GlobalEvent events, void *arg);
-+
-+/*
-+ * Platform-specific driver configuration
-+ */
-+const RFCC26XX_HWAttrsV2 RFCC26XX_hwAttrs = {
-+    .hwiPriority        = (~0),
-+    .swiPriority        = (uint8_t)0,
-+    .xoscHfAlwaysNeeded = true,
-+    .globalCallback     = &RF_globalCallbackFunction,
-+    .globalEventMask    = RF_GlobalEventInit | RF_GlobalEventRadioPowerDown | RF_GlobalEventRadioSetup
-+};
-+
-+/*
-+ *  ======== RF_globalCallbackFunction ========
-+ *  This function is called by the driver on global driver events.
-+ *  It will call specific callback functions to further handle the triggering events.
-+ */
-+static void RF_globalCallbackFunction(RF_Handle client, RF_GlobalEvent events, void *arg)
-+{
-+    rfDriverCallback(client, events, arg);
-+    rfDriverCallbackAntennaSwitching(client, events, arg);
-+}
-+
-+/*
-+ *  ======== rfDriverCallback ========
-+ *  Handle events triggered by the RF driver for custom / application specific behavior.
-+ */
-+void __attribute__((weak)) rfDriverCallback(RF_Handle client, RF_GlobalEvent events, void *arg)
-+{
-+    /* ======== PLEASE READ THIS ========
-+    *
-+    * This function is declared weak for the application to override it.
-+    * A new definition of 'rfDriverCallback' is required if you want to
-+    * handle the events listed in '.globalEventMask'.
-+    *
-+    * Please copy this function definition to create your own, but make
-+    * sure to remove '__attribute__((weak))' for your definition.
-+    *
-+    * According to '.globalEventMask', this function will be triggered by:
-+    *   - RF_GlobalEventInit
-+    *   - RF_GlobalEventRadioPowerDown
-+    *   - RF_GlobalEventRadioSetup
-+    * 
-+    * An example of how to handle these events would be:
-+    * 
-+    *   --- Code snippet begin ---
-+    * 
-+    *   if(events & RF_GlobalEventInit) {
-+    *       // Perform action for this event
-+    *   }
-+    *   else if (events & RF_GlobalEventRadioPowerDown) {
-+    *       // Perform action for this event
-+    *   }
-+    *   else if (events & RF_GlobalEventRadioSetup) {
-+    *       // Perform action for this event
-+    *   }
-+    * 
-+    *   --- Code snippet end ---
-+    */
-+}
-+
-+
-+/*
-+ * ======== Antenna switching ========
-+ */
-+static PIN_Handle antennaPins;
-+static PIN_State antennaState;
-+
-+static void initAntennaSwitch()
-+{
-+    PIN_Config antennaConfig[] = {
-+        CONFIG_RF_24GHZ | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,      /* Path disabled */
-+        CONFIG_RF_HIGH_PA | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,      /* Path disabled */
-+        CONFIG_RF_SUB1GHZ | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,      /* Path disabled */
-+        PIN_TERMINATE
-+    };
-+    antennaPins = PIN_open(&antennaState, antennaConfig);
-+}
-+
-+/*
-+ * ======== rfDriverCallbackAntennaSwitching ========
-+ * Sets up the antenna switch depending on the current PHY configuration.
-+ * 
-+ * Truth table:
-+ *
-+ * Path        DIO28 DIO29 DIO30
-+ * =========== ===== ===== =====
-+ * Off         0     0     0
-+ * Sub-1 GHz   0     0     1
-+ * 2.4 GHz     1     0     0
-+ * 20 dBm TX   0     1     0
-+ */
-+void __attribute__((weak)) rfDriverCallbackAntennaSwitching(RF_Handle client, RF_GlobalEvent events, void *arg)
-+{
-+    /* Protect against repeated RF_init */
-+    static bool initialized = false;
-+
-+    /* Local variable. */
-+    bool    sub1GHz   = false;
-+    uint8_t loDivider = 0;
-+
-+    if (!initialized && events & RF_GlobalEventInit) {
-+        /* Don't do it again */
-+        initialized = true;
-+        initAntennaSwitch();
-+    }
-+    else if (events & RF_GlobalEventRadioSetup) {
-+        /* Switch off all paths. */
-+        PINCC26XX_setOutputValue(CONFIG_RF_24GHZ, 0);
-+        PINCC26XX_setOutputValue(CONFIG_RF_HIGH_PA, 0);
-+        PINCC26XX_setOutputValue(CONFIG_RF_SUB1GHZ, 0);
-+
-+        /* Decode the current PA configuration. */
-+        RF_TxPowerTable_PAType paType = (RF_TxPowerTable_PAType)RF_getTxPower(client).paType;
-+
-+        /* Decode the generic argument as a setup command. */
-+        RF_RadioSetup* setupCommand = (RF_RadioSetup*)arg;
-+
-+        switch (setupCommand->common.commandNo) {
-+            case (CMD_RADIO_SETUP):
-+            case (CMD_BLE5_RADIO_SETUP):
-+                    loDivider = RF_LODIVIDER_MASK & setupCommand->common.loDivider;
-+
-+                    /* Sub-1GHz front-end. */
-+                    if (loDivider != 0) {
-+                        sub1GHz = true;
-+                    }
-+                    break;
-+            case (CMD_PROP_RADIO_DIV_SETUP):
-+                    loDivider = RF_LODIVIDER_MASK & setupCommand->prop_div.loDivider;
-+
-+                    /* Sub-1GHz front-end. */
-+                    if (loDivider != 0) {
-+                        sub1GHz = true;
-+                    }
-+                    break;
-+            default:break;
-+        }
-+
-+        if (sub1GHz) {
-+            /* Sub-1 GHz */
-+            if (paType == RF_TxPowerTable_HighPA) {
-+                /* PA enable --> HIGH PA
-+                 * LNA enable --> Sub-1 GHz
-+                 */
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_24GHZ, PINCC26XX_MUX_GPIO);
-+                /* Note: RFC_GPO3 is a work-around because the RFC_GPO1 (PA enable signal) is sometimes not
-+                         de-asserted on CC1352 Rev A. */
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_HIGH_PA, PINCC26XX_MUX_RFC_GPO3);
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_SUB1GHZ, PINCC26XX_MUX_RFC_GPO0);
-+            } else {
-+                /* RF core active --> Sub-1 GHz */
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_24GHZ, PINCC26XX_MUX_GPIO);
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_HIGH_PA, PINCC26XX_MUX_GPIO);
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_SUB1GHZ, PINCC26XX_MUX_GPIO);
-+                PINCC26XX_setOutputValue(CONFIG_RF_SUB1GHZ, 1);
-+            }
-+        } else {
-+            /* 2.4 GHz */
-+            if (paType == RF_TxPowerTable_HighPA)
-+            {
-+                /* PA enable --> HIGH PA
-+                 * LNA enable --> 2.4 GHz
-+                 */
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_24GHZ, PINCC26XX_MUX_RFC_GPO0);
-+                /* Note: RFC_GPO3 is a work-around because the RFC_GPO1 (PA enable signal) is sometimes not
-+                         de-asserted on CC1352 Rev A. */
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_HIGH_PA, PINCC26XX_MUX_RFC_GPO3);
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_SUB1GHZ, PINCC26XX_MUX_GPIO);
-+            } else {
-+                /* RF core active --> 2.4 GHz */
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_24GHZ, PINCC26XX_MUX_GPIO);
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_HIGH_PA, PINCC26XX_MUX_GPIO);
-+                PINCC26XX_setMux(antennaPins, CONFIG_RF_SUB1GHZ, PINCC26XX_MUX_GPIO);
-+                PINCC26XX_setOutputValue(CONFIG_RF_24GHZ, 1);
-+            }
-+        }
-+    }
-+    else if (events & RF_GlobalEventRadioPowerDown) {
-+        /* Switch off all paths. */
-+        PINCC26XX_setOutputValue(CONFIG_RF_24GHZ, 0);
-+        PINCC26XX_setOutputValue(CONFIG_RF_HIGH_PA, 0);
-+        PINCC26XX_setOutputValue(CONFIG_RF_SUB1GHZ, 0);
-+
-+        /* Reset the IO multiplexer to GPIO functionality */
-+        PINCC26XX_setMux(antennaPins, CONFIG_RF_24GHZ, PINCC26XX_MUX_GPIO);
-+        PINCC26XX_setMux(antennaPins, CONFIG_RF_HIGH_PA, PINCC26XX_MUX_GPIO);
-+        PINCC26XX_setMux(antennaPins, CONFIG_RF_SUB1GHZ, PINCC26XX_MUX_GPIO);
-+    }
-+}
-+
-+/*
-+ *  =============================== SHA2 ===============================
-+ */
-+
-+#include <ti/drivers/SHA2.h>
-+#include <ti/drivers/sha2/SHA2CC26X2.h>
-+
-+#define CONFIG_SHA2_COUNT 1
-+
-+SHA2CC26X2_Object sha2CC26X2Objects[CONFIG_SHA2_COUNT];
-+
-+/*
-+ *  ======== sha2CC26X2HWAttrs ========
-+ */
-+const SHA2CC26X2_HWAttrs sha2CC26X2HWAttrs[CONFIG_SHA2_COUNT] = {
-+    {
-+        .intPriority = (~0),
-+    },
-+};
-+
-+const SHA2_Config SHA2_config[CONFIG_SHA2_COUNT] = {
-+    {   /* CONFIG_SHA2_0 */
-+        .object         = &sha2CC26X2Objects[CONFIG_SHA2_0],
-+        .hwAttrs        = &sha2CC26X2HWAttrs[CONFIG_SHA2_0]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_SHA2_0_CONST = CONFIG_SHA2_0;
-+const uint_least8_t SHA2_count = CONFIG_SHA2_COUNT;
-+
-+/*
-+ *  =============================== SPI DMA ===============================
-+ */
-+#include <ti/drivers/SPI.h>
-+#include <ti/drivers/spi/SPICC26X2DMA.h>
-+
-+#define CONFIG_SPI_COUNT 1
-+
-+/*
-+ *  ======== spiCC26X2DMAObjects ========
-+ */
-+SPICC26X2DMA_Object spiCC26X2DMAObjects[CONFIG_SPI_COUNT];
-+
-+/*
-+ *  ======== spiCC26X2DMAHWAttrs ========
-+ */
-+const SPICC26X2DMA_HWAttrs spiCC26X2DMAHWAttrs[CONFIG_SPI_COUNT] = {
-+    /* CONFIG_SPI_0 */
-+    /* LaunchPad SPI Bus */
-+    {
-+        .baseAddr = SSI0_BASE,
-+        .intNum = INT_SSI0_COMB,
-+        .intPriority = (~0),
-+        .swiPriority = 0,
-+        .powerMngrId = PowerCC26XX_PERIPH_SSI0,
-+        .defaultTxBufValue = ~0,
-+        .rxChannelBitMask = 1<<UDMA_CHAN_SSI0_RX,
-+        .txChannelBitMask = 1<<UDMA_CHAN_SSI0_TX,
-+        .minDmaTransferSize = 10,
-+        .mosiPin = IOID_9,
-+        .misoPin = IOID_8,
-+        .clkPin  = IOID_10,
-+        .csnPin  = PIN_UNASSIGNED
-+    },
-+};
-+
-+/*
-+ *  ======== SPI_config ========
-+ */
-+const SPI_Config SPI_config[CONFIG_SPI_COUNT] = {
-+    /* CONFIG_SPI_0 */
-+    /* LaunchPad SPI Bus */
-+    {
-+        .fxnTablePtr = &SPICC26X2DMA_fxnTable,
-+        .object = &spiCC26X2DMAObjects[CONFIG_SPI_0],
-+        .hwAttrs = &spiCC26X2DMAHWAttrs[CONFIG_SPI_0]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_SPI_0_CONST = CONFIG_SPI_0;
-+const uint_least8_t SPI_count = CONFIG_SPI_COUNT;
-+
-+/*
-+ *  =============================== TRNG ===============================
-+ */
-+
-+#include <ti/drivers/TRNG.h>
-+#include <ti/drivers/trng/TRNGCC26XX.h>
-+
-+#define CONFIG_TRNG_COUNT 1
-+
-+TRNGCC26XX_Object trngCC26XXObjects[CONFIG_TRNG_COUNT];
-+
-+/*
-+ *  ======== trngCC26XXHWAttrs ========
-+ */
-+static const TRNGCC26XX_HWAttrs trngCC26XXHWAttrs[CONFIG_TRNG_COUNT] = {
-+    {
-+        .intPriority = (~0),
-+        .swiPriority = 0,
-+        .samplesPerCycle = 240000
-+    },
-+};
-+
-+const TRNG_Config TRNG_config[CONFIG_TRNG_COUNT] = {
-+    {   /* CONFIG_TRNG_0 */
-+        .object         = &trngCC26XXObjects[CONFIG_TRNG_0],
-+        .hwAttrs        = &trngCC26XXHWAttrs[CONFIG_TRNG_0]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_TRNG_0_CONST = CONFIG_TRNG_0;
-+const uint_least8_t TRNG_count = CONFIG_TRNG_COUNT;
-+
-+/*
-+ *  =============================== Temperature ===============================
-+ */
-+#include <ti/drivers/Temperature.h>
-+#include <ti/drivers/temperature/TemperatureCC26X2.h>
-+
-+const TemperatureCC26X2_Config TemperatureCC26X2_config = {
-+    .intPriority = (~0),
-+};
-+
-+/*
-+ *  =============================== UART ===============================
-+ */
-+
-+#include <ti/drivers/UART.h>
-+#include <ti/drivers/uart/UARTCC26XX.h>
-+#include <ti/drivers/Power.h>
-+#include <ti/drivers/power/PowerCC26X2.h>
-+#include <ti/devices/cc13x2_cc26x2/inc/hw_memmap.h>
-+#include <ti/devices/cc13x2_cc26x2/inc/hw_ints.h>
-+
-+#define CONFIG_UART_COUNT 1
-+
-+UARTCC26XX_Object uartCC26XXObjects[CONFIG_UART_COUNT];
-+
-+static unsigned char uartCC26XXRingBuffer0[32];
-+
-+static const UARTCC26XX_HWAttrsV2 uartCC26XXHWAttrs[CONFIG_UART_COUNT] = {
-+  {
-+    .baseAddr           = UART0_BASE,
-+    .intNum             = INT_UART0_COMB,
-+    .intPriority        = (~0),
-+    .swiPriority        = 0,
-+    .powerMngrId        = PowerCC26XX_PERIPH_UART0,
-+    .ringBufPtr         = uartCC26XXRingBuffer0,
-+    .ringBufSize        = sizeof(uartCC26XXRingBuffer0),
-+    .rxPin              = IOID_12,
-+    .txPin              = IOID_13,
-+    .ctsPin             = PIN_UNASSIGNED,
-+    .rtsPin             = PIN_UNASSIGNED,
-+    .txIntFifoThr       = UARTCC26XX_FIFO_THRESHOLD_1_8,
-+    .rxIntFifoThr       = UARTCC26XX_FIFO_THRESHOLD_4_8,
-+    .errorFxn           = NULL
-+  },
-+};
-+
-+const UART_Config UART_config[CONFIG_UART_COUNT] = {
-+    {   /* CONFIG_DISPLAY_UART */
-+        .fxnTablePtr = &UARTCC26XX_fxnTable,
-+        .object      = &uartCC26XXObjects[CONFIG_DISPLAY_UART],
-+        .hwAttrs     = &uartCC26XXHWAttrs[CONFIG_DISPLAY_UART]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_DISPLAY_UART_CONST = CONFIG_DISPLAY_UART;
-+const uint_least8_t UART_count = CONFIG_UART_COUNT;
-+
-+/*
-+ *  =============================== Button ===============================
-+ */
-+#include <ti/drivers/apps/Button.h>
-+
-+#define CONFIG_BUTTON_COUNT 2
-+Button_Object ButtonObjects[CONFIG_BUTTON_COUNT];
-+
-+static const Button_HWAttrs ButtonHWAttrs[CONFIG_BUTTON_COUNT] = {
-+    /* CONFIG_BTN_LEFT */
-+    /* LaunchPad Button BTN-1 (Left) */
-+    {
-+        .gpioIndex = CONFIG_GPIO_BTN1
-+    },
-+    /* CONFIG_BTN_RIGHT */
-+    /* LaunchPad Button BTN-2 (Right) */
-+    {
-+        .gpioIndex = CONFIG_GPIO_BTN2
-+    },
-+};
-+
-+const Button_Config Button_config[CONFIG_BUTTON_COUNT] = {
-+    /* CONFIG_BTN_LEFT */
-+    /* LaunchPad Button BTN-1 (Left) */
-+    {
-+        .object = &ButtonObjects[CONFIG_BTN_LEFT],
-+        .hwAttrs = &ButtonHWAttrs[CONFIG_BTN_LEFT]
-+    },
-+    /* CONFIG_BTN_RIGHT */
-+    /* LaunchPad Button BTN-2 (Right) */
-+    {
-+        .object = &ButtonObjects[CONFIG_BTN_RIGHT],
-+        .hwAttrs = &ButtonHWAttrs[CONFIG_BTN_RIGHT]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_BTN_LEFT_CONST = CONFIG_BTN_LEFT;
-+const uint_least8_t CONFIG_BTN_RIGHT_CONST = CONFIG_BTN_RIGHT;
-+const uint_least8_t Button_count = CONFIG_BUTTON_COUNT;
-+
-+/*
-+ *  =============================== LED ===============================
-+ */
-+#include <ti/drivers/apps/LED.h>
-+
-+#define CONFIG_LED_COUNT 2
-+LED_Object LEDObjects[CONFIG_LED_COUNT];
-+
-+static const LED_HWAttrs LEDHWAttrs[CONFIG_LED_COUNT] = {
-+    /* CONFIG_LED_RED */
-+    /* LaunchPad LED Red */
-+    {
-+        .type = LED_GPIO_CONTROLLED,
-+        .index = CONFIG_GPIO_RLED,
-+    },
-+    /* CONFIG_LED_GREEN */
-+    /* LaunchPad LED Green */
-+    {
-+        .type = LED_GPIO_CONTROLLED,
-+        .index = CONFIG_GPIO_GLED,
-+    },
-+};
-+
-+const LED_Config LED_config[CONFIG_LED_COUNT] = {
-+    /* CONFIG_LED_RED */
-+    /* LaunchPad LED Red */
-+    {
-+        .object = &LEDObjects[CONFIG_LED_RED],
-+        .hwAttrs = &LEDHWAttrs[CONFIG_LED_RED]
-+    },
-+    /* CONFIG_LED_GREEN */
-+    /* LaunchPad LED Green */
-+    {
-+        .object = &LEDObjects[CONFIG_LED_GREEN],
-+        .hwAttrs = &LEDHWAttrs[CONFIG_LED_GREEN]
-+    },
-+};
-+
-+const uint_least8_t CONFIG_LED_RED_CONST = CONFIG_LED_RED;
-+const uint_least8_t CONFIG_LED_GREEN_CONST = CONFIG_LED_GREEN;
-+const uint_least8_t LED_count = CONFIG_LED_COUNT;
-+
-+#include <stdbool.h>
-+
-+#include <ti/devices/cc13x2_cc26x2/driverlib/ioc.h>
-+#include <ti/devices/cc13x2_cc26x2/driverlib/cpu.h>
-+
-+#include <ti/drivers/pin/PINCC26XX.h>
-+
-+/*
-+ *  ======== Board_sendExtFlashByte ========
-+ */
-+void Board_sendExtFlashByte(PIN_Handle pinHandle, uint8_t byte)
-+{
-+    uint8_t i;
-+
-+    /* SPI Flash CS */
-+    PIN_setOutputValue(pinHandle, IOID_20, 0);
-+
-+    for (i = 0; i < 8; i++) {
-+        PIN_setOutputValue(pinHandle, IOID_10, 0);  /* SPI Flash CLK */
-+
-+        /* SPI Flash MOSI */
-+        PIN_setOutputValue(pinHandle, IOID_9, (byte >> (7 - i)) & 0x01);
-+        PIN_setOutputValue(pinHandle, IOID_10, 1);  /* SPI Flash CLK */
-+
-+        /*
-+         * Waste a few cycles to keep the CLK high for at
-+         * least 45% of the period.
-+         * 3 cycles per loop: 8 loops @ 48 Mhz = 0.5 us.
-+         */
-+        CPUdelay(8);
-+    }
-+
-+    PIN_setOutputValue(pinHandle, IOID_10, 0);  /* CLK */
-+    PIN_setOutputValue(pinHandle, IOID_20, 1);  /* CS */
-+
-+    /*
-+     * Keep CS high at least 40 us
-+     * 3 cycles per loop: 700 loops @ 48 Mhz ~= 44 us
-+     */
-+    CPUdelay(700);
-+}
-+
-+/*
-+ *  ======== Board_wakeUpExtFlash ========
-+ */
-+void Board_wakeUpExtFlash(void)
-+{
-+    PIN_Config extFlashPinTable[] = {
-+        /* SPI Flash CS */
-+        IOID_20 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL |
-+                PIN_INPUT_DIS | PIN_DRVSTR_MED,
-+        PIN_TERMINATE
-+    };
-+    PIN_State extFlashPinState;
-+    PIN_Handle extFlashPinHandle = PIN_open(&extFlashPinState, extFlashPinTable);
-+
-+    /*
-+     *  To wake up we need to toggle the chip select at
-+     *  least 20 ns and ten wait at least 35 us.
-+     */
-+
-+    /* Toggle chip select for ~20ns to wake ext. flash */
-+    PIN_setOutputValue(extFlashPinHandle, IOID_20, 0);
-+    /* 3 cycles per loop: 1 loop @ 48 Mhz ~= 62 ns */
-+    CPUdelay(1);
-+    PIN_setOutputValue(extFlashPinHandle, IOID_20, 1);
-+    /* 3 cycles per loop: 560 loops @ 48 Mhz ~= 35 us */
-+    CPUdelay(560);
-+
-+    PIN_close(extFlashPinHandle);
-+}
-+
-+/*
-+ *  ======== Board_shutDownExtFlash ========
-+ */
-+void Board_shutDownExtFlash(void)
-+{
-+    /*
-+     *  To be sure we are putting the flash into sleep and not waking it,
-+     *  we first have to make a wake up call
-+     */
-+    Board_wakeUpExtFlash();
-+
-+    PIN_Config extFlashPinTable[] = {
-+        /* SPI Flash CS*/
-+        IOID_20 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL |
-+                PIN_INPUT_DIS | PIN_DRVSTR_MED,
-+        /* SPI Flash CLK */
-+        IOID_10 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL |
-+                PIN_INPUT_DIS | PIN_DRVSTR_MED,
-+        /* SPI Flash MOSI */
-+        IOID_9 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL |
-+                PIN_INPUT_DIS | PIN_DRVSTR_MED,
-+        /* SPI Flash MISO */
-+        IOID_8 | PIN_INPUT_EN | PIN_PULLDOWN,
-+        PIN_TERMINATE
-+    };
-+    PIN_State extFlashPinState;
-+    PIN_Handle extFlashPinHandle = PIN_open(&extFlashPinState, extFlashPinTable);
-+
-+    uint8_t extFlashShutdown = 0xB9;
-+
-+    Board_sendExtFlashByte(extFlashPinHandle, extFlashShutdown);
-+
-+    PIN_close(extFlashPinHandle);
-+}
-+
-+
-+#include <ti/drivers/Board.h>
-+
-+/*
-+ *  ======== Board_initHook ========
-+ *  Perform any board-specific initialization needed at startup.  This
-+ *  function is declared weak to allow applications to override it if needed.
-+ */
-+void __attribute__((weak)) Board_initHook(void)
-+{
-+}
-+
-+/*
-+ *  ======== Board_init ========
-+ *  Perform any initialization needed before using any board APIs
-+ */
-+void Board_init(void)
-+{
-+    /* ==== /ti/drivers/Power initialization ==== */
-+    Power_init();
-+
-+    /* ==== /ti/devices/CCFGTemplate initialization ==== */
-+
-+    /* ==== /ti/drivers/PIN initialization ==== */
-+    if (PIN_init(BoardGpioInitTable) != PIN_SUCCESS) {
-+        /* Error with PIN_init */
-+        while (1);
-+    }
-+    /* ==== /ti/drivers/RF initialization ==== */
-+
-+
-+    Board_shutDownExtFlash();
-+
-+    Board_initHook();
-+}
-+
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.h
-new file mode 100644
-index 0000000..abf128f
---- /dev/null
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_drivers_config.h
-@@ -0,0 +1,283 @@
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_drivers_config.h
+@@ -0,0 +1,274 @@
 +/*
 + *  ======== ti_drivers_config.h ========
 + *  Configured TI-Drivers module declarations
@@ -1791,34 +865,65 @@ index 0000000..abf128f
 +
 +
 +/*
-+ *  ======== ECJPAKE ========
-+ */
-+
-+extern const uint_least8_t                  CONFIG_ECJPAKE_0_CONST;
-+#define CONFIG_ECJPAKE_0                    0
-+#define CONFIG_TI_DRIVERS_ECJPAKE_COUNT     1
-+
-+
-+/*
 + *  ======== GPIO ========
 + */
++/* Owned by CONFIG_DISPLAY_UART as  */
++extern const uint_least8_t CONFIG_GPIO_1_CONST;
++#define CONFIG_GPIO_1 13
 +
-+/* DIO15, LaunchPad Button BTN-1 (Left) */
-+extern const uint_least8_t              CONFIG_GPIO_BTN1_CONST;
-+#define CONFIG_GPIO_BTN1                0
-+/* DIO14, LaunchPad Button BTN-2 (Right) */
-+extern const uint_least8_t              CONFIG_GPIO_BTN2_CONST;
-+#define CONFIG_GPIO_BTN2                1
-+/* DIO6, LaunchPad LED Red */
-+extern const uint_least8_t              CONFIG_GPIO_RLED_CONST;
-+#define CONFIG_GPIO_RLED                2
-+/* DIO7, LaunchPad LED Green */
-+extern const uint_least8_t              CONFIG_GPIO_GLED_CONST;
-+#define CONFIG_GPIO_GLED                3
-+/* DIO20, MX25R8035F SPI Flash Slave Select */
-+extern const uint_least8_t              CONFIG_GPIO_0_CONST;
-+#define CONFIG_GPIO_0                   4
-+#define CONFIG_TI_DRIVERS_GPIO_COUNT    5
++/* Owned by CONFIG_DISPLAY_UART as  */
++extern const uint_least8_t CONFIG_GPIO_2_CONST;
++#define CONFIG_GPIO_2 12
++
++/* Owned by /ti/drivers/RF as  */
++extern const uint_least8_t CONFIG_RF_24GHZ_CONST;
++// CUSTOM: set in preinclude.h
++// #define CONFIG_RF_24GHZ 28
++
++/* Owned by /ti/drivers/RF as  */
++extern const uint_least8_t CONFIG_RF_HIGH_PA_CONST;
++// CUSTOM: set in preinclude.h
++// #define CONFIG_RF_HIGH_PA 29
++
++/* Owned by /ti/drivers/RF as  */
++extern const uint_least8_t CONFIG_RF_SUB1GHZ_CONST;
++#define CONFIG_RF_SUB1GHZ 30
++
++/* Owned by CONFIG_BTN_LEFT as  */
++extern const uint_least8_t CONFIG_GPIO_BTN1_CONST;
++#define CONFIG_GPIO_BTN1 15
++
++/* Owned by CONFIG_BTN_RIGHT as  */
++extern const uint_least8_t CONFIG_GPIO_BTN2_CONST;
++#define CONFIG_GPIO_BTN2 14
++
++/* Owned by CONFIG_LED_RED as  */
++extern const uint_least8_t CONFIG_GPIO_RLED_CONST;
++#define CONFIG_GPIO_RLED 6
++
++/* Owned by CONFIG_LED_GREEN as  */
++extern const uint_least8_t CONFIG_GPIO_GLED_CONST;
++#define CONFIG_GPIO_GLED 7
++
++/* Owned by CONFIG_NVS_SPI_0 as  */
++extern const uint_least8_t CONFIG_GPIO_0_CONST;
++#define CONFIG_GPIO_0 20
++
++/* Owned by CONFIG_SPI_0 as  */
++extern const uint_least8_t CONFIG_PIN_SPI_SCLK_CONST;
++#define CONFIG_PIN_SPI_SCLK 10
++
++/* Owned by CONFIG_SPI_0 as  */
++extern const uint_least8_t CONFIG_PIN_SPI_MISO_CONST;
++#define CONFIG_PIN_SPI_MISO 8
++
++/* Owned by CONFIG_SPI_0 as  */
++extern const uint_least8_t CONFIG_PIN_SPI_MOSI_CONST;
++#define CONFIG_PIN_SPI_MOSI 9
++
++/* The range of pins available on this device */
++extern const uint_least8_t GPIO_pinLowerBound;
++extern const uint_least8_t GPIO_pinUpperBound;
 +
 +/* LEDs are active high */
 +#define CONFIG_GPIO_LED_ON  (1)
@@ -1839,47 +944,11 @@ index 0000000..abf128f
 + *  MISO: DIO8
 + *  SCLK: DIO10
 + *  LaunchPad SPI Bus
-+ *  SS: DIO20, MX25R8035F SPI Flash Slave Select
++ *  SS: undefined
 + */
 +extern const uint_least8_t              CONFIG_NVSEXTERNAL_CONST;
 +#define CONFIG_NVSEXTERNAL              1
 +#define CONFIG_TI_DRIVERS_NVS_COUNT     2
-+
-+
-+/*
-+ *  ======== PIN ========
-+ */
-+#include <ti/drivers/PIN.h>
-+
-+extern const PIN_Config BoardGpioInitTable[];
-+
-+/* XDS110 UART, Parent Signal: CONFIG_DISPLAY_UART TX, (DIO13) */
-+#define CONFIG_PIN_UART_TX                   0x0000000d
-+/* XDS110 UART, Parent Signal: CONFIG_DISPLAY_UART RX, (DIO12) */
-+#define CONFIG_PIN_UART_RX                   0x0000000c
-+/* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 0, (DIO28) */
-+// #define CONFIG_RF_24GHZ                   0x0000001c
-+/* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 1, (DIO29) */
-+// #define CONFIG_RF_HIGH_PA                   0x0000001d
-+/* SKY13317-373LF RF Antenna Switch, Parent Signal: /ti/drivers/RF RF Antenna Pin 2, (DIO30) */
-+#define CONFIG_RF_SUB1GHZ                   0x0000001e
-+/* LaunchPad Button BTN-1 (Left), Parent Signal: CONFIG_GPIO_BTN1 GPIO Pin, (DIO15) */
-+#define CONFIG_PIN_BTN1                   0x0000000f
-+/* LaunchPad Button BTN-2 (Right), Parent Signal: CONFIG_GPIO_BTN2 GPIO Pin, (DIO14) */
-+#define CONFIG_PIN_BTN2                   0x0000000e
-+/* LaunchPad LED Red, Parent Signal: CONFIG_GPIO_RLED GPIO Pin, (DIO6) */
-+#define CONFIG_PIN_RLED                   0x00000006
-+/* LaunchPad LED Green, Parent Signal: CONFIG_GPIO_GLED GPIO Pin, (DIO7) */
-+#define CONFIG_PIN_GLED                   0x00000007
-+/* MX25R8035F SPI Flash Slave Select, Parent Signal: CONFIG_GPIO_0 GPIO Pin, (DIO20) */
-+#define CONFIG_PIN_0                   0x00000014
-+/* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 SCLK, (DIO10) */
-+#define CONFIG_PIN_SPI_SCLK                   0x0000000a
-+/* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 MISO, (DIO8) */
-+#define CONFIG_PIN_SPI_MISO                   0x00000008
-+/* LaunchPad SPI Bus, Parent Signal: CONFIG_SPI_0 MOSI, (DIO9) */
-+#define CONFIG_PIN_SPI_MOSI                   0x00000009
-+#define CONFIG_TI_DRIVERS_PIN_COUNT    13
 +
 +
 +/*
@@ -1939,10 +1008,8 @@ index 0000000..abf128f
 + *  ======== Button ========
 + */
 +
-+/* DIO15, LaunchPad Button BTN-1 (Left) */
 +extern const uint_least8_t                  CONFIG_BTN_LEFT_CONST;
 +#define CONFIG_BTN_LEFT                     0
-+/* DIO14, LaunchPad Button BTN-2 (Right) */
 +extern const uint_least8_t                  CONFIG_BTN_RIGHT_CONST;
 +#define CONFIG_BTN_RIGHT                    1
 +#define CONFIG_TI_DRIVERS_BUTTON_COUNT      2
@@ -1952,10 +1019,8 @@ index 0000000..abf128f
 + *  ======== LED ========
 + */
 +
-+/* DIO6, LaunchPad LED Red */
 +extern const uint_least8_t              CONFIG_LED_RED_CONST;
 +#define CONFIG_LED_RED                  0
-+/* DIO7, LaunchPad LED Green */
 +extern const uint_least8_t              CONFIG_LED_GREEN_CONST;
 +#define CONFIG_LED_GREEN                1
 +#define CONFIG_TI_DRIVERS_LED_COUNT     2
@@ -1988,12 +1053,12 @@ index 0000000..abf128f
 +#endif
 +
 +#endif /* include guard */
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_radio_config.c b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_radio_config.c
 new file mode 100644
-index 0000000..e40350d
+index 0000000..c23e14a
 --- /dev/null
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.c
-@@ -0,0 +1,340 @@
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_radio_config.c
+@@ -0,0 +1,387 @@
 +/*
 + *  ======== ti_radio_config.c ========
 + *  Configured RadioConfig module definitions
@@ -2001,17 +1066,12 @@ index 0000000..e40350d
 + *  DO NOT EDIT - This file is generated for the CC1352P1F3RGZ
 + *  by the SysConfig tool.
 + *
-+ *  Radio Config module version : 1.9
-+ *  SmartRF Studio data version : 2.21.0
++ *  Radio Config module version : 1.11
++ *  SmartRF Studio data version : 2.23.0
 + */
 +
-+#include <ti/devices/DeviceFamily.h>
-+#include DeviceFamily_constructPath(driverlib/rf_mailbox.h)
-+#include DeviceFamily_constructPath(driverlib/rf_common_cmd.h)
-+#include DeviceFamily_constructPath(driverlib/rf_ieee_cmd.h)
-+#include <ti/drivers/rf/RF.h>
-+#include DeviceFamily_constructPath(rf_patches/rf_patch_cpe_ieee_802_15_4.h)
 +#include "ti_radio_config.h"
++#include DeviceFamily_constructPath(rf_patches/rf_patch_cpe_ieee_802_15_4.h)
 +
 +
 +// *********************************************************************************
@@ -2094,6 +1154,17 @@ index 0000000..e40350d
 +    {3, RF_TxPowerTable_DEFAULT_PA_ENTRY(29, 1, 0, 28) },
 +    {4, RF_TxPowerTable_DEFAULT_PA_ENTRY(35, 1, 0, 39) },
 +    {5, RF_TxPowerTable_DEFAULT_PA_ENTRY(23, 0, 0, 57) },
++
++    // CUSTOM: allow transmit power 6 - 13 dbm
++    {6, .value.rawValue = (0x144f2a), .value.paType = RF_TxPowerTable_HighPA },
++    {7, .value.rawValue = (0x14285f), .value.paType = RF_TxPowerTable_HighPA },
++    {8, .value.rawValue = (0x10335a), .value.paType = RF_TxPowerTable_HighPA },
++    {9, .value.rawValue = (0x103f5f), .value.paType = RF_TxPowerTable_HighPA },
++    {10, .value.rawValue = (0x104f66), .value.paType = RF_TxPowerTable_HighPA },
++    {11, .value.rawValue = (0x3021cb), .value.paType = RF_TxPowerTable_HighPA },
++    {12, .value.rawValue = (0x3f27cc), .value.paType = RF_TxPowerTable_HighPA },
++    {13, .value.rawValue = (0x3fc3cd), .value.paType = RF_TxPowerTable_HighPA },
++
 +    {14, RF_TxPowerTable_HIGH_PA_ENTRY(22, 3, 1, 19, 27) },
 +    {15, RF_TxPowerTable_HIGH_PA_ENTRY(26, 3, 1, 23, 27) },
 +    {16, RF_TxPowerTable_HIGH_PA_ENTRY(30, 3, 1, 28, 27) },
@@ -2115,7 +1186,7 @@ index 0000000..e40350d
 +
 +// PARAMETER SUMMARY
 +// Channel - Frequency (MHz): 2405
-+// TX Power (dBm): 5
++// TX Power (dBm): 20
 +
 +// TI-RTOS RF Mode Object
 +RF_Mode RF_prop_ieee154 =
@@ -2134,6 +1205,46 @@ index 0000000..e40350d
 +    (uint32_t)0x000F8883,
 +    // Tx: Set DCDC settings IPEAK=3, dither = off
 +    (uint32_t)0x00F388D3,
++    (uint32_t)0xFFFFFFFF
++};
++
++// Overrides for CMD_RADIO_SETUP_PA
++uint32_t pOverrides_ieee154TxStd[] =
++{
++    // override_txstd_placeholder.json
++    // TX Standard power override
++    TX_STD_POWER_OVERRIDE(0x7217),
++    // The ANADIV radio parameter based on LO divider and front end settings
++    (uint32_t)0x05320703,
++    // override_txstd_settings.json
++    // Set RTIM offset to default for standard PA
++    (uint32_t)0x00008783,
++    // Set synth mux to default value for standard PA
++    (uint32_t)0x050206C3,
++    // Set TXRX pin to 0 in RX and high impedance in idle/TX. 
++    HW_REG_OVERRIDE(0x60A8,0x0401),
++    // Tx: Set DCDC settings IPEAK=3, dither = off
++    (uint32_t)0x00F388D3,
++    (uint32_t)0xFFFFFFFF
++};
++
++// Overrides for CMD_RADIO_SETUP_PA
++uint32_t pOverrides_ieee154Tx20[] =
++{
++    // override_tx20_placeholder.json
++    // TX HighPA power override
++    TX20_POWER_OVERRIDE(0x003F75F5),
++    // The ANADIV radio parameter based on LO divider and front end settings
++    (uint32_t)0x01C20703,
++    // override_tx20_settings.json
++    // Set RTIM offset to 3 for high power PA
++    (uint32_t)0x00038783,
++    // Set synth mux for high power PA
++    (uint32_t)0x010206C3,
++    // Set TXRX pin to 0 in RX/TX and high impedance in idle. 
++    HW_REG_OVERRIDE(0x60A8,0x0001),
++    // Tx: Set DCDC settings IPEAK=7, dither = off
++    (uint32_t)0x00F788D3,
 +    (uint32_t)0xFFFFFFFF
 +};
 +
@@ -2159,10 +1270,11 @@ index 0000000..e40350d
 +    .config.biasMode = 0x1,
 +    .config.analogCfgMode = 0x0,
 +    .config.bNoFsPowerUp = 0x0,
-+    .txPower = 0x7217,
++    .config.bSynthNarrowBand = 0x0,
++    .txPower = 0xFFFF,
 +    .pRegOverride = pOverrides_ieee154,
-+    .pRegOverrideTxStd = 0,
-+    .pRegOverrideTx20 = 0
++    .pRegOverrideTxStd = pOverrides_ieee154TxStd,
++    .pRegOverrideTx20 = pOverrides_ieee154Tx20
 +};
 +
 +// CMD_FS
@@ -2334,12 +1446,12 @@ index 0000000..e40350d
 +};
 +
 +
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_radio_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_radio_config.h
 new file mode 100644
-index 0000000..2477c99
+index 0000000..9d58da3
 --- /dev/null
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_radio_config.h
-@@ -0,0 +1,77 @@
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/ti_radio_config.h
+@@ -0,0 +1,83 @@
 +/*
 + *  ======== ti_radio_config.h ========
 + *  Configured RadioConfig module definitions
@@ -2347,8 +1459,8 @@ index 0000000..2477c99
 + *  DO NOT EDIT - This file is generated for the CC1352P1F3RGZ
 + *  by the SysConfig tool.
 + *
-+ *  Radio Config module version : 1.9
-+ *  SmartRF Studio data version : 2.21.0
++ *  Radio Config module version : 1.11
++ *  SmartRF Studio data version : 2.23.0
 + */
 +#ifndef _TI_RADIO_CONFIG_H_
 +#define _TI_RADIO_CONFIG_H_
@@ -2358,6 +1470,9 @@ index 0000000..2477c99
 +#include DeviceFamily_constructPath(driverlib/rf_common_cmd.h)
 +#include DeviceFamily_constructPath(driverlib/rf_ieee_cmd.h)
 +#include <ti/drivers/rf/RF.h>
++
++/* SmartRF Studio version that the RF data is fetched from */
++#define SMARTRF_STUDIO_VERSION "2.23.0"
 +
 +// *********************************************************************************
 +//   RF Frontend configuration
@@ -2381,7 +1496,8 @@ index 0000000..2477c99
 +// TX power table size definitions
 +#define TXPOWERTABLE_868_PA13_SIZE 20 // 868 MHz, 13 dBm
 +#define TXPOWERTABLE_2400_PA5_SIZE 16 // 2400 MHz, 5 dBm
-+#define TXPOWERTABLE_2400_PA5_20_SIZE 23 // 2400 MHz, 5 + 20 dBm
++// CUSTOM: account for extra entities in ti_radio_config.c txPowerTable_2400_pa5_20
++#define TXPOWERTABLE_2400_PA5_20_SIZE 31 // 2400 MHz, 5 + 20 dBm
 +
 +// TX power tables
 +extern RF_TxPowerTable_Entry txPowerTable_868_pa13[]; // 868 MHz, 13 dBm
@@ -2398,9 +1514,9 @@ index 0000000..2477c99
 +//*********************************************************************************
 +
 +// PA table usage
-+#define TX_POWER_TABLE_SIZE_ieee154 TXPOWERTABLE_2400_PA5_SIZE
++#define TX_POWER_TABLE_SIZE_ieee154 TXPOWERTABLE_2400_PA5_20_SIZE
 +
-+#define txPowerTable_ieee154 txPowerTable_2400_pa5
++#define txPowerTable_ieee154 txPowerTable_2400_pa5_20
 +
 +// TI-RTOS RF Mode object
 +extern RF_Mode RF_prop_ieee154;
@@ -2415,283 +1531,54 @@ index 0000000..2477c99
 +
 +// RF Core API overrides
 +extern uint32_t pOverrides_ieee154[];
++extern uint32_t pOverrides_ieee154TxStd[];
++extern uint32_t pOverrides_ieee154Tx20[];
 +
 +#endif // _TI_RADIO_CONFIG_H_
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs
-new file mode 100644
-index 0000000..fa697e6
---- /dev/null
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_utils_build_linker.cmd.genlibs
-@@ -0,0 +1,35 @@
-+/*
-+ *  ======== ti_utils_build_linker.cmd.genlibs ========
-+ *  Libraries needed to link this application's configuration
-+ *
-+ *  NOTE, this feature requires software components configured in your
-+ *  system to correctly indicate their dependencies and report the
-+ *  libraries needed for your specific configuration.  If you find
-+ *  errors, please report them on TI's E2E forums
-+ *  (https://e2e.ti.com/) so they can be addressed in a future
-+ *  release.
-+ *
-+ *  This file allows one to portably link applications that use SysConfig
-+ *  _without_ having to make changes to build rules when moving to a new
-+ *  device OR when upgrading to a new version of a SysConfig enabled
-+ *  product.
-+ *
-+ *  DO NOT EDIT - This file is generated by the SysConfig tool for the
-+ *                TI C/C++ toolchain
-+ */
-+
-+/* libraries required for /third_party/spiffs */
-+-l"third_party/spiffs/lib/ccs/m4f/spiffs.a"
-+
-+/* libraries required for /ti/drivers/RF */
-+-l"ti/drivers/rf/lib/rf_multiMode_cc13x2.aem4f"
-+
-+/* libraries required for /ti/drivers */
-+-l"ti/drivers/lib/ccs/m4f/drivers_cc13x2.a"
-+-l"ti/grlib/lib/ccs/m4f/grlib.a"
-+-l"ti/dpl/lib/ccs/m4f/dpl_cc13x2.a"
-+
-+/* libraries required for /ti/zstack */
-+-l"ti/ti154stack/library/tirtos/ccs/bin/maclib_nosecure_cc13x2_2_4g.a"
-+-l"ti/zstack/lib/ccs/libZStack_nwk_all_ccs.a"
-+
-diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
-new file mode 100644
-index 0000000..69447c1
---- /dev/null
-+++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/syscfg/ti_zstack_config.h
-@@ -0,0 +1,226 @@
-+/*
-+ * Copyright (c) 2018, Texas Instruments Incorporated
-+ * All rights reserved.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions
-+ * are met:
-+ *
-+ * *  Redistributions of source code must retain the above copyright
-+ *    notice, this list of conditions and the following disclaimer.
-+ *
-+ * *  Redistributions in binary form must reproduce the above copyright
-+ *    notice, this list of conditions and the following disclaimer in the
-+ *    documentation and/or other materials provided with the distribution.
-+ *
-+ * *  Neither the name of Texas Instruments Incorporated nor the names of
-+ *    its contributors may be used to endorse or promote products derived
-+ *    from this software without specific prior written permission.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ *
-+ */
-+
-+/*
-+ *                           ti_zstack_config.h
-+ *
-+ *  DO NOT EDIT - This file was generated by the SysConfig tool.
-+ *
-+ *  Macros used to define a TI Z-Stack ZigBee device. New user defined
-+ *  options may be added to this file, as necessary.
-+ *
-+ */
-+
-+#ifndef TI_ZSTACK_CONFIG_H
-+#define TI_ZSTACK_CONFIG_H
-+
-+/* Default (primary) and secondary channel masks. Secondary mask is used when the
-+ * default channels fail.
-+ * Channels are defined in the following:
-+ *        11 - 26 : 2.4 GHz     0x07FFF800
-+ */
-+#ifndef DEFAULT_CHANLIST
-+#define DEFAULT_CHANLIST              0x00000800
-+#endif
-+
-+#ifndef SECONDARY_CHANLIST
-+#define SECONDARY_CHANLIST            0x00000000
-+#endif
-+
-+/* Define the default PAN ID.
-+ *
-+ * Setting this to a value other than 0xFFFF causes
-+ * ZDO_COORD to use this value as its PAN ID and
-+ * Routers and end devices to join PAN with this ID
-+ */
-+#ifndef ZDAPP_CONFIG_PAN_ID
-+#define ZDAPP_CONFIG_PAN_ID           0xFFFF
-+#endif
-+
-+/* Specifiy whether to set the EPID to the Extended Address, or to use the
-+ * custom Extended Pan ID (EPID) defined by ZDAPP_CONFIG_EPID
-+ */
-+#ifndef SET_EPID_AS_EXT_ADDR
-+#define SET_EPID_AS_EXT_ADDR          TRUE
-+#endif
-+
-+/* Define the default Extended Pan ID (EPID)
-+ * ZDAPP_CONFIG_EPID is only used if SET_EPID_AS_EXT_ADDR is FALSE. Otherwise,
-+ * the EPID is set to the Extended Address.
-+ */
-+#ifndef ZDAPP_CONFIG_EPID
-+#define ZDAPP_CONFIG_EPID             {0x01,0x23,0x45,0x67,0x89,0xAB,0xCD,0xEF}
-+#endif
-+
-+/* in seconds; set to 255 to turn off route expiry */
-+#ifndef ROUTE_EXPIRY_TIME
-+#define ROUTE_EXPIRY_TIME             30
-+#endif
-+
-+/*  Default indirect message holding timeout value:
-+ *  1-65535 (0 -> 65536) X CNT_RTG_TIMER X RTG_TIMER_INTERVAL
-+ */
-+#ifndef NWK_INDIRECT_MSG_TIMEOUT
-+#define NWK_INDIRECT_MSG_TIMEOUT      7
-+#endif
-+
-+/* The number of simultaneous route discoveries in network */
-+#ifndef MAX_RREQ_ENTRIES
-+#define MAX_RREQ_ENTRIES              8
-+#endif
-+
-+/* The maximum number of MAC frame transmission attempts allowed */
-+#ifndef ZMAC_MAX_FRAME_RETRIES
-+#define ZMAC_MAX_FRAME_RETRIES          3
-+#endif
-+
-+/* Max number of times attempts looking for the next hop address of a message */
-+#ifndef NWK_MAX_DATA_RETRIES
-+#define NWK_MAX_DATA_RETRIES          2
-+#endif
-+
-+/* The maximum number of times APS frames are retried after not receiving an APS ACK */
-+#ifndef APSC_MAX_FRAME_RETRIES
-+#define APSC_MAX_FRAME_RETRIES        3
-+#endif
-+
-+/* This number is used by polled devices, since the spec'd formula
-+ * doesn't work for sleeping end devices.  For non-polled devices,
-+ * a formula is used. Value is in 2 milliseconds periods
-+ */
-+#ifndef APSC_ACK_WAIT_DURATION_POLLED
-+#define APSC_ACK_WAIT_DURATION_POLLED 3000
-+#endif
-+
-+/* The maximum number of groups in the groups table */
-+#ifndef APS_MAX_GROUPS
-+#define APS_MAX_GROUPS                16
-+#endif
-+
-+/* Number of entries in the regular routing table plus additional
-+ * entries for route repair
-+ */
-+#ifndef MAX_RTG_ENTRIES
-+#define MAX_RTG_ENTRIES               40
-+#endif
-+
-+/* Maximum number of entries in the Binding table. */
-+#ifndef NWK_MAX_BINDING_ENTRIES
-+#define NWK_MAX_BINDING_ENTRIES       4
-+#endif
-+
-+/* Default security key. */
-+#ifndef DEFAULT_KEY
-+#define DEFAULT_KEY                   {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
-+#endif
-+
-+/* ZigBee Alliance Pre-configured Distributed Link Key (for Distributed networks) */
-+#ifndef DISTRIBUTED_GLOBAL_LINK_KEY
-+#define DISTRIBUTED_GLOBAL_LINK_KEY   {0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF}
-+#endif
-+
-+/* ZigBee Alliance Pre-configured TC Link Key - 'ZigBeeAlliance09' (for Centralized networks) */
-+#ifndef DEFAULT_TC_LINK_KEY
-+#define DEFAULT_TC_LINK_KEY           {0x5a,0x69,0x67,0x42,0x65,0x65,0x41,0x6c,0x6c,0x69,0x61,0x6e,0x63,0x65,0x30,0x39}
-+#endif
-+
-+/* The number of milliseconds to wait between data request polls to the coordinator. */
-+#ifndef TXPOWER
-+#define TXPOWER                     5
-+#endif
-+
-+/****************************************
-+ * The following are for End Devices only
-+ ***************************************/
-+
-+/* Determine whether the radio on an End Device is always on */
-+#ifndef RFD_RX_ALWAYS_ON_CAPABLE
-+#define RFD_RX_ALWAYS_ON_CAPABLE            TRUE
-+#endif
-+
-+#ifndef RFD_RX_ALWAYS_ON
-+#define RFD_RX_ALWAYS_ON                    FALSE
-+#endif
-+
-+/* The minimum poll rate. */
-+#ifndef MINIMUM_APP_POLL_RATE
-+#define MINIMUM_APP_POLL_RATE                     100
-+#endif
-+
-+/* The number of milliseconds to wait between data request polls to the coordinator. */
-+#ifndef POLL_RATE
-+#define POLL_RATE                     3000
-+#endif
-+
-+/* This is used after receiving a data indication to poll immediately
-+ * for queued messages...in milliseconds.
-+ */
-+#ifndef QUEUED_POLL_RATE
-+#define QUEUED_POLL_RATE              100
-+#endif
-+
-+/* This is used after receiving a data confirmation to poll immediately
-+ * for response messages...in milliseconds
-+ */
-+#ifndef RESPONSE_POLL_RATE
-+#define RESPONSE_POLL_RATE            100
-+#endif
-+
-+/* This is used as an alternate response poll rate only for rejoin request.
-+ * This rate is determined by the response time of the parent that the device
-+ * is trying to join.
-+ */
-+#ifndef REJOIN_POLL_RATE
-+#define REJOIN_POLL_RATE              440
-+#endif
-+
-+/* Maximum number of devices in the Assoc/Device list. */
-+#ifndef NWK_MAX_DEVICE_LIST
-+#define NWK_MAX_DEVICE_LIST           20
-+#endif
-+
-+/* Total Number of APS keys that a TC can manage. This is equal to the number of devices a ZC can allow to join the network */
-+#ifndef ZDSECMGR_TC_DEVICE_MAX
-+#define ZDSECMGR_TC_DEVICE_MAX        40
-+#endif
-+
-+/* Value used by end device when sending End Device Timeout Request */
-+/* This is an index into table timeoutValue[] defined in nwk_globals.c */
-+#ifndef END_DEV_TIMEOUT_VALUE
-+#define END_DEV_TIMEOUT_VALUE        8
-+#endif
-+
-+
-+
-+
-+#endif /* TI_ZSTACK_CONFIG_H */
+diff --git a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
+index b24581d..b9a3cf3 100644
+--- a/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
++++ b/znp_CC1352P_2_LAUNCHXL_tirtos_ccs/znp.syscfg
+@@ -4,6 +4,10 @@
+  * @cliArgs --board "/ti/boards/CC1352P_2_LAUNCHXL" --rtos "tirtos" --product "simplelink_cc13xx_cc26xx_sdk@5.30.01.01"
+  * @versions {"tool":"1.10.0+2163"}
+  */
++scripting.excludeFromBuild("ti_devices_config.c");
++scripting.excludeFromBuild("ti_radio_config.c");
++scripting.excludeFromBuild("ti_radio_config.h");
++scripting.excludeFromBuild("ti_drivers_config.h");
+ 
+ /**
+  * Import the modules used in this configuration.
+@@ -50,6 +54,7 @@ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 15;
+ CCFG.levelBootloaderBackdoor  = "Active low";
+ CCFG.forceVddr                = true;
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
+ 
+ rfdesign.rfDesign = "LAUNCHXL-CC1352P-2";
+@@ -75,8 +80,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
+-NVS1.internalFlash.regionSize = 0x4000;
+-NVS1.internalFlash.regionBase = 0x52000;
++NVS1.internalFlash.regionBase = 0x50000;
++NVS1.internalFlash.regionSize = 0x6000;
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
+@@ -128,6 +133,7 @@ zstack.deviceTypeReadOnly                    = true;
+ zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+ zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+ zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
++zstack.rf.txPower                            = "20";
+ zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+ zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+ zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
-index 2c5073c..48f050b 100644
+index d4e9759..b7ff84c 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
 @@ -415,6 +415,8 @@ extern "C"
@@ -2713,7 +1600,7 @@ index 2c5073c..48f050b 100644
  #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
  #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
-index 90d6d4a..4f416e8 100644
+index 90d6d4a..a687b10 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
 @@ -53,6 +53,9 @@
@@ -2726,16 +1613,15 @@ index 90d6d4a..4f416e8 100644
  #if !defined NONWK
  
  #include "mt_nwk.h"
-@@ -95,6 +98,8 @@ static void MT_UtilSpi2Addr( zAddrType_t *pDst, uint8_t *pSrc );
+@@ -95,6 +98,7 @@ static void MT_UtilSpi2Addr( zAddrType_t *pDst, uint8_t *pSrc );
  #endif
  
  #if defined (MT_UTIL_FUNC)
-+static LED_Handle gLedHandle;
 +
  static void MT_UtilGetDeviceInfo(void);
  static void MT_UtilGetNvInfo(void);
  static void MT_UtilSetPanID(uint8_t *pBuf);
-@@ -128,6 +133,9 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+@@ -128,6 +132,9 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
  #endif //MT_SYS_KEY_MANAGEMENT
  static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
  static void MT_UtilAssocCount(uint8_t *pBuf);
@@ -2745,7 +1631,7 @@ index 90d6d4a..4f416e8 100644
  static void MT_UtilAssocFindDevice(uint8_t *pBuf);
  static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
  static void MT_UtilBindAddEntry(uint8_t *pBuf);
-@@ -260,6 +268,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -260,6 +267,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilAssocCount(pBuf);
      break;
  
@@ -2756,7 +1642,7 @@ index 90d6d4a..4f416e8 100644
    case MT_UTIL_ASSOC_FIND_DEVICE:
      MT_UtilAssocFindDevice(pBuf);
      break;
-@@ -272,6 +284,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -272,6 +283,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilBindAddEntry(pBuf);
      break;
  
@@ -2771,7 +1657,7 @@ index 90d6d4a..4f416e8 100644
    case MT_UTIL_SYNC_REQ:
      MT_UtilSync();
      break;
-@@ -1375,6 +1395,92 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+@@ -1375,6 +1394,95 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
    MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
  }
  
@@ -2798,6 +1684,9 @@ index 90d6d4a..4f416e8 100644
 +  }
 +
 +  if (mode==0) {
++    LED_setOff(gLedHandle);
++  } else if (mode == 5) {
++    gLedsDisabled = TRUE;
 +    LED_setOff(gLedHandle);
 +  } else {
 +    LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
@@ -2865,14 +1754,14 @@ index 90d6d4a..4f416e8 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..590ec09 100644
+index 63c143b..44ddc34 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210708
++#define CODE_REVISION_NUMBER 20211217
 +
  /******************************************************************************
   * CONSTANTS
@@ -2892,7 +1781,7 @@ index 63c143b..590ec09 100644
  
  /******************************************************************************
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
-index 9755b1d..1571e2b 100644
+index a4b15c6..1383e55 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
 @@ -1659,6 +1659,11 @@ static void MT_ZdoMgmtPermitJoinRequest(uint8_t *pBuf)
@@ -3022,7 +1911,7 @@ index 3a7afa3..2dcef5a 100644
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
-index 2b63c06..6ac3fb2 100644
+index b761da1..bc406ff 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -3041,7 +1930,7 @@ index 2b63c06..6ac3fb2 100644
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
-index 764dabd..e9135fb 100644
+index aafb10d..8d56d78 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
 @@ -105,7 +105,7 @@ uint8_t zgSecurePermitJoin = TRUE;
@@ -3065,10 +1954,10 @@ index 764dabd..e9135fb 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-index 1f807ca..b3e2694 100644
+index 63519d6..088ad02 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
+@@ -415,12 +415,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
            ZDApp_ChangeState( DEV_ROUTER );
          }
  
@@ -3086,7 +1975,7 @@ index 1f807ca..b3e2694 100644
        }
        else
        {
-@@ -885,12 +884,11 @@ void ZDApp_NetworkStartEvt( void )
+@@ -881,12 +880,11 @@ void ZDApp_NetworkStartEvt( void )
          bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
        }
  
@@ -3104,7 +1993,7 @@ index 1f807ca..b3e2694 100644
      }
      else
      {
-@@ -3132,6 +3130,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3139,6 +3137,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -3119,11 +2008,136 @@ index 1f807ca..b3e2694 100644
  }
  
  /******************************************************************************
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_object.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_object.c
+index 0440d04..4e08567 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_object.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_object.c
+@@ -650,6 +650,20 @@ void ZDO_ProcessNodeDescReq( zdoIncomingMsg_t *inMsg )
+ 
+   if ( desc != NULL )
+   {
++    uint8_t extAddr[Z_EXTADDR_LEN];
++    // Respond with Xiaomi manufacturer code when ieeAddr is withing Xiaomi address space
++    // Otherwise some devices don't work
++    // https://github.com/Koenkk/zigbee2mqtt/issues/9274
++    if (APSME_LookupExtAddr(inMsg->srcAddr.addr.shortAddr, extAddr) == TRUE &&
++         ((extAddr[7] == 0x04 && extAddr[6] == 0xcf && extAddr[5] == 0x8c) ||
++          (extAddr[7] == 0x54 && extAddr[6] == 0xef && extAddr[5] == 0x44))) {
++        desc->ManufacturerCode[0] = 0x5f;
++        desc->ManufacturerCode[1] = 0x11;
++    } else {
++        desc->ManufacturerCode[0] = 0x0;
++        desc->ManufacturerCode[1] = 0x0;
++    }
++
+     ZDP_NodeDescMsg( inMsg, aoi, desc );
+   }
+   else
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.c b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.c
+index 4ce9188..f613b6a 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.c
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.c
+@@ -62,6 +62,7 @@ extern "C"
+ 
+ #include <ti/drivers/TRNG.h>
+ #include <ti/drivers/cryptoutils/cryptokey/CryptoKeyPlaintext.h>
++#include "ti_drivers_config.h"
+ 
+ /******************************************************************************
+  * CONSTANTS
+@@ -119,6 +120,8 @@ typedef struct
+  */
+ extern CONST uint8_t gMAX_NWK_SEC_MATERIAL_TABLE_ENTRIES;
+ extern pfnZdoCb zdoCBFunc[MAX_ZDO_CB_FUNC];
++bool gLedsDisabled = FALSE;
++LED_Handle gLedHandle;
+ 
+ /******************************************************************************
+  * EXTERNAL FUNCTIONS
+@@ -1519,6 +1522,23 @@ void ZDSecMgrConfig( void )
+   }
+ }
+ 
++void updateLED( void )
++{
++    if (gLedHandle == NULL) {
++      LED_Params ledParams;
++      LED_Params_init(&ledParams);
++      gLedHandle = LED_open(CONFIG_LED_GREEN, &ledParams);
++    }
++
++    if (gLedsDisabled == FALSE && gLedHandle != NULL) {
++        if (ZDSecMgrPermitJoiningEnabled == TRUE) {
++            LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
++        } else {
++            LED_setOff(gLedHandle);
++        }
++    }
++}
++
+ /******************************************************************************
+  * @fn          ZDSecMgrPermitJoining
+  *
+@@ -1547,6 +1567,7 @@ uint8_t ZDSecMgrPermitJoining( uint8_t duration )
+     ZDSecMgrPermitJoiningEnabled = FALSE;
+   }
+ 
++  updateLED();
+   accept = TRUE;
+ 
+   return accept;
+@@ -1568,6 +1589,8 @@ void ZDSecMgrPermitJoiningTimeout( void )
+     ZDSecMgrPermitJoiningEnabled = FALSE;
+     ZDSecMgrPermitJoiningTimed   = FALSE;
+   }
++
++  updateLED();
+ }
+ 
+ /******************************************************************************
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.h b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.h
+index 6468e0d..e61c5e4 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.h
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.h
+@@ -51,6 +51,8 @@ extern "C"
+ #include "zcomdef.h"
+ #include "zd_app.h"
+ 
++#include <ti/drivers/apps/LED.h>
++
+ /******************************************************************************
+  * TYPEDEFS
+  */
+@@ -95,6 +97,9 @@ extern CONST uint16_t gZDSECMGR_TC_DEVICE_MAX;
+ extern CONST uint16_t gZDSECMGR_TC_DEVICE_IC_MAX;
+ extern uint8_t  gZDSECMGR_TC_ATTEMPT_DEFAULT_KEY;
+ 
++extern bool gLedsDisabled;
++extern LED_Handle gLedHandle;
++
+ typedef struct
+ {
+ uint32_t              FrameCounter;
+diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/app.cfg b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/app.cfg
+index 5089a84..146ef06 100644
+--- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/app.cfg
++++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/app.cfg
+@@ -700,7 +700,9 @@ var GateMutexPri = xdc.useModule('ti.sysbios.gates.GateMutexPri');
+  */
+ var Memory = xdc.useModule('xdc.runtime.Memory');
+ var HEAPMGR_CONFIG = 0;
+-var HEAPMGR_SIZE   = 0x1800;
++// Increase heap to 48kb
++// https://e2e.ti.com/support/wireless-connectivity/zigbee-thread-group/zigbee-and-thread/f/zigbee-thread-forum/1052120/cc2652r-mac-no-resources-0x1a-errors-complete-crash-with-simplelink-cc13xx-cc26xx-sdk_5-30-00-56/3897554#3897554
++var HEAPMGR_SIZE   = 0xc000;
+ 
+ // The following will create the #define HEAPMGR_CONFIG. It can then be used by include  <xdc/cfg/global.h>
+ Program.global.HEAPMGR_CONFIG = HEAPMGR_CONFIG;
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
-index 2dcc711..a8b8d93 100755
+index 2856ad2..d9a66ac 100755
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
-@@ -70,9 +70,9 @@
+@@ -67,9 +67,9 @@
  /* must be located at the beginning of the application.                      */
  
  #define FLASH_BASE              0x00000000
@@ -3137,63 +2151,38 @@ index 2dcc711..a8b8d93 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-index 352db90..fae442b 100644
+index f0650d7..6abe720 100644
 --- a/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
 +++ b/znp_CC26X2R1_LAUNCHXL_tirtos_ccs/znp.syscfg
-@@ -49,6 +49,7 @@ CCFG.enableBootloader         = true;
+@@ -47,6 +47,7 @@ CCFG.enableBootloader         = true;
  CCFG.enableBootloaderBackdoor = true;
  CCFG.dioBootloaderBackdoor    = 13;
  CCFG.levelBootloaderBackdoor  = "Active low";
 +CCFG.enableDCDC               = false;
  CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
  
- AESCBC1.$name = "CONFIG_AESCBC_0";
-@@ -67,8 +68,8 @@ ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
+ Display1.$hardware                = system.deviceData.board.components.XDS110UART;
+@@ -70,8 +71,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
  
  NVS1.$name                    = "CONFIG_NVSINTERNAL";
  NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
--NVS1.internalFlash.regionBase = 0x52000;
 -NVS1.internalFlash.regionSize = 0x4000;
+-NVS1.internalFlash.regionBase = 0x52000;
 +NVS1.internalFlash.regionBase = 0x50000;
 +NVS1.internalFlash.regionSize = 0x6000;
  
  NVS2.$name                          = "CONFIG_NVSEXTERNAL";
  NVS2.nvsType                        = "External";
-@@ -121,18 +122,20 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
- SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
- SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
- 
--zstack.deviceType                            = "znp";
--zstack.deviceTypeReadOnly                    = true;
--zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
--zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
--zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
--zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
--zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
--zstack.network.$name                         = "ti_zstack_network_zstack_network0";
--zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanced0";
--zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
--zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
--zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
-+zstack.deviceType                                      = "znp";
-+zstack.deviceTypeReadOnly                              = true;
-+zstack.touchlink.$name                                 = "ti_zstack_touchlink_zstack_touchlink0";
-+zstack.pm.$name                                        = "ti_zstack_pm_zstack_pm0";
-+zstack.rf.$name                                        = "ti_zstack_rf_zstack_rf0";
-+zstack.rf.txPower                                      = "5";
-+zstack.rf.radioConfig.$name                            = "ti_devices_radioconfig_settings_ieee_15_40";
-+zstack.rf.radioConfig.codeExportConfig.$name           = "ti_devices_radioconfig_code_export_param0";
-+zstack.network.$name                                   = "ti_zstack_network_zstack_network0";
-+zstack.advanced.$name                                  = "ti_zstack_advanced_zstack_advanced0";
-+zstack.advanced.routing.$name                          = "ti_zstack_advanced_zstack_routing0";
-+zstack.advanced.packetSending.$name                    = "ti_zstack_advanced_zstack_packet_sending0";
-+zstack.advanced.packetSending.apsAckWaitDurationPolled = 1000;
-+zstack.advanced.tableSize.$name                        = "ti_zstack_advanced_zstack_table_size0";
- 
- /**
-  * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+@@ -121,6 +122,7 @@ zstack.deviceTypeReadOnly                    = true;
+ zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+ zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+ zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
++zstack.rf.txPower                            = "5";
+ zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+ zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+ zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt.h b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt.h
-index 2c5073c..48f050b 100644
+index d4e9759..b7ff84c 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt.h
 +++ b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt.h
 @@ -415,6 +415,8 @@ extern "C"
@@ -3215,7 +2204,7 @@ index 2c5073c..48f050b 100644
  #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
  #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_util.c b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_util.c
-index 90d6d4a..4f416e8 100644
+index 90d6d4a..a687b10 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_util.c
 +++ b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_util.c
 @@ -53,6 +53,9 @@
@@ -3228,16 +2217,15 @@ index 90d6d4a..4f416e8 100644
  #if !defined NONWK
  
  #include "mt_nwk.h"
-@@ -95,6 +98,8 @@ static void MT_UtilSpi2Addr( zAddrType_t *pDst, uint8_t *pSrc );
+@@ -95,6 +98,7 @@ static void MT_UtilSpi2Addr( zAddrType_t *pDst, uint8_t *pSrc );
  #endif
  
  #if defined (MT_UTIL_FUNC)
-+static LED_Handle gLedHandle;
 +
  static void MT_UtilGetDeviceInfo(void);
  static void MT_UtilGetNvInfo(void);
  static void MT_UtilSetPanID(uint8_t *pBuf);
-@@ -128,6 +133,9 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
+@@ -128,6 +132,9 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
  #endif //MT_SYS_KEY_MANAGEMENT
  static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
  static void MT_UtilAssocCount(uint8_t *pBuf);
@@ -3247,7 +2235,7 @@ index 90d6d4a..4f416e8 100644
  static void MT_UtilAssocFindDevice(uint8_t *pBuf);
  static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
  static void MT_UtilBindAddEntry(uint8_t *pBuf);
-@@ -260,6 +268,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -260,6 +267,10 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilAssocCount(pBuf);
      break;
  
@@ -3258,7 +2246,7 @@ index 90d6d4a..4f416e8 100644
    case MT_UTIL_ASSOC_FIND_DEVICE:
      MT_UtilAssocFindDevice(pBuf);
      break;
-@@ -272,6 +284,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
+@@ -272,6 +283,14 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
      MT_UtilBindAddEntry(pBuf);
      break;
  
@@ -3273,7 +2261,7 @@ index 90d6d4a..4f416e8 100644
    case MT_UTIL_SYNC_REQ:
      MT_UtilSync();
      break;
-@@ -1375,6 +1395,92 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
+@@ -1375,6 +1394,95 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
    MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
  }
  
@@ -3300,6 +2288,9 @@ index 90d6d4a..4f416e8 100644
 +  }
 +
 +  if (mode==0) {
++    LED_setOff(gLedHandle);
++  } else if (mode == 5) {
++    gLedsDisabled = TRUE;
 +    LED_setOff(gLedHandle);
 +  } else {
 +    LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
@@ -3367,14 +2358,14 @@ index 90d6d4a..4f416e8 100644
   * @fn      MT_UtilAssocFindDevice
   *
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c
-index 63c143b..590ec09 100644
+index 63c143b..44ddc34 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c
 +++ b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_version.c
 @@ -43,15 +43,21 @@
  #include "zcomdef.h"
  #include "mt_version.h"
  
-+#define CODE_REVISION_NUMBER 20210708
++#define CODE_REVISION_NUMBER 20211217
 +
  /******************************************************************************
   * CONSTANTS
@@ -3394,7 +2385,7 @@ index 63c143b..590ec09 100644
  
  /******************************************************************************
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_zdo.c b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_zdo.c
-index 9755b1d..1571e2b 100644
+index a4b15c6..1383e55 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_zdo.c
 +++ b/znp_LP_CC2652RB_tirtos_ccs/Application/mt/mt_zdo.c
 @@ -1659,6 +1659,11 @@ static void MT_ZdoMgmtPermitJoinRequest(uint8_t *pBuf)
@@ -3524,7 +2515,7 @@ index 3a7afa3..2dcef5a 100644
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c
-index 2b63c06..6ac3fb2 100644
+index b761da1..bc406ff 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c
 +++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/nwk/nwk_globals.c
 @@ -65,10 +65,10 @@
@@ -3543,7 +2534,7 @@ index 2b63c06..6ac3fb2 100644
  // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
  // A known shortcoming is that when a message is enqueued as "hold" for a
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/sys/zglobals.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/sys/zglobals.c
-index 764dabd..e9135fb 100644
+index aafb10d..8d56d78 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/Stack/sys/zglobals.c
 +++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/sys/zglobals.c
 @@ -105,7 +105,7 @@ uint8_t zgSecurePermitJoin = TRUE;
@@ -3567,10 +2558,10 @@ index 764dabd..e9135fb 100644
  //==========    TouchLink NWK configuration    ===============
  // Values used by Router when starts a network as initiator
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c
-index 1f807ca..b3e2694 100644
+index 63519d6..088ad02 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c
 +++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_app.c
-@@ -419,12 +419,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
+@@ -415,12 +415,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
            ZDApp_ChangeState( DEV_ROUTER );
          }
  
@@ -3588,7 +2579,7 @@ index 1f807ca..b3e2694 100644
        }
        else
        {
-@@ -885,12 +884,11 @@ void ZDApp_NetworkStartEvt( void )
+@@ -881,12 +880,11 @@ void ZDApp_NetworkStartEvt( void )
          bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
        }
  
@@ -3606,7 +2597,7 @@ index 1f807ca..b3e2694 100644
      }
      else
      {
-@@ -3132,6 +3130,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
+@@ -3139,6 +3137,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
      // Routing error for dstAddr, this is informational and a Route
      // Request should happen automatically.
    }
@@ -3621,11 +2612,136 @@ index 1f807ca..b3e2694 100644
  }
  
  /******************************************************************************
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_object.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_object.c
+index 0440d04..4e08567 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_object.c
++++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_object.c
+@@ -650,6 +650,20 @@ void ZDO_ProcessNodeDescReq( zdoIncomingMsg_t *inMsg )
+ 
+   if ( desc != NULL )
+   {
++    uint8_t extAddr[Z_EXTADDR_LEN];
++    // Respond with Xiaomi manufacturer code when ieeAddr is withing Xiaomi address space
++    // Otherwise some devices don't work
++    // https://github.com/Koenkk/zigbee2mqtt/issues/9274
++    if (APSME_LookupExtAddr(inMsg->srcAddr.addr.shortAddr, extAddr) == TRUE &&
++         ((extAddr[7] == 0x04 && extAddr[6] == 0xcf && extAddr[5] == 0x8c) ||
++          (extAddr[7] == 0x54 && extAddr[6] == 0xef && extAddr[5] == 0x44))) {
++        desc->ManufacturerCode[0] = 0x5f;
++        desc->ManufacturerCode[1] = 0x11;
++    } else {
++        desc->ManufacturerCode[0] = 0x0;
++        desc->ManufacturerCode[1] = 0x0;
++    }
++
+     ZDP_NodeDescMsg( inMsg, aoi, desc );
+   }
+   else
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_sec_mgr.c b/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_sec_mgr.c
+index 4ce9188..f613b6a 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_sec_mgr.c
++++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_sec_mgr.c
+@@ -62,6 +62,7 @@ extern "C"
+ 
+ #include <ti/drivers/TRNG.h>
+ #include <ti/drivers/cryptoutils/cryptokey/CryptoKeyPlaintext.h>
++#include "ti_drivers_config.h"
+ 
+ /******************************************************************************
+  * CONSTANTS
+@@ -119,6 +120,8 @@ typedef struct
+  */
+ extern CONST uint8_t gMAX_NWK_SEC_MATERIAL_TABLE_ENTRIES;
+ extern pfnZdoCb zdoCBFunc[MAX_ZDO_CB_FUNC];
++bool gLedsDisabled = FALSE;
++LED_Handle gLedHandle;
+ 
+ /******************************************************************************
+  * EXTERNAL FUNCTIONS
+@@ -1519,6 +1522,23 @@ void ZDSecMgrConfig( void )
+   }
+ }
+ 
++void updateLED( void )
++{
++    if (gLedHandle == NULL) {
++      LED_Params ledParams;
++      LED_Params_init(&ledParams);
++      gLedHandle = LED_open(CONFIG_LED_GREEN, &ledParams);
++    }
++
++    if (gLedsDisabled == FALSE && gLedHandle != NULL) {
++        if (ZDSecMgrPermitJoiningEnabled == TRUE) {
++            LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
++        } else {
++            LED_setOff(gLedHandle);
++        }
++    }
++}
++
+ /******************************************************************************
+  * @fn          ZDSecMgrPermitJoining
+  *
+@@ -1547,6 +1567,7 @@ uint8_t ZDSecMgrPermitJoining( uint8_t duration )
+     ZDSecMgrPermitJoiningEnabled = FALSE;
+   }
+ 
++  updateLED();
+   accept = TRUE;
+ 
+   return accept;
+@@ -1568,6 +1589,8 @@ void ZDSecMgrPermitJoiningTimeout( void )
+     ZDSecMgrPermitJoiningEnabled = FALSE;
+     ZDSecMgrPermitJoiningTimed   = FALSE;
+   }
++
++  updateLED();
+ }
+ 
+ /******************************************************************************
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_sec_mgr.h b/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_sec_mgr.h
+index 6468e0d..e61c5e4 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_sec_mgr.h
++++ b/znp_LP_CC2652RB_tirtos_ccs/Stack/zdo/zd_sec_mgr.h
+@@ -51,6 +51,8 @@ extern "C"
+ #include "zcomdef.h"
+ #include "zd_app.h"
+ 
++#include <ti/drivers/apps/LED.h>
++
+ /******************************************************************************
+  * TYPEDEFS
+  */
+@@ -95,6 +97,9 @@ extern CONST uint16_t gZDSECMGR_TC_DEVICE_MAX;
+ extern CONST uint16_t gZDSECMGR_TC_DEVICE_IC_MAX;
+ extern uint8_t  gZDSECMGR_TC_ATTEMPT_DEFAULT_KEY;
+ 
++extern bool gLedsDisabled;
++extern LED_Handle gLedHandle;
++
+ typedef struct
+ {
+ uint32_t              FrameCounter;
+diff --git a/znp_LP_CC2652RB_tirtos_ccs/app.cfg b/znp_LP_CC2652RB_tirtos_ccs/app.cfg
+index 5089a84..146ef06 100644
+--- a/znp_LP_CC2652RB_tirtos_ccs/app.cfg
++++ b/znp_LP_CC2652RB_tirtos_ccs/app.cfg
+@@ -700,7 +700,9 @@ var GateMutexPri = xdc.useModule('ti.sysbios.gates.GateMutexPri');
+  */
+ var Memory = xdc.useModule('xdc.runtime.Memory');
+ var HEAPMGR_CONFIG = 0;
+-var HEAPMGR_SIZE   = 0x1800;
++// Increase heap to 48kb
++// https://e2e.ti.com/support/wireless-connectivity/zigbee-thread-group/zigbee-and-thread/f/zigbee-thread-forum/1052120/cc2652r-mac-no-resources-0x1a-errors-complete-crash-with-simplelink-cc13xx-cc26xx-sdk_5-30-00-56/3897554#3897554
++var HEAPMGR_SIZE   = 0xc000;
+ 
+ // The following will create the #define HEAPMGR_CONFIG. It can then be used by include  <xdc/cfg/global.h>
+ Program.global.HEAPMGR_CONFIG = HEAPMGR_CONFIG;
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd b/znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd
-index 2dcc711..a8b8d93 100755
+index 2856ad2..d9a66ac 100755
 --- a/znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd
 +++ b/znp_LP_CC2652RB_tirtos_ccs/cc13x2_cc26x2.cmd
-@@ -70,9 +70,9 @@
+@@ -67,9 +67,9 @@
  /* must be located at the beginning of the application.                      */
  
  #define FLASH_BASE              0x00000000
@@ -3639,61 +2755,36 @@ index 2dcc711..a8b8d93 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg b/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg
-index a63cc20..95397f1 100644
+index 68c1c52..420d5e2 100644
 --- a/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg
 +++ b/znp_LP_CC2652RB_tirtos_ccs/znp.syscfg
-@@ -50,6 +50,7 @@ CCFG.enableBootloaderBackdoor = true;
+@@ -48,6 +48,7 @@ CCFG.enableBootloaderBackdoor = true;
  CCFG.dioBootloaderBackdoor    = 13;
  CCFG.levelBootloaderBackdoor  = "Active low";
  CCFG.srcClkLF                 = "Derived from HF XOSC";
 +CCFG.enableDCDC               = false;
  CCFG.ccfgTemplate.$name       = "ti_devices_CCFGTemplate0";
  
- AESCBC1.$name = "CONFIG_AESCBC_0";
-@@ -68,8 +69,8 @@ ECJPAKE1.$name = "CONFIG_ECJPAKE_0";
+ Display1.$hardware                = system.deviceData.board.components.XDS110UART;
+@@ -71,8 +72,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
  
  NVS1.$name                    = "CONFIG_NVSINTERNAL";
  NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
--NVS1.internalFlash.regionBase = 0x52000;
 -NVS1.internalFlash.regionSize = 0x4000;
+-NVS1.internalFlash.regionBase = 0x52000;
 +NVS1.internalFlash.regionBase = 0x50000;
 +NVS1.internalFlash.regionSize = 0x6000;
  
  NVS2.$name                          = "CONFIG_NVSEXTERNAL";
  NVS2.nvsType                        = "External";
-@@ -122,18 +123,20 @@ SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
- SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
- SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
- 
--zstack.deviceType                            = "znp";
--zstack.deviceTypeReadOnly                    = true;
--zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
--zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
--zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
--zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
--zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
--zstack.network.$name                         = "ti_zstack_network_zstack_network0";
--zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanced0";
--zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
--zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
--zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
-+zstack.deviceType                                      = "znp";
-+zstack.deviceTypeReadOnly                              = true;
-+zstack.touchlink.$name                                 = "ti_zstack_touchlink_zstack_touchlink0";
-+zstack.pm.$name                                        = "ti_zstack_pm_zstack_pm0";
-+zstack.rf.$name                                        = "ti_zstack_rf_zstack_rf0";
-+zstack.rf.txPower                                      = "5";
-+zstack.rf.radioConfig.$name                            = "ti_devices_radioconfig_settings_ieee_15_40";
-+zstack.rf.radioConfig.codeExportConfig.$name           = "ti_devices_radioconfig_code_export_param0";
-+zstack.network.$name                                   = "ti_zstack_network_zstack_network0";
-+zstack.advanced.$name                                  = "ti_zstack_advanced_zstack_advanced0";
-+zstack.advanced.routing.$name                          = "ti_zstack_advanced_zstack_routing0";
-+zstack.advanced.packetSending.$name                    = "ti_zstack_advanced_zstack_packet_sending0";
-+zstack.advanced.packetSending.apsAckWaitDurationPolled = 1000;
-+zstack.advanced.tableSize.$name                        = "ti_zstack_advanced_zstack_table_size0";
- 
- /**
-  * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+@@ -122,6 +123,7 @@ zstack.deviceTypeReadOnly                    = true;
+ zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+ zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+ zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
++zstack.rf.txPower                            = "5";
+ zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+ zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+ zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
 -- 
-2.32.0
+2.34.0
 

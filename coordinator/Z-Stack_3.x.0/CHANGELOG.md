@@ -1,3 +1,10 @@
+# 20211217
+- SimpleLink SDK 5.30.01.01 ([changelog](https://software-dl.ti.com/simplelink/esd/simplelink_cc13xx_cc26xx_sdk/5.30.01.01/exports/changelog.html))
+- Increase memory heap
+- Turn on/off leds when joining is enabled/disabled
+- Fix Xiaomi E1 devices not (fully) working
+- Allow setting transmit power for CC2652P/CC1352P greater than 5dBm (max 20dBm), default transmit power is set to 9dBm
+
 # 20210708
 - SimpleLink SDK 5.10.00.48 ([changelog](http://software-dl.ti.com/simplelink/esd/simplelink_cc13x2_26x2_sdk/5.10.00.48/exports/changelog.html))
 - Increase MAC buffers, increases performance on message burst and reduces MAC_TRANSACTION_OVERFLOW errors
