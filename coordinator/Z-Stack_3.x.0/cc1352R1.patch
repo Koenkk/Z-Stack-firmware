@@ -1,0 +1,815 @@
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/app.cfg znp_CC1352R1_LAUNCHXL_tirtos_ccs/app.cfg
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/app.cfg	2022-02-12 16:07:31.700412920 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/app.cfg	2022-02-12 16:45:13.305596034 -0500
+@@ -700,7 +700,9 @@
+  */
+ var Memory = xdc.useModule('xdc.runtime.Memory');
+ var HEAPMGR_CONFIG = 0;
+-var HEAPMGR_SIZE   = 0x1800;
++// Increase heap to 48kb
++// https://e2e.ti.com/support/wireless-connectivity/zigbee-thread-group/zigbee-and-thread/f/zigbee-thread-forum/1052120/cc2652r-mac-no-resources-0x1a-errors-complete-crash-with-simplelink-cc13xx-cc26xx-sdk_5-30-00-56/3897554#3897554
++var HEAPMGR_SIZE   = 0xc000;
+ 
+ // The following will create the #define HEAPMGR_CONFIG. It can then be used by include  <xdc/cfg/global.h>
+ Program.global.HEAPMGR_CONFIG = HEAPMGR_CONFIG;
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/mt/mt.h znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/mt/mt.h	2022-02-12 17:46:47.734115005 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/mt/mt.h	2022-02-12 16:18:13.551312589 -0500
+@@ -415,6 +415,12 @@
+ #define MT_UTIL_CALLBACK_SUB_CMD             0x06
+ #define MT_UTIL_TIME_ALIVE                   0x09
+ 
++/* PSY */
++#define MT_UTIL_LED_CONTROL                  0x0A
++#define MT_UTIL_ASSOC_REMOVE                 0x63 // Custom command
++#define MT_UTIL_ASSOC_ADD                    0x64 // Custom command
++
++
+ #define MT_UTIL_TEST_LOOPBACK                0x10
+ #define MT_UTIL_DATA_REQ                     0x11
+ 
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/mt/mt_util.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/mt/mt_util.c	2022-02-12 16:07:31.708412838 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_util.c	2022-02-12 16:49:39.575041980 -0500
+@@ -53,6 +53,9 @@
+ #include "mt_zdo.h"
+ #include "ssp.h"
+ 
++#include <ti/drivers/apps/LED.h>
++#include <ti_drivers_config.bak>
++
+ #if !defined NONWK
+ 
+ #include "mt_nwk.h"
+@@ -128,6 +131,11 @@
+ #endif //MT_SYS_KEY_MANAGEMENT
+ static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
+ static void MT_UtilAssocCount(uint8_t *pBuf);
++
++static void MT_UtilLedControl(uint8_t *pBuf);
++static void MT_UtilAssocRemove(uint8_t *pBuf);
++static void MT_UtilAssocAdd(uint8_t *pBuf);
++
+ static void MT_UtilAssocFindDevice(uint8_t *pBuf);
+ static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
+ static void MT_UtilBindAddEntry(uint8_t *pBuf);
+@@ -252,6 +260,15 @@
+     break;
+ #endif // MT_SYS_KEY_MANAGEMENT
+ 
++  case MT_UTIL_LED_CONTROL:
++    MT_UtilLedControl(pBuf);
++    break;
++  case MT_UTIL_ASSOC_REMOVE:
++    MT_UtilAssocRemove(pBuf);
++    break;
++  case MT_UTIL_ASSOC_ADD:
++    MT_UtilAssocAdd(pBuf);
++    break;
+   case MT_UTIL_APSME_REQUEST_KEY_CMD:
+     MT_UtilAPSME_RequestKeyCmd(pBuf);
+     break;
+@@ -1375,6 +1392,99 @@
+   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
+ }
+ 
++
++/***************************************************************************************************
++ * @fn      MT_UtilLedControl
++ *
++ * @brief   Proxy the LedControl() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilLedControl(uint8_t *pBuf)
++{
++  uint8_t cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  uint8_t mode =  pBuf[1];
++
++  if (gLedHandle == NULL) {
++    LED_Params ledParams;
++    LED_Params_init(&ledParams);
++    gLedHandle = LED_open(CONFIG_LED_GREEN, &ledParams);
++  }
++
++  if (mode==0) {
++    LED_setOff(gLedHandle);
++  } else if (mode == 5) {
++    gLedsDisabled = TRUE;
++    LED_setOff(gLedHandle);
++  } else {
++    LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
++  }
++
++  uint8_t retValue = 0;
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
++/***************************************************************************************************
++ * @fn      MT_UtilAssocRemove
++ *
++ * @brief   Proxy the AssocRemove() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilAssocRemove(uint8_t *pBuf)
++{
++  uint8_t cmdId;
++  uint8_t ieeeAddr[Z_EXTADDR_LEN];
++  uint8_t retValue = 0;
++
++  // parse header
++  cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  /* IeeAddress */
++  OsalPort_memcpy(ieeeAddr, pBuf, Z_EXTADDR_LEN);
++
++  AssocRemove(ieeeAddr);
++
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
++/***************************************************************************************************
++ * @fn      MT_UtilAssocAdd
++ *
++ * @brief   Proxy the AssocAdd() function.
++ *
++ * @param   pBuf - pointer to the received buffer
++ *
++ * @return  void
++ ***************************************************************************************************/
++static void MT_UtilAssocAdd(uint8_t *pBuf)
++{
++  uint8_t cmdId;
++  uint8_t retValue = 0;
++
++  // parse header
++  cmdId = pBuf[MT_RPC_POS_CMD1];
++  pBuf += MT_RPC_FRAME_HDR_SZ;
++
++  AssocAddNew(
++    BUILD_UINT16(pBuf[Z_EXTADDR_LEN], pBuf[Z_EXTADDR_LEN + 1]),
++    pBuf,
++    pBuf[Z_EXTADDR_LEN + 2]
++  );
++
++  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
++}
++
++
++
++
+ /***************************************************************************************************
+  * @fn      MT_UtilAssocFindDevice
+  *
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/mt/mt_version.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/mt/mt_version.c	2022-02-12 16:07:31.708412838 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_version.c	2022-02-12 16:27:12.603533486 -0500
+@@ -43,15 +43,20 @@
+ #include "zcomdef.h"
+ #include "mt_version.h"
+ 
++#define CODE_REVISION_NUMBER 20220212
+ /******************************************************************************
+  * CONSTANTS
+  *****************************************************************************/
+ const uint8_t MTVersionString[] = {
+                                    2,  /* Transport protocol revision */
+-                                   0,  /* Product ID */
++                                   1,  /* Product ID */
+                                    2,  /* Software major release number */
+                                    7,  /* Software minor release number */
+                                    1,  /* Software maintenance release number */
++                                   ((CODE_REVISION_NUMBER >> 0)  & 0xFF),
++                                   ((CODE_REVISION_NUMBER >> 8)  & 0xFF),
++                                   ((CODE_REVISION_NUMBER >> 16) & 0xFF),
++                                   ((CODE_REVISION_NUMBER >> 24) & 0xFF),
+                                  };
+ 
+ /******************************************************************************
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/mt/mt_zdo.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/mt/mt_zdo.c	2022-02-12 16:07:31.708412838 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/mt/mt_zdo.c	2022-02-12 16:28:20.069839321 -0500
+@@ -1659,6 +1659,15 @@
+   retValue = (uint8_t)ZDP_MgmtPermitJoinReq( &destAddr, duration, tcSignificance, 0);
+   ignoreIndication = FALSE;
+ 
++
++  // If joining is enabled via a router, ZDO_ProcessMgmtPermitJoinReq is never triggered thus
++  // ZDSecMgrPermitJoining is never called. Joining via a router would always fail now since
++  // ZDSecMgrPermitJoiningEnabled in zd_sec_mgr.c stays FALSE
++  ZDSecMgrPermitJoining(duration);
++
++
++
++
+   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_ZDO), cmdId, 1, &retValue);
+ }
+ 
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/npi/npi_config.h znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/npi/npi_config.h
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/npi/npi_config.h	2022-02-12 16:07:31.704412880 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/npi/npi_config.h	2022-02-12 16:49:39.103059906 -0500
+@@ -59,7 +59,7 @@
+ // includes
+ // ****************************************************************************
+ 
+-#include "ti_drivers_config.h"
++#include <ti_drivers_config.bak>
+ 
+ // ****************************************************************************
+ // defines
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/npi/npi_rxbuf.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/npi/npi_rxbuf.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/npi/npi_rxbuf.c	2022-02-12 16:07:31.704412880 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/npi/npi_rxbuf.c	2022-02-12 16:49:38.495083053 -0500
+@@ -48,9 +48,9 @@
+ // includes
+ // ****************************************************************************
+ #include <string.h>
++#include <ti_drivers_config.bak>
+ #include <xdc/std.h>
+ 
+-#include "ti_drivers_config.h"
+ #include "hal_types.h"
+ #include "npi_config.h"
+ #include "npi_tl.h"
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/npi/npi_tl.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/npi/npi_tl.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/npi/npi_tl.c	2022-02-12 16:07:31.704412880 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/npi/npi_tl.c	2022-02-12 16:49:38.243092652 -0500
+@@ -54,10 +54,10 @@
+ #include <ti/drivers/pin/PINCC26XX.h>
+ #include <ti/sysbios/knl/Task.h>
+ #include <ti/sysbios/knl/Swi.h>
++#include <ti_drivers_config.bak>
+ 
+ #include "hw_memmap.h"
+ #include "hw_ints.h"
+-#include "ti_drivers_config.h"
+ #include "rom_jt_154.h"
+ #include "hal_types.h"
+ #include "npi_tl.h"
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/npi/npi_tl_uart.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/npi/npi_tl_uart.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/npi/npi_tl_uart.c	2022-02-12 16:07:31.704412880 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/npi/npi_tl_uart.c	2022-02-12 16:49:37.991102251 -0500
+@@ -52,7 +52,6 @@
+ #include <xdc/std.h>
+ #include "hw_memmap.h"
+ #include "hw_ints.h"
+-#include "ti_drivers_config.h"
+ #include "hal_types.h"
+ #include <ti/sysbios/knl/Task.h>
+ #include <ti/sysbios/knl/Swi.h>
+@@ -61,6 +60,7 @@
+ #include "npi_tl_uart.h"
+ #include <ti/drivers/UART.h>
+ #include <ti/drivers/uart/UARTCC26XX.h>
++#include <ti_drivers_config.bak>
+ 
+ // ****************************************************************************
+ // defines
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/StartUp/main.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/StartUp/main.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/StartUp/main.c	2022-02-12 16:07:31.700412920 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/StartUp/main.c	2022-02-12 16:49:39.311052006 -0500
+@@ -61,7 +61,6 @@
+ 
+ #include "sys_ctrl.h"
+ 
+-#include "ti_drivers_config.h"
+ #include <inc/hw_ccfg.h>
+ #include <inc/hw_ccfg_simple_struct.h>
+ 
+@@ -70,6 +69,7 @@
+ #include <ti/drivers/power/PowerCC26XX.h>
+ #include <aon_rtc.h>
+ #include <prcm.h>
++#include <ti_drivers_config.bak>
+ 
+ #ifndef TIMAC_ROM_IMAGE_BUILD
+ #include "crypto_mac_api.h"
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/StartUp/zstackstartup.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/StartUp/zstackstartup.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/StartUp/zstackstartup.c	2022-02-12 16:07:31.700412920 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/StartUp/zstackstartup.c	2022-02-12 16:49:38.683075894 -0500
+@@ -45,10 +45,10 @@
+ #include <ti/sysbios/knl/Semaphore.h>
+ #include <ti/sysbios/knl/Task.h>
+ #include <ti/sysbios/BIOS.h>
++#include <ti_drivers_config.bak>
+ 
+ #include "rom_jt_154.h"
+ #include "osal_nv.h"
+-#include "ti_drivers_config.h"
+ #include "nwk.h"
+ #include "aps.h"
+ #include "aps_frag.h"
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/ui/cui.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/ui/cui.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Application/ui/cui.c	2022-02-12 16:07:31.700412920 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Application/ui/cui.c	2022-02-12 16:49:38.935066296 -0500
+@@ -74,7 +74,7 @@
+ #include <ti/drivers/utils/Random.h>
+ #include <ti/drivers/apps/LED.h>
+ #include DeviceFamily_constructPath(driverlib/cpu.h)
+-#include "ti_drivers_config.h"
++#include <ti_drivers_config.bak>
+ 
+ #include "cui.h"
+ 
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/cc13x2_cc26x2.cmd znp_CC1352R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/cc13x2_cc26x2.cmd	2022-02-12 16:07:31.700412920 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/cc13x2_cc26x2.cmd	2022-02-12 16:46:04.741989345 -0500
+@@ -67,12 +67,16 @@
+ /* must be located at the beginning of the application.                      */
+ 
+ #define FLASH_BASE              0x00000000
+-#define FLASH_SIZE              0x52000
+-#define FLASH_NV_BASE           0x52000
+-#define FLASH_NV_SIZE           0x4000
++#define FLASH_SIZE              0x50000
++#define FLASH_NV_BASE           0x50000
++#define FLASH_NV_SIZE           0x6000
+ #define FLASH_LAST_BASE         0x56000
+ #define FLASH_LAST_SIZE         0x2000
+ 
++
++
++
++
+ #define RAM_BASE                0x20000000
+ #define RAM_SIZE                0x14000
+ #define GPRAM_BASE              0x11000000
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/.launches/znp_CC1352R1_LAUNCHXL_tirtos_ccs.launch znp_CC1352R1_LAUNCHXL_tirtos_ccs/.launches/znp_CC1352R1_LAUNCHXL_tirtos_ccs.launch
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/.launches/znp_CC1352R1_LAUNCHXL_tirtos_ccs.launch	1969-12-31 19:00:00.000000000 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/.launches/znp_CC1352R1_LAUNCHXL_tirtos_ccs.launch	2022-02-12 17:05:55.918872069 -0500
+@@ -0,0 +1,16 @@
++<?xml version="1.0" encoding="UTF-8" standalone="no"?>
++<launchConfiguration type="com.ti.ccstudio.debug.launchType.device.debugging">
++    <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_DEBUGGER_PROPERTIES.CC1352R1F3.ccxml.Texas Instruments XDS110 USB Debug Probe/Cortex_M4_0" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot; ?&gt;&#10;&lt;PropertyValues&gt;&#10;&#10;  &lt;property id=&quot;ConnectOnStartup&quot;&gt;&#10;    &lt;curValue&gt;1&lt;/curValue&gt;&#10;  &lt;/property&gt;&#10;&#10;  &lt;property id=&quot;EnableInstalledBreakpoint&quot;&gt;&#10;    &lt;curValue&gt;1&lt;/curValue&gt;&#10;  &lt;/property&gt;&#10;&#10;  &lt;property id=&quot;IgnoreSoftLaunchFailures&quot;&gt;&#10;    &lt;curValue&gt;0&lt;/curValue&gt;&#10;  &lt;/property&gt;&#10;&#10;&lt;/PropertyValues&gt;&#10;"/>
++    <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM.CC1352R1F3.ccxml.Texas Instruments XDS110 USB Debug Probe/Cortex_M4_0" value="${build_artifact:znp_CC1352R1_LAUNCHXL_tirtos_ccs}"/>
++    <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.CC1352R1F3.ccxml.Texas Instruments XDS110 USB Debug Probe/Cortex_M4_0" value="znp_CC1352R1_LAUNCHXL_tirtos_ccs"/>
++    <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:znp_CC1352R1_LAUNCHXL_tirtos_ccs}"/>
++    <stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.CC1352R1F3.ccxml.Texas Instruments XDS110 USB Debug Probe/Cortex_M4_0" value="${build_artifact:znp_CC1352R1_LAUNCHXL_tirtos_ccs}"/>
++    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
++        <listEntry value="/znp_CC1352R1_LAUNCHXL_tirtos_ccs"/>
++    </listAttribute>
++    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
++        <listEntry value="4"/>
++    </listAttribute>
++    <stringAttribute key="org.eclipse.debug.core.source_locator_id" value="com.ti.ccstudio.debug.sourceLocator"/>
++    <stringAttribute key="org.eclipse.debug.core.source_locator_memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;sourceLookupDirector&gt;&#10;    &lt;sourceContainers duplicates=&quot;false&quot;&gt;&#10;        &lt;container memento=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; standalone=&amp;quot;no&amp;quot;?&amp;gt;&amp;#10;&amp;lt;default/&amp;gt;&amp;#10;&quot; typeId=&quot;org.eclipse.debug.core.containerType.default&quot;/&gt;&#10;        &lt;container memento=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; standalone=&amp;quot;no&amp;quot;?&amp;gt;&amp;#10;&amp;lt;cpuSpecificContainer cpuName=&amp;quot;Texas Instruments XDS110 USB Debug Probe/Cortex_M4_0&amp;quot;&amp;gt;&amp;#10;    &amp;lt;childContainerEntry childMemento=&amp;quot;&amp;amp;lt;?xml version=&amp;amp;quot;1.0&amp;amp;quot; encoding=&amp;amp;quot;UTF-8&amp;amp;quot; standalone=&amp;amp;quot;no&amp;amp;quot;?&amp;amp;gt;&amp;amp;#10;&amp;amp;lt;project name=&amp;amp;quot;znp_CC1352R1_LAUNCHXL_tirtos_ccs&amp;amp;quot; referencedProjects=&amp;amp;quot;true&amp;amp;quot;/&amp;amp;gt;&amp;amp;#10;&amp;quot; childType=&amp;quot;org.eclipse.debug.core.containerType.project&amp;quot;/&amp;gt;&amp;#10;    &amp;lt;childContainerEntry childMemento=&amp;quot;&amp;amp;lt;?xml version=&amp;amp;quot;1.0&amp;amp;quot; encoding=&amp;amp;quot;UTF-8&amp;amp;quot; standalone=&amp;amp;quot;no&amp;amp;quot;?&amp;amp;gt;&amp;amp;#10;&amp;amp;lt;default/&amp;amp;gt;&amp;amp;#10;&amp;quot; childType=&amp;quot;org.eclipse.debug.core.containerType.default&amp;quot;/&amp;gt;&amp;#10;    &amp;lt;childContainerEntry childMemento=&amp;quot;&amp;amp;lt;?xml version=&amp;amp;quot;1.0&amp;amp;quot; encoding=&amp;amp;quot;UTF-8&amp;amp;quot; standalone=&amp;amp;quot;no&amp;amp;quot;?&amp;amp;gt;&amp;amp;#10;&amp;amp;lt;productsSource/&amp;amp;gt;&amp;amp;#10;&amp;quot; childType=&amp;quot;com.ti.ccstudio.debug.containerType.products.source&amp;quot;/&amp;gt;&amp;#10;    &amp;lt;childContainerEntry childMemento=&amp;quot;&amp;amp;lt;?xml version=&amp;amp;quot;1.0&amp;amp;quot; encoding=&amp;amp;quot;UTF-8&amp;amp;quot; standalone=&amp;amp;quot;no&amp;amp;quot;?&amp;amp;gt;&amp;amp;#10;&amp;amp;lt;deviceLibrarySource/&amp;amp;gt;&amp;amp;#10;&amp;quot; childType=&amp;quot;com.ti.ccstudio.debug.containerType.device.library.source&amp;quot;/&amp;gt;&amp;#10;    &amp;lt;childContainerEntry childMemento=&amp;quot;&amp;amp;lt;?xml version=&amp;amp;quot;1.0&amp;amp;quot; encoding=&amp;amp;quot;UTF-8&amp;amp;quot; standalone=&amp;amp;quot;no&amp;amp;quot;?&amp;amp;gt;&amp;amp;#10;&amp;amp;lt;librarySource/&amp;amp;gt;&amp;amp;#10;&amp;quot; childType=&amp;quot;com.ti.ccstudio.debug.containerType.library.source&amp;quot;/&amp;gt;&amp;#10;&amp;lt;/cpuSpecificContainer&amp;gt;&amp;#10;&quot; typeId=&quot;com.ti.ccstudio.debug.containerType.cpu.specific&quot;/&gt;&#10;    &lt;/sourceContainers&gt;&#10;&lt;/sourceLookupDirector&gt;&#10;"/>
++</launchConfiguration>
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/.settings/org.eclipse.core.resources.prefs znp_CC1352R1_LAUNCHXL_tirtos_ccs/.settings/org.eclipse.core.resources.prefs
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/.settings/org.eclipse.core.resources.prefs	1969-12-31 19:00:00.000000000 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/.settings/org.eclipse.core.resources.prefs	2022-02-12 16:53:25.688773334 -0500
+@@ -0,0 +1,50 @@
++eclipse.preferences.version=1
++encoding//default/Application/Services/subdir_rules.mk=UTF-8
++encoding//default/Application/Services/subdir_vars.mk=UTF-8
++encoding//default/Application/StartUp/subdir_rules.mk=UTF-8
++encoding//default/Application/StartUp/subdir_vars.mk=UTF-8
++encoding//default/Application/ZStackApi/subdir_rules.mk=UTF-8
++encoding//default/Application/ZStackApi/subdir_vars.mk=UTF-8
++encoding//default/Application/mt/subdir_rules.mk=UTF-8
++encoding//default/Application/mt/subdir_vars.mk=UTF-8
++encoding//default/Application/npi/subdir_rules.mk=UTF-8
++encoding//default/Application/npi/subdir_vars.mk=UTF-8
++encoding//default/Application/ui/subdir_rules.mk=UTF-8
++encoding//default/Application/ui/subdir_vars.mk=UTF-8
++encoding//default/Application/util/subdir_rules.mk=UTF-8
++encoding//default/Application/util/subdir_vars.mk=UTF-8
++encoding//default/Common/gp/subdir_rules.mk=UTF-8
++encoding//default/Common/gp/subdir_vars.mk=UTF-8
++encoding//default/Common/touchlink/subdir_rules.mk=UTF-8
++encoding//default/Common/touchlink/subdir_vars.mk=UTF-8
++encoding//default/Stack/Config/subdir_rules.mk=UTF-8
++encoding//default/Stack/Config/subdir_vars.mk=UTF-8
++encoding//default/Stack/MAC/Debug/subdir_rules.mk=UTF-8
++encoding//default/Stack/MAC/Debug/subdir_vars.mk=UTF-8
++encoding//default/Stack/MAC/HighLevel/subdir_rules.mk=UTF-8
++encoding//default/Stack/MAC/HighLevel/subdir_vars.mk=UTF-8
++encoding//default/Stack/MAC/LowLevel/subdir_rules.mk=UTF-8
++encoding//default/Stack/MAC/LowLevel/subdir_vars.mk=UTF-8
++encoding//default/Stack/ROM/subdir_rules.mk=UTF-8
++encoding//default/Stack/ROM/subdir_vars.mk=UTF-8
++encoding//default/Stack/ZStackTask/subdir_rules.mk=UTF-8
++encoding//default/Stack/ZStackTask/subdir_vars.mk=UTF-8
++encoding//default/Stack/af/subdir_rules.mk=UTF-8
++encoding//default/Stack/af/subdir_vars.mk=UTF-8
++encoding//default/Stack/bdb/subdir_rules.mk=UTF-8
++encoding//default/Stack/bdb/subdir_vars.mk=UTF-8
++encoding//default/Stack/nwk/subdir_rules.mk=UTF-8
++encoding//default/Stack/nwk/subdir_vars.mk=UTF-8
++encoding//default/Stack/osal_port/subdir_rules.mk=UTF-8
++encoding//default/Stack/osal_port/subdir_vars.mk=UTF-8
++encoding//default/Stack/sys/subdir_rules.mk=UTF-8
++encoding//default/Stack/sys/subdir_vars.mk=UTF-8
++encoding//default/Stack/zdo/subdir_rules.mk=UTF-8
++encoding//default/Stack/zdo/subdir_vars.mk=UTF-8
++encoding//default/Stack/zmac/subdir_rules.mk=UTF-8
++encoding//default/Stack/zmac/subdir_vars.mk=UTF-8
++encoding//default/makefile=UTF-8
++encoding//default/objects.mk=UTF-8
++encoding//default/sources.mk=UTF-8
++encoding//default/subdir_rules.mk=UTF-8
++encoding//default/subdir_vars.mk=UTF-8
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/src/.exclude znp_CC1352R1_LAUNCHXL_tirtos_ccs/src/.exclude
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/src/.exclude	1969-12-31 19:00:00.000000000 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/src/.exclude	2022-02-12 16:53:30.852676765 -0500
+@@ -0,0 +1 @@
++This file exists to prevent Eclipse/CDT from adding the C sources contained in this directory (or below) to any enclosing project.
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/af/af.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/af/af.c	2022-02-12 16:07:31.660413338 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/af/af.c	2022-02-12 16:33:48.217519513 -0500
+@@ -407,10 +407,18 @@
+ #if !defined ( APS_NO_GROUPS )
+     // Find the first endpoint for this group
+     grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
+-    if ( grpEp == APS_GROUPS_EP_NOT_FOUND )
+-      return;   // No endpoint found
+ 
+-    epDesc = afFindEndPointDesc( grpEp );
++    if ( grpEp == APS_GROUPS_EP_NOT_FOUND ) {
++      // No endpoint found, default to endpoint 1.
++      // In the original source code there is a return here.
++      // This prevent the messags from being forwarded.
++      // For our use-case we want to capture all messages.
++      // Even if the coordinator is not in the group.
++      epDesc = afFindEndPointDesc( 1 );
++    }
++    else {
++      epDesc = afFindEndPointDesc( grpEp );
++    }
+     if ( epDesc == NULL )
+       return;   // Endpoint descriptor not found
+ 
+@@ -457,7 +465,9 @@
+     // if the Wildcard ProfileID is received the message should not be sent to ZDO endpoint
+     if ( (aff->ProfileID == epProfileID) ||
+          ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
+-         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) )
++         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) ||
++         // Forward messages to endpoint even with profileID mismatches
++         ((aff->ProfileID >= 0x100) && (aff->ProfileID <= 0xFC01)) )
+     {
+       // Save original endpoint
+       uint8_t endpoint = aff->DstEndPoint;
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/Config/mac_user_config.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/Config/mac_user_config.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/Config/mac_user_config.c	2022-02-12 16:07:31.660413338 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/Config/mac_user_config.c	2022-02-12 16:49:37.791109889 -0500
+@@ -51,7 +51,7 @@
+ #if (defined(USE_DMM) && !defined(SYSCFG))
+ #include "Board.h"
+ #else
+-#include "ti_drivers_config.h"
++#include <ti_drivers_config.bak>
+ #endif
+ 
+ #include "ti_radio_config.h"
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/Config/preinclude.h znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/Config/preinclude.h	1969-12-31 19:00:00.000000000 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/Config/preinclude.h	2022-02-12 16:30:06.325546404 -0500
+@@ -0,0 +1,78 @@
++#define MT_SYS_KEY_MANAGEMENT 1
++#define FEATURE_NVEXID 1
++
++// Increase MAC buffers
++#undef MAC_CFG_TX_DATA_MAX
++#define MAC_CFG_TX_DATA_MAX 20
++#undef MAC_CFG_TX_MAX
++#define MAC_CFG_TX_MAX 32
++#undef MAC_CFG_RX_MAX
++#define MAC_CFG_RX_MAX 20
++
++// Save memory
++#undef NWK_MAX_BINDING_ENTRIES
++#define NWK_MAX_BINDING_ENTRIES 1
++#undef APS_MAX_GROUPS
++#define APS_MAX_GROUPS 1
++
++// Increase NV pages to 3 to allow for bigger device tables
++#undef NVOCMP_NVPAGES
++#define NVOCMP_NVPAGES 3
++
++// Disabling MULTICAST is required in order for proper group support.
++// If MULTICAST is not disabled, the group adress is not included in the APS header
++#define MULTICAST_ENABLED FALSE
++
++// Increase the max number of boardcasts, the default broadcast delivery time is 3 seconds
++// with the value below this will allow for 1 broadcast every 0.15 second
++#define MAX_BCAST 30
++
++/**
++ * Enable MTO routing
++ */
++#define CONCENTRATOR_ENABLE TRUE
++#define CONCENTRATOR_DISCOVERY_TIME 100
++#define CONCENTRATOR_ROUTE_CACHE TRUE
++#define MAX_RTG_SRC_ENTRIES 200
++#define SRC_RTG_EXPIRY_TIME 2
++
++/**
++ * Set default transmit power to 9
++ */
++#define TXPOWER 9
++
++/**
++ * Scale other device tables appropriately
++ */
++#define NWK_MAX_DEVICE_LIST 50
++#define ZDSECMGR_TC_DEVICE_MAX 200
++#define MAX_NEIGHBOR_ENTRIES 20
++#define MAX_RTG_ENTRIES 100
++
++/**
++ * Reduce the APS ack wait duration from 6000 ms to 1000 ms (value * 2 = value in ms).
++ * This will make requests timeout quicker, in pratice the default timeout of 6000ms is too long.
++ */
++#define APSC_ACK_WAIT_DURATION_POLLED 500
++
++// From https://www.ti.com/lit/an/swra650b/swra650b.pdf
++#define LINK_DOWN_TRIGGER 12
++#define NWK_ROUTE_AGE_LIMIT 5
++#define DEF_NWK_RADIUS 15
++#define DEFAULT_ROUTE_REQUEST_RADIUS 8
++#define ZDNWKMGR_MIN_TRANSMISSIONS 0
++#define ROUTE_DISCOVERY_TIME 13
++#define MTO_RREQ_LIMIT_TIME 5000
++
++// Different configs, uncomment for launchpad firmware
++#define LAUNCHPAD_CONFIG 1
++
++#ifdef LAUNCHPAD_CONFIG
++#define CONFIG_RF_24GHZ                         0x0000001c
++#define CONFIG_RF_HIGH_PA                       0x0000001d
++#define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA  0xc1
++#else
++#define CONFIG_RF_24GHZ                         0x0000006
++#define CONFIG_RF_HIGH_PA                       0x0000005
++#define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA  0xfa
++#endif
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/Config/znp_cnf.opts znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/Config/znp_cnf.opts	2022-02-12 16:07:31.660413338 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/Config/znp_cnf.opts	2022-02-12 16:30:47.258995919 -0500
+@@ -32,3 +32,5 @@
+ -DMT_GP_CB_FUNC
+ 
+ -DMT_APP_CNF_FUNC
++
++--preinclude=preinclude.h
+\ No newline at end of file
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/nwk/nwk_globals.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/nwk/nwk_globals.c	2022-02-12 16:07:31.664413296 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/nwk/nwk_globals.c	2022-02-12 16:34:51.907852818 -0500
+@@ -65,10 +65,11 @@
+  * CONSTANTS
+  */
+ // Maximums for the data buffer queue
+-#define NWK_MAX_DATABUFS_WAITING    8     // Waiting to be sent to MAC
+-#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
+-#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
+-#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
++#define NWK_MAX_DATABUFS_WAITING    32     // Waiting to be sent to MAC
++#define NWK_MAX_DATABUFS_SCHEDULED  20     // Timed messages to be sent
++#define NWK_MAX_DATABUFS_CONFIRMED  20     // Held after MAC confirms
++#define NWK_MAX_DATABUFS_TOTAL      48    // Total number of buffers
++
+ 
+ // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
+ // A known shortcoming is that when a message is enqueued as "hold" for a
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/sys/zglobals.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/sys/zglobals.c	2022-02-12 16:07:31.668413253 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/sys/zglobals.c	2022-02-12 16:35:53.198113142 -0500
+@@ -105,7 +105,8 @@
+ // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
+ // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
+ // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
+-uint8_t zgAllowRejoinsWithWellKnownKey = FALSE;
++uint8_t zgAllowRejoinsWithWellKnownKey = TRUE; // https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/882650/3265311#3265311
++
+ 
+ //allowInstallCodes
+ uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
+@@ -199,7 +200,8 @@
+ //
+ // NOTICE:  Before enabling Child Aging make sure to review all the related
+ // definitions in this file, especially zgNwkParentInformation.
+-uint8_t zgChildAgingEnable = TRUE;
++// Disable child aging, otherwise Xiaomi devices are being kicked off the network.
++uint8_t zgChildAgingEnable = FALSE;
+ 
+ //==========    TouchLink NWK configuration    ===============
+ // Values used by Router when starts a network as initiator
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/zdo/zd_app.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/zdo/zd_app.c	2022-02-12 16:07:31.668413253 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_app.c	2022-02-12 16:39:23.749317788 -0500
+@@ -415,12 +415,20 @@
+           ZDApp_ChangeState( DEV_ROUTER );
+         }
+ 
++        /* Disabled because of xiaomi, which seems suboptimal...
+         if ( zgChildAgingEnable == TRUE )
+         {
+           // Once the device has changed its state to a ROUTER set the timer to send
+           // Parent annce
+           ZDApp_SetParentAnnceTimer();
+         }
++        Instead doing:
++        */
++        // As we cannot enable child aging as Xiaomi devices will drop off
++        // but we stil want to have the parent announces we always enable it here.
++        // Otherwise some end devices could be unreachable when they changed parent
++        // while the coordinator was powered off.
++        ZDApp_SetParentAnnceTimer();
+       }
+       else
+       {
+@@ -880,13 +888,12 @@
+       {
+         bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
+       }
+-
+-      if ( zgChildAgingEnable == TRUE )
+-      {
+-        // Once the device has changed its state to a COORDINATOR set the timer to send
+-        // Parent annce
+-        ZDApp_SetParentAnnceTimer();
+-      }
++      // again this...
++      // As we cannot enable child aging as Xiaomi devices will drop off
++      // but we stil want to have the parent announces we always enable it here.
++      // Otherwise some end devices could be unreachable when they changed parent
++      // while the coordinator was powered off.
++      ZDApp_SetParentAnnceTimer();
+     }
+     else
+     {
+@@ -3139,6 +3146,14 @@
+     // Routing error for dstAddr, this is informational and a Route
+     // Request should happen automatically.
+   }
++  if ( (nwkDstAddr == NLME_GetShortAddr())
++          && (statusCode == NWKSTAT_SOURCE_ROUTE_FAILURE) )
++  {
++      // Received a source route failure, remove route and rediscover.
++      RTG_RemoveRtgEntry( dstAddr, 0 );
++      NLME_RouteDiscoveryRequest( dstAddr, 0, 30 );
++  }
++
+ }
+ 
+ /******************************************************************************
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/zdo/zd_object.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_object.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/zdo/zd_object.c	2022-02-12 16:07:31.668413253 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_object.c	2022-02-12 16:40:09.302255125 -0500
+@@ -650,6 +650,21 @@
+ 
+   if ( desc != NULL )
+   {
++
++      uint8_t extAddr[Z_EXTADDR_LEN];
++      // Respond with Xiaomi manufacturer code when ieeAddr is withing Xiaomi address space
++      // Otherwise some devices don't work
++      // https://github.com/Koenkk/zigbee2mqtt/issues/9274
++      if (APSME_LookupExtAddr(inMsg->srcAddr.addr.shortAddr, extAddr) == TRUE &&
++           ((extAddr[7] == 0x04 && extAddr[6] == 0xcf && extAddr[5] == 0x8c) ||
++            (extAddr[7] == 0x54 && extAddr[6] == 0xef && extAddr[5] == 0x44))) {
++          desc->ManufacturerCode[0] = 0x5f;
++          desc->ManufacturerCode[1] = 0x11;
++      } else {
++          desc->ManufacturerCode[0] = 0x0;
++          desc->ManufacturerCode[1] = 0x0;
++      }
++
+     ZDP_NodeDescMsg( inMsg, aoi, desc );
+   }
+   else
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/zdo/zd_sec_mgr.c znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.c
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/zdo/zd_sec_mgr.c	2022-02-12 16:07:31.668413253 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.c	2022-02-12 16:55:52.178665248 -0500
+@@ -62,6 +62,7 @@
+ 
+ #include <ti/drivers/TRNG.h>
+ #include <ti/drivers/cryptoutils/cryptokey/CryptoKeyPlaintext.h>
++#include <ti_drivers_config.bak>
+ 
+ /******************************************************************************
+  * CONSTANTS
+@@ -120,10 +121,12 @@
+ extern CONST uint8_t gMAX_NWK_SEC_MATERIAL_TABLE_ENTRIES;
+ extern pfnZdoCb zdoCBFunc[MAX_ZDO_CB_FUNC];
+ 
++
+ /******************************************************************************
+  * EXTERNAL FUNCTIONS
+  */
+ extern void   ZDApp_ResetTimerCancel( void );
++
+ /******************************************************************************
+  * LOCAL VARIABLES
+  */
+@@ -148,6 +151,40 @@
+ CONST uint16_t gZDSECMGR_TC_DEVICE_MAX = ZDSECMGR_TC_DEVICE_MAX;
+ CONST uint16_t gZDSECMGR_TC_DEVICE_IC_MAX = ZDSECMGR_TC_DEVICE_IC_MAX;
+ uint8_t  gZDSECMGR_TC_ATTEMPT_DEFAULT_KEY = ZDSECMGR_TC_ATTEMPT_DEFAULT_KEY;
++
++
++
++
++bool gLedsDisabled = FALSE;
++LED_Handle gLedHandle;
++
++void updateLED( void )
++{
++    if (gLedHandle == NULL) {
++      LED_Params ledParams;
++      LED_Params_init(&ledParams);
++      gLedHandle = LED_open(CONFIG_LED_GREEN, &ledParams);
++    }
++
++    if (gLedsDisabled == FALSE && gLedHandle != NULL) {
++        if (ZDSecMgrPermitJoiningEnabled == TRUE) {
++            LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
++        } else {
++            LED_setOff(gLedHandle);
++        }
++    }
++}
++
++
++
++
++
++
++
++
++
++
++
+ /******************************************************************************
+  * PRIVATE FUNCTIONS
+  *
+@@ -1547,6 +1584,7 @@
+     ZDSecMgrPermitJoiningEnabled = FALSE;
+   }
+ 
++  updateLED();
+   accept = TRUE;
+ 
+   return accept;
+@@ -1568,6 +1606,7 @@
+     ZDSecMgrPermitJoiningEnabled = FALSE;
+     ZDSecMgrPermitJoiningTimed   = FALSE;
+   }
++  updateLED();
+ }
+ 
+ /******************************************************************************
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/zdo/zd_sec_mgr.h znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.h
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/Stack/zdo/zd_sec_mgr.h	2022-02-12 16:07:31.668413253 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/Stack/zdo/zd_sec_mgr.h	2022-02-12 16:44:19.633856890 -0500
+@@ -51,6 +51,8 @@
+ #include "zcomdef.h"
+ #include "zd_app.h"
+ 
++#include <ti/drivers/apps/LED.h>
++
+ /******************************************************************************
+  * TYPEDEFS
+  */
+@@ -94,6 +96,8 @@
+ extern CONST uint16_t gZDSECMGR_TC_DEVICE_MAX;
+ extern CONST uint16_t gZDSECMGR_TC_DEVICE_IC_MAX;
+ extern uint8_t  gZDSECMGR_TC_ATTEMPT_DEFAULT_KEY;
++extern bool gLedsDisabled;
++extern LED_Handle gLedHandle;
+ 
+ typedef struct
+ {
+diff -Naur znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/znp.syscfg znp_CC1352R1_LAUNCHXL_tirtos_ccs/znp.syscfg
+--- znp_CC1352R1_LAUNCHXL_tirtos_ccs-bak/znp.syscfg	2022-02-12 16:07:31.696412963 -0500
++++ znp_CC1352R1_LAUNCHXL_tirtos_ccs/znp.syscfg	2022-02-12 16:54:16.439899223 -0500
+@@ -71,8 +71,8 @@
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
+-NVS1.internalFlash.regionSize = 0x4000;
+-NVS1.internalFlash.regionBase = 0x52000;
++NVS1.internalFlash.regionBase = 0x50000;
++NVS1.internalFlash.regionSize = 0x6000;
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
+@@ -122,6 +122,9 @@
+ zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+ zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+ zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
++/* fails:
++zstack.rf.txPower                            = "20";
++#/
+ zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+ zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+ zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
