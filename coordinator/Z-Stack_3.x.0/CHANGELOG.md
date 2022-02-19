@@ -1,6 +1,7 @@
-# 20220103
+# 20220219
 - Fix Touchlink crash
- 
+- SimpleLink SDK 5.40.00.40 ([changelog](https://software-dl.ti.com/simplelink/esd/simplelink_cc13xx_cc26xx_sdk/5.40.00.40/exports/changelog.html))
+
 # 20211217
 - SimpleLink SDK 5.30.01.01 ([changelog](https://software-dl.ti.com/simplelink/esd/simplelink_cc13xx_cc26xx_sdk/5.30.01.01/exports/changelog.html))
 - Increase memory heap

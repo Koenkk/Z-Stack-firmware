@@ -1,12 +1,12 @@
 # Compiling the firmware
 
 ## Setup development environment
-1. Download and install [SIMPLELINK-CC13XX-CC26XX-SDK_5.30.01.01](https://www.ti.com/tool/download/SIMPLELINK-CC13XX-CC26XX-SDK)
-1. Download and install [Code Composer Studio 11.0.0.00012](http://www.ti.com/tool/CCSTUDIO)
+1. Download and install [SIMPLELINK-CC13XX-CC26XX-SDK_5.40.00.40](https://www.ti.com/tool/download/SIMPLELINK-CC13XX-CC26XX-SDK)
+1. Download and install [Code Composer Studio 11.1.0.00011](http://www.ti.com/tool/CCSTUDIO)
 
 ## Compiling
 1. Start Code Composer Studio
-1. Go to *File -> Import -> Code Composer Studio -> CCS Projects -> Select* search-directory: `simplelink_cc13xx_cc26xx_sdk_5_30_01_01/examples/rtos`. 
+1. Go to *File -> Import -> Code Composer Studio -> CCS Projects -> Select* search-directory: `simplelink_cc13xx_cc26xx_sdk_5_40_00_40/examples/rtos`. 
 1. Select:
     - `znp_CC26X2R1_LAUNCHXL_tirtos_css`
     - `znp_CC1352P_2_LAUNCHXL_tirtos_css`
