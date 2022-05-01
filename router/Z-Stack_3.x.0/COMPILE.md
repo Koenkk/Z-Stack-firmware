@@ -10,7 +10,7 @@
 1. Select:
  - `zr_genericapp_CC26X2R1_LAUNCHXL_tirtos_ccs`
  - `zr_genericapp_CC1352P_2_LAUNCHXL_tirtos_ccs`
- - `zr_genericapp_CC2652RB_LAUNCHXL_tirtos_ccs`. 
+ - `zr_genericapp_LP_CC2652RB_LAUNCHXL_tirtos_ccs`. 
 4. Press *Finish*.
 1. In Code Composer Studio, expand the 3 projects and for each open `znp.syscfg`, expand `Power Management` and change `Minimal Poll Period (ms)` to `1000`, change it back to `100` immediately and save the file.
 1. Go to your CCS workspace and copy `firmware.patch` to the root.
