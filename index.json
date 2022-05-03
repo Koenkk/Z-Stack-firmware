@@ -8,7 +8,7 @@
           "Z-Stack_3.0.x":"20190523"
         },
         {
-          "Z-Stack_3.x.0":"20210708"
+          "Z-Stack_3.x.0":"20220219"
         }
       ],
       "stack_default":"Z-Stack_3.x.0"
@@ -17,7 +17,7 @@
       "stack":[
         [
           "Z-Stack_3.x.0",
-          "20210128"
+          "20220125"
         ]
       ],
       "stack_default":"Z-Stack_3.x.0"
