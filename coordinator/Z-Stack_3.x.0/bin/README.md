@@ -157,11 +157,21 @@
     <td>?</td>
   </tr>
   <tr>
-    <td>cod.m Zigbee CC2652P RPi Module</td>
+  <td><a href="https://github.com/codm/cc2652-raspberry-pi-module">cod.m Zigbee CC2652P RPi Module</a></td>
     <td>CC2652P<br>(RFSTAR RF-BM-2652P2)</td>
     <td>CC1352P2_CC2652P_launchpad_*.zip</td>
     <td>DIO_15</td>
-    <td>Yes</td>
+    <td>No</td>
+    <td>DIO_28: 2.4Ghz<br>DIO_29: 20dBm PA</td>
+    <td>N/A</td>
+    <td>?</td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/codm/cc2652p2-tcp-zigbee">cod.m ZigBee CC2652P2 TCP Coordinator</a></td>
+    <td>CC2652P<br>(RFSTAR RF-BM-2652P2)</td>
+    <td>CC1352P2_CC2652P_launchpad_*.zip</td>
+    <td>DIO_15</td>
+    <td>No</td>
     <td>DIO_28: 2.4Ghz<br>DIO_29: 20dBm PA</td>
     <td>DIO_7 (Green)<br>DIO_6 (Red)<br></td>
     <td>?</td>
