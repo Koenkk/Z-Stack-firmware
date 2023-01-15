@@ -75,7 +75,7 @@ This directory contains various Z-Stack coordinator firmwares.
     <td>50</td>
     <td>100/200</td>
     <td>
-      - <a href="https://github.com/Koenkk/zigbee2mqtt/issues/1429">Discussion #1429</a>
+      - <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/5266">Discussion #5266</a>
       <br/>
       - Max 200 Zigbee 3.0 devices
     </td>
@@ -92,10 +92,10 @@ This depends:
 ### Legend
 - *Z-Stack:* Z-Stack is the Zigbee stack for Texas Instruments Zigbee devices
 - *Device:* The Zigbee hardware
-- *Zigbee:* Zigbee version, for more information read [What's New in Zigbee 3.0](http://www.ti.com/lit/an/swra615a/swra615a.pdf)
-- *Direct children:* Number of children that directly can join the coordinator. Note that this is **not** the maximum network size. For more information, read [the Zigbee2MQTT FAQ about device limit](http://www.zigbee2mqtt.io/information/FAQ.html#i-read-that-zigbee2mqtt-has-a-limit-of-15-devices-is-this-true)
+- *Zigbee:* Zigbee version, for more information read [What's New in Zigbee 3.0](https://www.ti.com/lit/an/swra615a/swra615a.pdf)
+- *Direct children:* Number of children that directly can join the coordinator. Note that this is **not** the maximum network size. For more information, read [the Zigbee2MQTT FAQ about device limit](https://www.zigbee2mqtt.io/guide/faq/#i-read-that-zigbee2mqtt-has-a-limit-of-20-devices-when-using-a-cc2530-cc2531-adapter-is-this-true)
 - *Routes:* This indicates how many routes the coordinator can keep in memory. For example 100/200 would mean that: 100 normal routes and 200 source routes can be kept in memory. 0 source routes mean that source routing is disabled. Source routes improve the performance for larger (40+ nodes) networks. For more information read [Large ZigBee Networks and Source Routing
-](http://cms.digi.com/resources/documentation/digidocs/90001537/references/r_large_zigbee_networks-source_routing.htm?TocPath=Working%20with%20Zigbee%7C_____14).
+](https://www.digi.com/resources/documentation/digidocs/90001537/references/r_large_zigbee_networks-source_routing.htm?TocPath=Working%20with%20Zigbee%7C_____14).
 
 #### Notes
 - Due to new security requirements in Zigbee 3.0, Zigbee 3.0 coordinators can only support a limited amount of Zigbee 3.0 devices. For Zigbee 1.2 coordinators there is no limit on the max number of Zigbee 3.0 devices that can join.
