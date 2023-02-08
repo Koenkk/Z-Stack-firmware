@@ -1,5 +1,5 @@
 {
-  "index_version":"1631448902",
+  "index_version":"1675873866",
   
   "firmware_type":{
     "coordinator":{
@@ -8,7 +8,7 @@
           "Z-Stack_3.0.x":"20190523"
         },
         {
-          "Z-Stack_3.x.0":"20220219"
+          "Z-Stack_3.x.0":"20221226"
         }
       ],
       "stack_default":"Z-Stack_3.x.0"
@@ -17,7 +17,7 @@
       "stack":[
         [
           "Z-Stack_3.x.0",
-          "20220125"
+          "20221102"
         ]
       ],
       "stack_default":"Z-Stack_3.x.0"
