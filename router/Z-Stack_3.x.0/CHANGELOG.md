@@ -1,3 +1,8 @@
+# 20221102
+- Allow to set transmit power
+- Fix directly connected Xiaomi devices disconnecting
+- SimpleLink SDK 6.30.00.84 ([changelog](https://software-dl.ti.com/simplelink/esd/simplelink_cc13xx_cc26xx_sdk/6.30.00.84/exports/changelog.html))
+
 # 20220125
 - SimpleLink SDK 5.30.01.01 ([changelog](https://software-dl.ti.com/simplelink/esd/simplelink_cc13xx_cc26xx_sdk/5.30.01.01/exports/changelog.html))
 - Increase memory heap
