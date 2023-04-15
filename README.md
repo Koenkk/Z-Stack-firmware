@@ -1,2 +1,2 @@
 # Z-Stack-firmware
-This repository contains compilation instructions and compiled Z-Stack firmwares for the Texas Instruments CC2530, CC2531, CC2538, CC1352P, CC2652P, CC2652R and CC2652RB.
+This repository contains compilation instructions and compiled Z-Stack firmwares for the Texas Instruments [CC2530](https://www.ti.com/product/CC2530), [CC2531](https://www.ti.com/product/CC2531), [CC2538](https://www.ti.com/product/CC2538), [CC1352P](https://www.ti.com/product/CC1352P), [CC2652P](https://www.ti.com/product/CC2652P), [CC2652R](https://www.ti.com/product/CC2652R) and [CC2652RB](https://www.ti.com/product/CC2652RB).
