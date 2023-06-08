@@ -12,3 +12,4 @@ To factory reset single press the button on your device.
 Notes:
 - Launchpads have 2 buttons, it doesn't matter which one you press
 - Slaesh's CC2652RB stick has 2 buttons, press the one furthest away from the USB connector.
+- SMLIGHT SLZB-06 adapter - pairing mode activated through web interface: System and Tools - System Control - Router Reconnect
