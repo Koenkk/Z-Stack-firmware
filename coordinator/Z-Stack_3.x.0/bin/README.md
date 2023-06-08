@@ -147,17 +147,7 @@ The list of supported firmware versions and Zigbee adapters in alphabetical orde
     <td>DIO_7 (Blue)</td>
     <td>?</td>
   </tr>
-  <tr>
-    <td>SONOFF Zigbee 3.0 USB Dongle Plus by ITead</td>
-    <td>CC2652P</td>
-    <td>CC1352P2_CC2652P_launchpad_*.zip</td>
-    <td>DIO_15</td>
-    <td>Yes</td>
-    <td>DIO_29: 20dBm PA</td>
-    <td>DIO_7(Not welded)<br>Power LED(Red)</td>
-    <td>DIO13: TX<br>DIO12:RC<br>DIO19: CTS(DIP switch ON)<br>DIO18: RTS(DIP switch ON)</td>
-  </tr>
-  <tr>
+    <tr>
     <td><a href="https://smartlight.me/smart-home-devices/zigbee-devices/zigbee-coordinator-v4-cc2652p">SMLIGHT SLZB-02 USB Zigbee Adapter</td>
     <td>CC2652P<br>(Ebyte E72-2G4M20S1E)</td>
     <td>CC1352P2_CC2652P_other_*.zip</td>
@@ -186,6 +176,16 @@ The list of supported firmware versions and Zigbee adapters in alphabetical orde
     <td>DIO_5: 20dBm PA<br>DIO_6: 2.4GHz</td>
     <td>DIO_8 (Green)<br>DIO_7 (Red)<br></td>
     <td>?</td>
+  </tr>
+  <tr>
+    <td>SONOFF Zigbee 3.0 USB Dongle Plus by ITead</td>
+    <td>CC2652P</td>
+    <td>CC1352P2_CC2652P_launchpad_*.zip</td>
+    <td>DIO_15</td>
+    <td>Yes</td>
+    <td>DIO_29: 20dBm PA</td>
+    <td>DIO_7(Not welded)<br>Power LED(Red)</td>
+    <td>DIO13: TX<br>DIO12:RC<br>DIO19: CTS(DIP switch ON)<br>DIO18: RTS(DIP switch ON)</td>
   </tr>
   <tr>
     <td>TI LAUNCHXL-CC1352P-2</td>
