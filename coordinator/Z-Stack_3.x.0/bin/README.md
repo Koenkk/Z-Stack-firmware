@@ -37,6 +37,27 @@
     <td>?</td>
   </tr>
   <tr>
+    <td>TI LP-CC1352P7</td>
+    <td>CC1352P7</td>
+    <td>CC1352P7_*.zip<br></td>
+    <td>?</td>
+    <td>No</td>
+    <td>?</td>
+    <td>?</td>
+    <td>?</td>
+  </tr>
+  </tr>
+    <tr>
+    <td>TI LP-CC2652R7</td>
+    <td>CC1352P7</td>
+    <td>CC1352P7_*.zip<br></td>
+    <td>?</td>
+    <td>No</td>
+    <td>?</td>
+    <td>N/A</td>
+    <td>?</td>
+  </tr>
+  <tr>
     <td>Electrolama zzh</td>
     <td>CC2652R</td>
     <td>CC2652R_*.zip</td>
