@@ -1,6 +1,6 @@
 # Tested adapters
 
-**WARNING:** Make sure you flash the correct firmware! Flashing the **wrong** firmware might lock your bootloader preventing future flashing. If you are a Zigbee2MQTT user and don't know what to pick click the **Coordinator firmware** link of your adapter on: https://www.zigbee2mqtt.io/information/supported_adapters.html.
+**WARNING:** Make sure you flash the correct firmware! Flashing the **wrong** firmware might lock your bootloader preventing future flashing. If you are a Zigbee2MQTT user and don't know what to pick click the **Coordinator firmware** link of your adapter on: https://www.zigbee2mqtt.io/guide/adapters/.
 The list of supported firmware versions and Zigbee adapters in alphabetical order is below:
 
 <table>
