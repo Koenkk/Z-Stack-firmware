@@ -40,7 +40,7 @@ The list of supported firmware versions and Zigbee adapters in alphabetical orde
 <tr>
     <td><a href="https://shop.codm.de/en/automation/zigbee/40/zigbee-coordinator-cc2652p7-PoE">cod.m Zigbee Coordinator CC2652P7 (CZC-1.0)</a></td>
     <td>CC2652P7<br>(RFSTAR RF-BM-2652P4I)</td>
-    <td>CC1352P7_coordinator_20230507.zip</td>
+    <td>CC1352P7_*.zip</td>
     <td>DIO_15</td>
     <td>Yes</td>
     <td>N/A</td>
