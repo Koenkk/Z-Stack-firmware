@@ -328,9 +328,9 @@ index 7ee216ee..2032cc02 100644
    ignoreIndication = TRUE;
    retValue = (uint8_t)ZDP_MgmtPermitJoinReq( &destAddr, duration, tcSignificance, 0);
    ignoreIndication = FALSE;
-+  
++
 +  // If joining is enabled via a router, ZDO_ProcessMgmtPermitJoinReq is never triggered thus
-+  // ZDSecMgrPermitJoining is never called. Joining via a router would always fail now since 
++  // ZDSecMgrPermitJoining is never called. Joining via a router would always fail now since
 +  // ZDSecMgrPermitJoiningEnabled in zd_sec_mgr.c stays FALSE
 +  ZDSecMgrPermitJoining(duration);
  
@@ -1229,7 +1229,7 @@ new file mode 100644
 index 00000000..da63a63b
 --- /dev/null
 +++ b/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.c
-@@ -0,0 +1,385 @@
+@@ -0,0 +1,383 @@
 +/*
 + *  ======== ti_radio_config.c ========
 + *  Configured RadioConfig module definitions
@@ -1394,7 +1394,7 @@ index 00000000..da63a63b
 +    (uint32_t)0x00008783,
 +    // Set synth mux to default value for standard PA
 +    (uint32_t)0x050206C3,
-+    // Set TXRX pin to 0 in RX and high impedance in idle/TX. 
++    // Set TXRX pin to 0 in RX and high impedance in idle/TX.
 +    HW_REG_OVERRIDE(0x60A8,0x0401),
 +    (uint32_t)0xFFFFFFFF
 +};
@@ -1412,7 +1412,7 @@ index 00000000..da63a63b
 +    (uint32_t)0x00038783,
 +    // Set synth mux for high power PA
 +    (uint32_t)0x010206C3,
-+    // Set TXRX pin to 0 in RX/TX and high impedance in idle. 
++    // Set TXRX pin to 0 in RX/TX and high impedance in idle.
 +    HW_REG_OVERRIDE(0x60A8,0x0001),
 +    (uint32_t)0xFFFFFFFF
 +};
@@ -1613,8 +1613,6 @@ index 00000000..da63a63b
 +    .endTrigger.pastTrig = 0x0,
 +    .endTime = 0x00000000
 +};
-+
-+
 diff --git a/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.h b/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.h
 new file mode 100644
 index 00000000..4abddd14
