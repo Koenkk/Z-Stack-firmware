@@ -62,6 +62,7 @@ CCFG.enableBootloader         = true;
 CCFG.enableBootloaderBackdoor = true;
 CCFG.dioBootloaderBackdoor    = 13;
 CCFG.levelBootloaderBackdoor  = "Active low";
+CCFG.enableDCDC               = false;
 CCFG.ccfgTemplate.$name       = "ti_devices_CCFG_CCFGCC26XXTemplate0";
 
 Display1.$hardware  = system.deviceData.board.components.XDS110UART;
@@ -82,8 +83,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
 
 NVS1.$name                    = "CONFIG_NVSINTERNAL";
 NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
-NVS1.internalFlash.regionSize = 0x4000;
-NVS1.internalFlash.regionBase = 0xAA000;
+NVS1.internalFlash.regionSize = 0x8000;
+NVS1.internalFlash.regionBase = 0xA6000;
 
 NVS2.$name                          = "CONFIG_NVSEXTERNAL";
 NVS2.nvsType                        = "External";
@@ -172,6 +173,7 @@ zstack.deviceTypeReadOnly                    = true;
 zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
 zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
 zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
+zstack.rf.txPower                            = "5";
 zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
 zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
 zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";

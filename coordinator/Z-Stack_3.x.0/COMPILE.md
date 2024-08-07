@@ -5,10 +5,10 @@
 1. Download and install [Code Composer Studio 12.3.0.00005](http://www.ti.com/tool/CCSTUDIO)
 
 ## Compiling
-1. Create a folder called `workspace` in the folder where the SDK is installed. In the SDK installation folder you should see files like `Makefile` and `license_simplelink_cc13xx_cc26xx_sdk_7_10_00_98.txt`.
+1. Create a folder called `workspace`.
 1. Start Code Composer Studio, it will ask you to select a workspace folder, select the `workspace` folder you created in the previous step.
 1. Go to *File -> Import -> Code Composer Studio -> CCS Projects -> Select* search-directory: `simplelink_cc13xx_cc26xx_sdk_7_10_00_98/examples/rtos`. 
-1. Select:
+1. Select whichever of the projects needed:
     - `znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang`
     - `znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang`
     - `znp_LP_CC2652RB_tirtos7_ticlang`
@@ -18,7 +18,8 @@
 1. Close Code Composer Studio and then copy the appropriate `syscfg` file as `znp.syscfg` into the appropriate workspace folder(s).
     (For example copy `znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang.syscfg` into `workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/znp.syscfg`.
 1. Copy `patches/*` to the SDK installation folder, open a Git Bash in this folder and apply the patch using `git apply *.patch --ignore-space-change`.
-1. Build the 5 projects; right click -> *Build project*.
+1. Open Code Compose Studio again.
+1. Build the project(s); right click -> *Build project*.
     - **Important:** by default the **launchpad** variant of the CC1352P2_CC2652P (= `znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang`) is build. To build the **other** variant comment `#define LAUNCHPAD_CONFIG 1` in `preinclude.h` (located under `Stack/Config/`), don't forget to save.
 1. Once finished, the firmware can be found under `znp_*_tirtos7_ticlang/default/znp_*_tirtos7_ticlang.hex`
     - `znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang.hex` -> CC2652R
