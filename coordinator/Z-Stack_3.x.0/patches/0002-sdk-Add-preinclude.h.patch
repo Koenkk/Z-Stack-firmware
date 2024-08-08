@@ -1,7 +1,7 @@
 From f71d447513da9ebe547240bb8591f918c4f5fbd2 Mon Sep 17 00:00:00 2001
 From: Olliver Schinagl <oliver@schinagl.nl>
 Date: Wed, 7 Aug 2024 16:09:49 +0200
-Subject: [PATCH 2/2] sdk: Add preinclude.h
+Subject: [PATCH 2/3] sdk: Add preinclude.h
 
 Configure our project with a standardized pre-include header
 

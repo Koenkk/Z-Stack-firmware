@@ -4,8 +4,6 @@ Date: Sun, 7 May 2023 20:55:19 +0200
 Subject: [PATCH 1/1] Own changes
 
 ---
- .../cc13x2_cc26x2_tirtos7_ticlang.cmd         |   6 +-
- .../cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd     |   8 +-
  source/ti/zstack/mt/mt.h                      |   4 +
  source/ti/zstack/mt/mt_util.c                 | 119 +++++-
  source/ti/zstack/mt/mt_version.c              |   8 +-
@@ -26,60 +24,13 @@ Subject: [PATCH 1/1] Own changes
  .../znp.syscfg                                |   6 +-
  .../znp.syscfg                                |   6 +-
  .../znp.syscfg                                |   6 +-
- 32 files changed, 1098 insertions(+), 29 deletions(-)
+ 30 files changed, 1092 insertions(+), 21 deletions(-)
  mode change 100644 => 100755 source/ti/zstack/stack/af/af.c
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_drivers_config.h
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.c
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.h
 
-diff --git a/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd b/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd
-index 3095fba2..81262533 100755
---- a/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd
-+++ b/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd
-@@ -60,15 +60,13 @@
- /* modifications in your CCS project and leave this file alone.              */
- /*                                                                           */
- /* --heap_size=0                                                             */
----stack_size=1024
-+--stack_size=8192
- /* --library=rtsv7M3_T_le_eabi.lib                                           */
- 
- /* The starting address of the application.  Normally the interrupt vectors  */
- /* must be located at the beginning of the application.                      */
- 
--#ifndef NVOCMP_NVPAGES
--#define NVOCMP_NVPAGES          2
--#endif
-+#define NVOCMP_NVPAGES          3
- 
- #define FLASH_BASE              0x00000000
- #define FLASH_SIZE              (0x56000 - (NVOCMP_NVPAGES * 0x2000))
-diff --git a/source/ti/zstack/boards/cc13x2x7_cc26x2x7/cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd b/source/ti/zstack/boards/cc13x2x7_cc26x2x7/cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd
-index bbe82ebc..fdebcef3 100755
---- a/source/ti/zstack/boards/cc13x2x7_cc26x2x7/cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd
-+++ b/source/ti/zstack/boards/cc13x2x7_cc26x2x7/cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd
-@@ -60,16 +60,16 @@
- /* modifications in your CCS project and leave this file alone.              */
- /*                                                                           */
- /* --heap_size=0                                                             */
----stack_size=1024
-+--stack_size=8192
- /* --library=rtsv7M3_T_le_eabi.lib                                           */
- 
- /* The starting address of the application.  Normally the interrupt vectors  */
- /* must be located at the beginning of the application.                      */
- 
- #define FLASH_BASE              0x00000000
--#define FLASH_SIZE              0xAA000
--#define FLASH_NV_BASE           0xAA000
--#define FLASH_NV_SIZE           0x4000
-+#define FLASH_SIZE              0xA6000
-+#define FLASH_NV_BASE           0xA6000
-+#define FLASH_NV_SIZE           0x8000
- #define FLASH_LAST_BASE         0xAE000
- #define FLASH_LAST_SIZE         0x2000
- 
 diff --git a/source/ti/zstack/mt/mt.h b/source/ti/zstack/mt/mt.h
 index a14a3282..5153fa39 100644
 --- a/source/ti/zstack/mt/mt.h
