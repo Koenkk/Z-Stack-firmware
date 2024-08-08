@@ -31,6 +31,8 @@ const Power        = scripting.addModule("/ti/drivers/Power");
 const RF           = scripting.addModule("/ti/drivers/RF");
 const SHA2         = scripting.addModule("/ti/drivers/SHA2");
 const SHA21        = SHA2.addInstance();
+const SPI          = scripting.addModule("/ti/drivers/SPI", {}, false);
+const SPI1         = SPI.addInstance();
 const TRNG         = scripting.addModule("/ti/drivers/TRNG");
 const TRNG1        = TRNG.addInstance();
 const Button       = scripting.addModule("/ti/drivers/apps/Button");
@@ -67,9 +69,12 @@ CCFG.enableDCDC               = false;
 CCFG.srcClkLF                 = "Derived from HF XOSC";
 CCFG.ccfgTemplate.$name       = "ti_devices_CCFG_CCFGCC26XXTemplate0";
 
-Display1.$hardware  = system.deviceData.board.components.XDS110UART;
-Display1.$name      = "CONFIG_DISPLAY";
-Display1.uart.$name = "CONFIG_DISPLAY_UART";
+Display1.$hardware               = system.deviceData.board.components.XDS110UART;
+Display1.$name                   = "CONFIG_DISPLAY";
+Display1.uart.$name              = "CONFIG_DISPLAY_UART";
+Display1.uart.uart.$assign       = "UART0";
+Display1.uart.uart.txPin.$assign = "boosterpack.4";
+Display1.uart.uart.rxPin.$assign = "boosterpack.3";
 
 AESCBC1.$name = "CONFIG_AESCBC_0";
 
@@ -99,37 +104,46 @@ SHA21.$name = "CONFIG_SHA2_0";
 
 TRNG1.$name = "CONFIG_TRNG_0";
 
-Button1.$name         = "CONFIG_BTN_LEFT";
-Button1.$hardware     = system.deviceData.board.components["BTN-1"];
-Button1.gpioPin.$name = "CONFIG_GPIO_BTN1";
-Button1.gpioPin.pull  = "Pull Up";
+Button1.$name          = "CONFIG_BTN_LEFT";
+Button1.$hardware      = system.deviceData.board.components["BTN-1"];
+Button1.gpioPin.$name  = "CONFIG_GPIO_BTN1";
+Button1.gpioPin.pull   = "Pull Up";
+Button1.button.$assign = "boosterpack.13";
 
-Button2.$name         = "CONFIG_BTN_RIGHT";
-Button2.$hardware     = system.deviceData.board.components["BTN-2"];
-Button2.gpioPin.$name = "CONFIG_GPIO_BTN2";
-Button2.gpioPin.pull  = "Pull Up";
+Button2.$name          = "CONFIG_BTN_RIGHT";
+Button2.$hardware      = system.deviceData.board.components["BTN-2"];
+Button2.gpioPin.$name  = "CONFIG_GPIO_BTN2";
+Button2.gpioPin.pull   = "Pull Up";
+Button2.button.$assign = "boosterpack.12";
 
-LED1.$name         = "CONFIG_LED_RED";
-LED1.$hardware     = system.deviceData.board.components.LED_RED;
-LED1.gpioPin.$name = "CONFIG_GPIO_RLED";
+LED1.$name          = "CONFIG_LED_RED";
+LED1.$hardware      = system.deviceData.board.components.LED_RED;
+LED1.ledPin.$assign = "boosterpack.39";
+LED1.gpioPin.$name  = "CONFIG_GPIO_RLED";
 
-LED2.$name         = "CONFIG_LED_GREEN";
-LED2.$hardware     = system.deviceData.board.components.LED_GREEN;
-LED2.gpioPin.$name = "CONFIG_GPIO_GLED";
+LED2.$name          = "CONFIG_LED_GREEN";
+LED2.$hardware      = system.deviceData.board.components.LED_GREEN;
+LED2.ledPin.$assign = "boosterpack.40";
+LED2.gpioPin.$name  = "CONFIG_GPIO_GLED";
 
 const NVSSPI25XDevice                        = scripting.addModule("/ti/drivers/nvs/NVSSPI25XDevice", {}, false);
 const NVSSPI25XDevice1                       = NVSSPI25XDevice.addInstance({}, false);
 NVSSPI25XDevice1.$name                       = "CONFIG_NVS_SPI_0";
 NVS2.externalFlash.spiFlashDevice            = NVSSPI25XDevice1;
+NVSSPI25XDevice1.chipSelect.$assign          = "boosterpack.38";
 NVSSPI25XDevice1.chipSelectPinInstance.$name = "CONFIG_GPIO_0";
 
-const SPI                          = scripting.addModule("/ti/drivers/SPI", {}, false);
-const SPI1                         = SPI.addInstance({}, false);
 SPI1.$name                         = "CONFIG_SPI_0";
 NVSSPI25XDevice1.sharedSpiInstance = SPI1;
 SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
 SPI1.pociPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
 SPI1.picoPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
+SPI1.spi.$assign                   = "SSI0";
+SPI1.spi.sclkPin.$assign           = "boosterpack.7";
+SPI1.spi.pociPin.$assign           = "boosterpack.14";
+SPI1.spi.picoPin.$assign           = "boosterpack.15";
+SPI1.spi.dmaRxChannel.$assign      = "DMA_CH3";
+SPI1.spi.dmaTxChannel.$assign      = "DMA_CH4";
 
 BIOS.assertsEnabled = false;
 BIOS.rtsGateType    = "BIOS_GateMutexPri";
@@ -148,7 +162,8 @@ HeapCallback.isBlockingInstFxn = "osalHeapIsBlockingFxn";
 Clock.tickPeriod  = 10;
 Clock.swiPriority = 4;
 
-const Timer = scripting.addModule("/ti/sysbios/family/arm/cc26xx/Timer", {}, false);
+const Timer       = scripting.addModule("/ti/sysbios/family/arm/cc26xx/Timer", {}, false);
+Timer.rtc.$assign = "RTC0";
 
 Idle1.$name   = "powerIdle";
 Idle1.idleFxn = "Power_idleFunc";
@@ -183,24 +198,3 @@ zstack.advanced.$name                        = "ti_zstack_advanced_zstack_advanc
 zstack.advanced.routing.$name                = "ti_zstack_advanced_zstack_routing0";
 zstack.advanced.packetSending.$name          = "ti_zstack_advanced_zstack_packet_sending0";
 zstack.advanced.tableSize.$name              = "ti_zstack_advanced_zstack_table_size0";
-
-/**
- * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
- * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
- * re-solve from scratch.
- */
-Display1.uart.uart.$suggestSolution          = "UART0";
-Display1.uart.uart.txPin.$suggestSolution    = "boosterpack.4";
-Display1.uart.uart.rxPin.$suggestSolution    = "boosterpack.3";
-Button1.button.$suggestSolution              = "boosterpack.13";
-Button2.button.$suggestSolution              = "boosterpack.12";
-LED1.ledPin.$suggestSolution                 = "boosterpack.39";
-LED2.ledPin.$suggestSolution                 = "boosterpack.40";
-NVSSPI25XDevice1.chipSelect.$suggestSolution = "boosterpack.38";
-SPI1.spi.$suggestSolution                    = "SSI0";
-SPI1.spi.sclkPin.$suggestSolution            = "boosterpack.7";
-SPI1.spi.pociPin.$suggestSolution            = "boosterpack.14";
-SPI1.spi.picoPin.$suggestSolution            = "boosterpack.15";
-SPI1.spi.dmaRxChannel.$suggestSolution       = "DMA_CH3";
-SPI1.spi.dmaTxChannel.$suggestSolution       = "DMA_CH4";
-Timer.rtc.$suggestSolution                   = "RTC0";
