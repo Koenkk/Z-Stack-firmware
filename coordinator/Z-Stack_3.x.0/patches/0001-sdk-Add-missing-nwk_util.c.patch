@@ -1,0 +1,107 @@
+From bfdeb9b9beeb98f912525534a5901e261dbcb821 Mon Sep 17 00:00:00 2001
+From: Olliver Schinagl <oliver@schinagl.nl>
+Date: Wed, 7 Aug 2024 16:08:21 +0200
+Subject: [PATCH] sdk: Add missing nwk_util.c
+
+Add our own customized nwk_util.
+
+Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+---
+ source/ti/zstack/stack/nwk/nwk_globals.c |  8 ++--
+ source/ti/zstack/stack/nwk/nwk_util.c    | 49 ++++++++++++++++++++++++
+ source/ti/zstack/stack/nwk/nwk_util.h    |  4 ++
+ 3 files changed, 57 insertions(+), 4 deletions(-)
+ create mode 100644 source/ti/zstack/stack/nwk/nwk_util.c
+
+diff --git a/source/ti/zstack/stack/nwk/nwk_globals.c b/source/ti/zstack/stack/nwk/nwk_globals.c
+index a0acd954d..4953a483b 100644
+--- a/source/ti/zstack/stack/nwk/nwk_globals.c
++++ b/source/ti/zstack/stack/nwk/nwk_globals.c
+@@ -91,10 +91,10 @@
+  * CONSTANTS
+  */
+ // Maximums for the data buffer queue
+-#define NWK_MAX_DATABUFS_WAITING    8     // Waiting to be sent to MAC
+-#define NWK_MAX_DATABUFS_SCHEDULED  5     // Timed messages to be sent
+-#define NWK_MAX_DATABUFS_CONFIRMED  5     // Held after MAC confirms
+-#define NWK_MAX_DATABUFS_TOTAL      12    // Total number of buffers
++#define NWK_MAX_DATABUFS_WAITING    48     // Waiting to be sent to MAC
++#define NWK_MAX_DATABUFS_SCHEDULED  30     // Timed messages to be sent
++#define NWK_MAX_DATABUFS_CONFIRMED  30     // Held after MAC confirms
++#define NWK_MAX_DATABUFS_TOTAL      72    // Total number of buffers
+ 
+ // 1-255 (0 -> 256) X RTG_TIMER_INTERVAL
+ // A known shortcoming is that when a message is enqueued as "hold" for a
+diff --git a/source/ti/zstack/stack/nwk/nwk_util.c b/source/ti/zstack/stack/nwk/nwk_util.c
+new file mode 100644
+index 000000000..da24c0388
+--- /dev/null
++++ b/source/ti/zstack/stack/nwk/nwk_util.c
+@@ -0,0 +1,49 @@
++#include "nwk_util.h"
++#include "aps_mede.h"
++
++#ifndef NWK_MAX_CHILD_AGING_LEAVE_DISABLED_ENTRIES
++#define NWK_MAX_CHILD_AGING_LEAVE_DISABLED_ENTRIES 50
++#endif
++
++typedef struct
++{
++    uint8_t extAddr[Z_EXTADDR_LEN];
++    uint8_t numBytesToMatch;
++} child_aging_leave_disabled_entry_t;
++
++child_aging_leave_disabled_entry_t childAgingLeaveDisabledList[NWK_MAX_CHILD_AGING_LEAVE_DISABLED_ENTRIES];
++uint8_t chidlAgingLeaveDisabledCnt = 0;
++
++uint8_t NwkDisableChildAgingLeaveAdd(uint8_t* extAddr, uint8_t numBytesToMatch)
++{
++    if (chidlAgingLeaveDisabledCnt == NWK_MAX_CHILD_AGING_LEAVE_DISABLED_ENTRIES) {
++        return 1;
++    }
++
++    memcpy(childAgingLeaveDisabledList[chidlAgingLeaveDisabledCnt].extAddr, extAddr, Z_EXTADDR_LEN);
++    childAgingLeaveDisabledList[chidlAgingLeaveDisabledCnt].numBytesToMatch = numBytesToMatch;
++    ++chidlAgingLeaveDisabledCnt;
++
++    return 0;
++}
++
++void NwkNotMyChildSendLeaveCustom (uint16_t dstAddr)
++{
++    uint8_t extAddr[Z_EXTADDR_LEN];
++    uint8_t idx;
++
++    if (!APSME_LookupExtAddr(dstAddr, extAddr)) {
++        return;
++    }
++
++    // Do not send leave request to devices where it is disabled for
++    for (idx = 0; idx < chidlAgingLeaveDisabledCnt; ++idx)
++    {
++        uint8_t offset = Z_EXTADDR_LEN - childAgingLeaveDisabledList[idx].numBytesToMatch;
++        if (memcmp(childAgingLeaveDisabledList[idx].extAddr + offset, extAddr + offset, childAgingLeaveDisabledList[idx].numBytesToMatch) == 0) {
++            return;
++        }
++    }
++
++    NwkNotMyChildSendLeave (dstAddr);
++};
+diff --git a/source/ti/zstack/stack/nwk/nwk_util.h b/source/ti/zstack/stack/nwk/nwk_util.h
+index 584c35aed..a567e0c47 100644
+--- a/source/ti/zstack/stack/nwk/nwk_util.h
++++ b/source/ti/zstack/stack/nwk/nwk_util.h
+@@ -638,6 +638,10 @@ extern uint8_t (*pNwkNotMyChildListAdd)( uint16_t devAddr, uint32_t timeoutValue
+ extern void (*pNwkNotMyChildListDelete)( uint16_t devAddr );
+ extern void (*pNwkNotMyChildSendLeave)( uint16_t dstAddr );
+ 
++// Custom functions
++void NwkNotMyChildSendLeaveCustom (uint16_t dstAddr);
++uint8_t NwkDisableChildAgingLeaveAdd(uint8_t* extAddr, uint8_t numBytesToMatch);
++
+ /****************************************************************************
+  * Utility function to copy NV items
+  ****************************************************************************/
+-- 
+2.46.0
+

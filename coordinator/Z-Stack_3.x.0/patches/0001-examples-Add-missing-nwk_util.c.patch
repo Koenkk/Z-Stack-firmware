@@ -1,0 +1,84 @@
+From 331374464e302478df9f5d48b6150a60073759df Mon Sep 17 00:00:00 2001
+From: Olliver Schinagl <oliver@schinagl.nl>
+Date: Wed, 7 Aug 2024 16:08:21 +0200
+Subject: [PATCH] examples: Add missing nwk_util.c
+
+Add our own customized nwk_util.
+
+Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+---
+ .../ticlang/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang.projectspec  | 2 ++
+ .../ticlang/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang.projectspec   | 2 ++
+ .../ticlang/znp_LP_CC1352P7_4_tirtos7_ticlang.projectspec       | 2 ++
+ .../tirtos7/ticlang/znp_LP_CC2652R7_tirtos7_ticlang.projectspec | 2 ++
+ .../tirtos7/ticlang/znp_LP_CC2652RB_tirtos7_ticlang.projectspec | 2 ++
+ 5 files changed, 10 insertions(+)
+
+diff --git a/examples/rtos/CC1352P_2_LAUNCHXL/zstack/znp/tirtos7/ticlang/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang.projectspec b/examples/rtos/CC1352P_2_LAUNCHXL/zstack/znp/tirtos7/ticlang/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang.projectspec
+index 83c0a9e..6bafd64 100644
+--- a/examples/rtos/CC1352P_2_LAUNCHXL/zstack/znp/tirtos7/ticlang/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang.projectspec
++++ b/examples/rtos/CC1352P_2_LAUNCHXL/zstack/znp/tirtos7/ticlang/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang.projectspec
+@@ -345,6 +345,8 @@
+         </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_globals.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+         </file>
++        <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_util.c" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
++        </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_util.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+         </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/reflecttrack.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+diff --git a/examples/rtos/CC26X2R1_LAUNCHXL/zstack/znp/tirtos7/ticlang/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang.projectspec b/examples/rtos/CC26X2R1_LAUNCHXL/zstack/znp/tirtos7/ticlang/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang.projectspec
+index 4202575..ae9d219 100644
+--- a/examples/rtos/CC26X2R1_LAUNCHXL/zstack/znp/tirtos7/ticlang/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang.projectspec
++++ b/examples/rtos/CC26X2R1_LAUNCHXL/zstack/znp/tirtos7/ticlang/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang.projectspec
+@@ -342,6 +342,8 @@
+         </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_globals.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+         </file>
++        <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_util.c" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
++        </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_util.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+         </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/reflecttrack.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+diff --git a/examples/rtos/LP_CC1352P7_4/zstack/znp/tirtos7/ticlang/znp_LP_CC1352P7_4_tirtos7_ticlang.projectspec b/examples/rtos/LP_CC1352P7_4/zstack/znp/tirtos7/ticlang/znp_LP_CC1352P7_4_tirtos7_ticlang.projectspec
+index c002100..dead548 100644
+--- a/examples/rtos/LP_CC1352P7_4/zstack/znp/tirtos7/ticlang/znp_LP_CC1352P7_4_tirtos7_ticlang.projectspec
++++ b/examples/rtos/LP_CC1352P7_4/zstack/znp/tirtos7/ticlang/znp_LP_CC1352P7_4_tirtos7_ticlang.projectspec
+@@ -342,6 +342,8 @@
+         </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_globals.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+         </file>
++        <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_util.c" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
++        </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_util.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+         </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/reflecttrack.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+diff --git a/examples/rtos/LP_CC2652R7/zstack/znp/tirtos7/ticlang/znp_LP_CC2652R7_tirtos7_ticlang.projectspec b/examples/rtos/LP_CC2652R7/zstack/znp/tirtos7/ticlang/znp_LP_CC2652R7_tirtos7_ticlang.projectspec
+index 533705e..c8ef857 100644
+--- a/examples/rtos/LP_CC2652R7/zstack/znp/tirtos7/ticlang/znp_LP_CC2652R7_tirtos7_ticlang.projectspec
++++ b/examples/rtos/LP_CC2652R7/zstack/znp/tirtos7/ticlang/znp_LP_CC2652R7_tirtos7_ticlang.projectspec
+@@ -342,6 +342,8 @@
+         </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_globals.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+         </file>
++        <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_util.c" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
++        </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_util.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+         </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/reflecttrack.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+diff --git a/examples/rtos/LP_CC2652RB/zstack/znp/tirtos7/ticlang/znp_LP_CC2652RB_tirtos7_ticlang.projectspec b/examples/rtos/LP_CC2652RB/zstack/znp/tirtos7/ticlang/znp_LP_CC2652RB_tirtos7_ticlang.projectspec
+index d399d8c..26aacd6 100644
+--- a/examples/rtos/LP_CC2652RB/zstack/znp/tirtos7/ticlang/znp_LP_CC2652RB_tirtos7_ticlang.projectspec
++++ b/examples/rtos/LP_CC2652RB/zstack/znp/tirtos7/ticlang/znp_LP_CC2652RB_tirtos7_ticlang.projectspec
+@@ -342,6 +342,8 @@
+         </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_globals.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+         </file>
++        <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_util.c" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
++        </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/nwk_util.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+         </file>
+         <file path="${COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR}/source/ti/zstack/stack/nwk/reflecttrack.h" openOnCreation="false" excludeFromBuild="false" action="link" targetDirectory="Stack/nwk">
+-- 
+2.46.0
+
