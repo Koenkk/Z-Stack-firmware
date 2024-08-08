@@ -1,0 +1,60 @@
+From 7d704874f337b13cd6b195fc4a81d02600d43b85 Mon Sep 17 00:00:00 2001
+From: Koen Kanters <koenkanters94@gmail.com>
+Date: Sun, 7 May 2023 20:55:19 +0200
+Subject: [PATCH 3/5] sdk: Flash config
+
+---
+ .../cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd       | 6 ++----
+ .../cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd                 | 8 ++++----
+ 2 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd b/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd
+index 3095fba2c..812625339 100755
+--- a/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd
++++ b/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd
+@@ -60,15 +60,13 @@
+ /* modifications in your CCS project and leave this file alone.              */
+ /*                                                                           */
+ /* --heap_size=0                                                             */
+---stack_size=1024
++--stack_size=8192
+ /* --library=rtsv7M3_T_le_eabi.lib                                           */
+ 
+ /* The starting address of the application.  Normally the interrupt vectors  */
+ /* must be located at the beginning of the application.                      */
+ 
+-#ifndef NVOCMP_NVPAGES
+-#define NVOCMP_NVPAGES          2
+-#endif
++#define NVOCMP_NVPAGES          3
+ 
+ #define FLASH_BASE              0x00000000
+ #define FLASH_SIZE              (0x56000 - (NVOCMP_NVPAGES * 0x2000))
+diff --git a/source/ti/zstack/boards/cc13x2x7_cc26x2x7/cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd b/source/ti/zstack/boards/cc13x2x7_cc26x2x7/cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd
+index bbe82ebcb..fdebcef36 100755
+--- a/source/ti/zstack/boards/cc13x2x7_cc26x2x7/cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd
++++ b/source/ti/zstack/boards/cc13x2x7_cc26x2x7/cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd
+@@ -60,16 +60,16 @@
+ /* modifications in your CCS project and leave this file alone.              */
+ /*                                                                           */
+ /* --heap_size=0                                                             */
+---stack_size=1024
++--stack_size=8192
+ /* --library=rtsv7M3_T_le_eabi.lib                                           */
+ 
+ /* The starting address of the application.  Normally the interrupt vectors  */
+ /* must be located at the beginning of the application.                      */
+ 
+ #define FLASH_BASE              0x00000000
+-#define FLASH_SIZE              0xAA000
+-#define FLASH_NV_BASE           0xAA000
+-#define FLASH_NV_SIZE           0x4000
++#define FLASH_SIZE              0xA6000
++#define FLASH_NV_BASE           0xA6000
++#define FLASH_NV_SIZE           0x8000
+ #define FLASH_LAST_BASE         0xAE000
+ #define FLASH_LAST_SIZE         0x2000
+ 
+-- 
+2.46.0
+
