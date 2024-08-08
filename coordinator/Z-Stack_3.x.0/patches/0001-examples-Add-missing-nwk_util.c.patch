@@ -1,7 +1,7 @@
 From 331374464e302478df9f5d48b6150a60073759df Mon Sep 17 00:00:00 2001
 From: Olliver Schinagl <oliver@schinagl.nl>
 Date: Wed, 7 Aug 2024 16:08:21 +0200
-Subject: [PATCH] examples: Add missing nwk_util.c
+Subject: [PATCH 1/2] examples: Add missing nwk_util.c
 
 Add our own customized nwk_util.
 
