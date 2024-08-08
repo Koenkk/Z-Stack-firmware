@@ -1,7 +1,7 @@
 From 7d704874f337b13cd6b195fc4a81d02600d43b85 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Sun, 7 May 2023 20:55:19 +0200
-Subject: [PATCH 3/4] sdk: Flash config
+Subject: [PATCH 3/5] sdk: Flash config
 
 ---
  .../cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd       | 6 ++----

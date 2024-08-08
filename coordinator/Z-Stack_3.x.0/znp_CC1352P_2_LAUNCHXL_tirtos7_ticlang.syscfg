@@ -4,10 +4,6 @@
  * @cliArgs --board "/ti/boards/CC1352P_2_LAUNCHXL" --rtos "tirtos7" --product "simplelink_cc13xx_cc26xx_sdk@7.10.00.98"
  * @versions {"tool":"1.16.1+2960"}
  */
-scripting.excludeFromBuild("ti_devices_config.c");
-scripting.excludeFromBuild("ti_radio_config.c");
-scripting.excludeFromBuild("ti_radio_config.h");
-scripting.excludeFromBuild("ti_drivers_config.h");
 
 /**
  * Import the modules used in this configuration.

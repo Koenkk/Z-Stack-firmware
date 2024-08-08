@@ -1,7 +1,7 @@
 From d8e644353d975a2feec609ee25334f36987815cd Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
 Date: Sun, 7 May 2023 20:55:19 +0200
-Subject: [PATCH 4/4] sdk: Own changes
+Subject: [PATCH 4/5] sdk: Own changes
 
 ---
  source/ti/zstack/mt/mt.h                 |   4 +
