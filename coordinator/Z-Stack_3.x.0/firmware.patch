@@ -1708,7 +1708,7 @@ index 2725d0f8..af3fc593 100644
 +++ b/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/znp.syscfg
 @@ -4,6 +4,10 @@
   * @cliArgs --board "/ti/boards/CC1352P_2_LAUNCHXL" --rtos "tirtos7" --product "simplelink_cc13xx_cc26xx_sdk@7.10.00.98"
-  * @versions {"tool":"1.15.0+2826"}
+  * @versions {"tool":"1.16.1+2960"}
   */
 +scripting.excludeFromBuild("ti_devices_config.c");
 +scripting.excludeFromBuild("ti_radio_config.c");
