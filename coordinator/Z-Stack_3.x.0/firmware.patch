@@ -42,8 +42,6 @@ Subject: [PATCH 1/1] Own changes
  .../znp.syscfg                                |   6 +-
  36 files changed, 1363 insertions(+), 29 deletions(-)
  create mode 100644 source/ti/zstack/stack/Config/preinclude.h
- mode change 100644 => 100755 source/ti/zstack/stack/af/af.c
- mode change 100644 => 100755 source/ti/zstack/stack/nwk/nwk_globals.c
  create mode 100644 source/ti/zstack/stack/nwk/nwk_util.c
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_drivers_config.h
@@ -502,9 +500,7 @@ index 00000000..a50a178c
 +    #endif
 +#endif
 diff --git a/source/ti/zstack/stack/af/af.c b/source/ti/zstack/stack/af/af.c
-old mode 100644
-new mode 100755
-index 12512a39..4298e709
+index 12512a39..4298e709 100644
 --- a/source/ti/zstack/stack/af/af.c
 +++ b/source/ti/zstack/stack/af/af.c
 @@ -433,10 +433,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
@@ -541,9 +537,7 @@ index 12512a39..4298e709
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
 diff --git a/source/ti/zstack/stack/nwk/nwk_globals.c b/source/ti/zstack/stack/nwk/nwk_globals.c
-old mode 100644
-new mode 100755
-index a0acd954..7b12a23c
+index a0acd954..7b12a23c 100644
 --- a/source/ti/zstack/stack/nwk/nwk_globals.c
 +++ b/source/ti/zstack/stack/nwk/nwk_globals.c
 @@ -91,10 +91,10 @@
