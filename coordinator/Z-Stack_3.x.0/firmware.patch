@@ -5,28 +5,24 @@ Subject: [PATCH] Changes
 
 ---
  source/ti/zstack/stack/Config/preinclude.h    | 109 +++++
- source/ti/zstack/stack/nwk/nwk_util.c         |  49 +++
- source/ti/zstack/stack/nwk/nwk_util.h         |   4 +
- source/ti/zstack/stack/zdo/zd_object.c        |  14 +
- source/ti/zstack/startup/zstackstartup.c      |   8 +
- .../.project                                  |  10 +
+ .../.project                                  |   5 +
  .../Stack/Config/znp_cnf.opts                 |   2 +
  .../ti_devices_config.c                       | 108 +++++
  .../ti_drivers_config.h                       | 274 +++++++++++++
  .../znp.syscfg                                |   8 +-
- .../.project                                  |  10 +
+ .../.project                                  |   5 +
  .../Stack/Config/znp_cnf.opts                 |   2 +
  .../znp.syscfg                                |   6 +-
- .../.project                                  |  10 +
+ .../.project                                  |   5 +
  .../Stack/Config/znp_cnf.opts                 |   2 +
  .../znp.syscfg                                |   6 +-
- .../znp_LP_CC2652R7_tirtos7_ticlang/.project  |  10 +
+ .../znp_LP_CC2652R7_tirtos7_ticlang/.project  |   5 +
  .../Stack/Config/znp_cnf.opts                 |   2 +
  .../znp.syscfg                                |   6 +-
- .../znp_LP_CC2652RB_tirtos7_ticlang/.project  |  10 +
+ .../znp_LP_CC2652RB_tirtos7_ticlang/.project  |   5 +
  .../Stack/Config/znp_cnf.opts                 |   2 +
  .../znp.syscfg                                |   6 +-
- 22 files changed, 648 insertions(+), 11 deletions(-)
+ 18 files changed, 548 insertions(+), 11 deletions(-)
  create mode 100644 source/ti/zstack/stack/Config/preinclude.h
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_drivers_config.h
@@ -146,120 +142,6 @@ index 000000000..0602c98c0
 +        #define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA  0xfa
 +    #endif
 +#endif
-diff --git a/source/ti/zstack/stack/nwk/nwk_util.c b/source/ti/zstack/stack/nwk/nwk_util.c
-new file mode 100644
-index 000000000..da24c0388
---- /dev/null
-+++ b/source/ti/zstack/stack/nwk/nwk_util.c
-@@ -0,0 +1,49 @@
-+#include "nwk_util.h"
-+#include "aps_mede.h"
-+
-+#ifndef NWK_MAX_CHILD_AGING_LEAVE_DISABLED_ENTRIES
-+#define NWK_MAX_CHILD_AGING_LEAVE_DISABLED_ENTRIES 50
-+#endif
-+
-+typedef struct
-+{
-+    uint8_t extAddr[Z_EXTADDR_LEN];
-+    uint8_t numBytesToMatch;
-+} child_aging_leave_disabled_entry_t;
-+
-+child_aging_leave_disabled_entry_t childAgingLeaveDisabledList[NWK_MAX_CHILD_AGING_LEAVE_DISABLED_ENTRIES];
-+uint8_t chidlAgingLeaveDisabledCnt = 0;
-+
-+uint8_t NwkDisableChildAgingLeaveAdd(uint8_t* extAddr, uint8_t numBytesToMatch)
-+{
-+    if (chidlAgingLeaveDisabledCnt == NWK_MAX_CHILD_AGING_LEAVE_DISABLED_ENTRIES) {
-+        return 1;
-+    }
-+
-+    memcpy(childAgingLeaveDisabledList[chidlAgingLeaveDisabledCnt].extAddr, extAddr, Z_EXTADDR_LEN);
-+    childAgingLeaveDisabledList[chidlAgingLeaveDisabledCnt].numBytesToMatch = numBytesToMatch;
-+    ++chidlAgingLeaveDisabledCnt;
-+
-+    return 0;
-+}
-+
-+void NwkNotMyChildSendLeaveCustom (uint16_t dstAddr)
-+{
-+    uint8_t extAddr[Z_EXTADDR_LEN];
-+    uint8_t idx;
-+
-+    if (!APSME_LookupExtAddr(dstAddr, extAddr)) {
-+        return;
-+    }
-+
-+    // Do not send leave request to devices where it is disabled for
-+    for (idx = 0; idx < chidlAgingLeaveDisabledCnt; ++idx)
-+    {
-+        uint8_t offset = Z_EXTADDR_LEN - childAgingLeaveDisabledList[idx].numBytesToMatch;
-+        if (memcmp(childAgingLeaveDisabledList[idx].extAddr + offset, extAddr + offset, childAgingLeaveDisabledList[idx].numBytesToMatch) == 0) {
-+            return;
-+        }
-+    }
-+
-+    NwkNotMyChildSendLeave (dstAddr);
-+};
-diff --git a/source/ti/zstack/stack/nwk/nwk_util.h b/source/ti/zstack/stack/nwk/nwk_util.h
-index 468227b32..4075d50df 100644
---- a/source/ti/zstack/stack/nwk/nwk_util.h
-+++ b/source/ti/zstack/stack/nwk/nwk_util.h
-@@ -638,6 +638,10 @@ extern uint8_t (*pNwkNotMyChildListAdd)( uint16_t devAddr, uint32_t timeoutValue
- extern void (*pNwkNotMyChildListDelete)( uint16_t devAddr );
- extern void (*pNwkNotMyChildSendLeave)( uint16_t dstAddr );
- 
-+// Custom functions
-+void NwkNotMyChildSendLeaveCustom (uint16_t dstAddr);
-+uint8_t NwkDisableChildAgingLeaveAdd(uint8_t* extAddr, uint8_t numBytesToMatch);
-+
- /****************************************************************************
-  * Utility function to copy NV items
-  ****************************************************************************/
-diff --git a/source/ti/zstack/stack/zdo/zd_object.c b/source/ti/zstack/stack/zdo/zd_object.c
-index 0c62d58d6..d1f899cec 100644
---- a/source/ti/zstack/stack/zdo/zd_object.c
-+++ b/source/ti/zstack/stack/zdo/zd_object.c
-@@ -676,6 +676,20 @@ void ZDO_ProcessNodeDescReq( zdoIncomingMsg_t *inMsg )
- 
-   if ( desc != NULL )
-   {
-+    uint8_t extAddr[Z_EXTADDR_LEN];
-+    // Respond with Xiaomi manufacturer code when ieeAddr is withing Xiaomi address space
-+    // Otherwise some devices don't work
-+    // https://github.com/Koenkk/zigbee2mqtt/issues/9274
-+    if (APSME_LookupExtAddr(inMsg->srcAddr.addr.shortAddr, extAddr) == TRUE &&
-+         ((extAddr[7] == 0x04 && extAddr[6] == 0xcf && extAddr[5] == 0x8c) ||
-+          (extAddr[7] == 0x54 && extAddr[6] == 0xef && extAddr[5] == 0x44))) {
-+        desc->ManufacturerCode[0] = 0x5f;
-+        desc->ManufacturerCode[1] = 0x11;
-+    } else {
-+        desc->ManufacturerCode[0] = 0x0;
-+        desc->ManufacturerCode[1] = 0x0;
-+    }
-+
-     ZDP_NodeDescMsg( inMsg, aoi, desc );
-   }
-   else
-diff --git a/source/ti/zstack/startup/zstackstartup.c b/source/ti/zstack/startup/zstackstartup.c
-index 72073f7a9..47b2f1b4f 100644
---- a/source/ti/zstack/startup/zstackstartup.c
-+++ b/source/ti/zstack/startup/zstackstartup.c
-@@ -701,6 +701,14 @@ static void stackInit(void)
-     //Initialize default poll rates
-     nwk_InitializeDefaultPollRates();
- 
-+    // Use custom function for child aging leave requests
-+    pNwkNotMyChildSendLeave = &NwkNotMyChildSendLeaveCustom;
-+
-+    // Disable child aging leave for Xiaomi/Aqara extAddr range to prevent them from being kicekd out of the network.
-+    // They do not support child aging.
-+    uint8_t extAddrXiaomi [] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x8d, 0x15, 0x00};
-+    NwkDisableChildAgingLeaveAdd(extAddrXiaomi, 3);
-+
-     /* Initialize MAC buffer */
-     macLowLevelBufferInit();
- 
 diff --git a/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project b/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project
 index 9a0c4b5ab..0732ecdb6 100644
 --- a/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project
@@ -275,18 +157,6 @@ index 9a0c4b5ab..0732ecdb6 100644
 +		</link>
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
- 			<type>1</type>
-@@ -715,6 +720,11 @@
- 			<type>1</type>
- 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
- 		</link>
-+		<link>
-+			<name>Stack/nwk/nwk_util.c</name>
-+			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
-+		</link>
- 		<link>
- 			<name>Stack/nwk/reflecttrack.h</name>
  			<type>1</type>
 diff --git a/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 index 2a7704196..2e9e7ac6e 100644
@@ -748,18 +618,6 @@ index 546dd8fec..5abbb67b0 100644
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
  			<type>1</type>
-@@ -715,6 +720,11 @@
- 			<type>1</type>
- 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
- 		</link>
-+		<link>
-+			<name>Stack/nwk/nwk_util.c</name>
-+			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
-+		</link>
- 		<link>
- 			<name>Stack/nwk/reflecttrack.h</name>
- 			<type>1</type>
 diff --git a/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 index 2a7704196..2e9e7ac6e 100644
 --- a/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts
@@ -816,18 +674,6 @@ index a1c7085b5..63a8481bc 100644
 +		</link>
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
- 			<type>1</type>
-@@ -715,6 +720,11 @@
- 			<type>1</type>
- 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
- 		</link>
-+		<link>
-+			<name>Stack/nwk/nwk_util.c</name>
-+			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
-+		</link>
- 		<link>
- 			<name>Stack/nwk/reflecttrack.h</name>
  			<type>1</type>
 diff --git a/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 index 2a7704196..2e9e7ac6e 100644
@@ -886,18 +732,6 @@ index 7391bc144..21e0fb34b 100644
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
  			<type>1</type>
-@@ -715,6 +720,11 @@
- 			<type>1</type>
- 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
- 		</link>
-+		<link>
-+			<name>Stack/nwk/nwk_util.c</name>
-+			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
-+		</link>
- 		<link>
- 			<name>Stack/nwk/reflecttrack.h</name>
- 			<type>1</type>
 diff --git a/workspace/znp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 index 2a7704196..11938012f 100644
 --- a/workspace/znp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/znp_cnf.opts
@@ -955,18 +789,6 @@ index 713e60098..29346400d 100644
 +		</link>
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
- 			<type>1</type>
-@@ -715,6 +720,11 @@
- 			<type>1</type>
- 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
- 		</link>
-+		<link>
-+			<name>Stack/nwk/nwk_util.c</name>
-+			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
-+		</link>
- 		<link>
- 			<name>Stack/nwk/reflecttrack.h</name>
  			<type>1</type>
 diff --git a/workspace/znp_LP_CC2652RB_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_LP_CC2652RB_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 index 2a7704196..2e9e7ac6e 100644
