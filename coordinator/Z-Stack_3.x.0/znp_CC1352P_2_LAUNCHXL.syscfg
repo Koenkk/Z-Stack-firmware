@@ -66,6 +66,7 @@ CCFG.enableBootloaderBackdoor = true;
 CCFG.dioBootloaderBackdoor    = 15;
 CCFG.levelBootloaderBackdoor  = "Active low";
 CCFG.forceVddr                = true;
+CCFG.enableDCDC               = false;
 CCFG.ccfgTemplate.$name       = "ti_devices_CCFG_CCFGCC26XXTemplate0";
 
 rfdesign.rfDesign = "LAUNCHXL-CC1352P-2";
@@ -88,8 +89,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
 
 NVS1.$name                    = "CONFIG_NVSINTERNAL";
 NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
-NVS1.internalFlash.regionSize = 0x4000;
-NVS1.internalFlash.regionBase = 0x52000;
+NVS1.internalFlash.regionSize = 0x6000;
+NVS1.internalFlash.regionBase = 0x50000;
 
 NVS2.$name                          = "CONFIG_NVSEXTERNAL";
 NVS2.nvsType                        = "External";
@@ -180,6 +181,7 @@ zstack.deviceTypeReadOnly                    = true;
 zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
 zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
 zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
+zstack.rf.txPower                            = "9";
 zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
 zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
 zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
