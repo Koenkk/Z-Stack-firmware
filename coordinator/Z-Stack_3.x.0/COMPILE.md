@@ -19,8 +19,8 @@
    - `znp_LP_CC2652R7_tirtos7_ticlang`
    - `znp_LP_CC2652RB_tirtos7_ticlang`
 1. Press _Finish_.
-1. In Code Composer Studio, expand the 5 projects and for each open `znp.syscfg`, expand `Power Management` and change `Minimal Poll Period (ms)` to `1000`, change it back to `100` immediately and save the file.
-1. Copy `*.patch` to the SDK installation folder, open a Git Bash in this folder and apply the patch using `git apply --ignore-space-change *.patch`.
+1. Close Code Composer Studio and then copy the appropriate `syscfg` file as `znp.syscfg` into the appropriate workspace folder(s).
+   - For example copy `znp_CC26X2R1_LAUNCHXL.syscfg` into `workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/znp.syscfg`.
 1. Build the 5 projects; right click -> *Build project*.
    - **Important:** by default the **launchpad** variant of the CC1352P2_CC2652P (= `znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang`) is build. To build the **other** variant configure the correct pins in Code Compose Studio, don't forget to save.
 1. Once finished, the firmware can be found under `znp_*_tirtos7_ticlang/default/znp_*_tirtos7_ticlang.hex`
