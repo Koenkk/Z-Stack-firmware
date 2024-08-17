@@ -728,7 +728,7 @@ index 060717f99..f7c0bd319 100644
  zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
  zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
  zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
-+zstack.rf.txPower                            = "20";
++zstack.rf.txPower                            = "9";
  zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
  zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
  zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
