@@ -1,0 +1,3 @@
+[submodule "simplelink_f2_examples_sdk"]
+	path = simplelink_f2_examples_sdk
+	url = https://github.com/Koenkk/simplelink-zstack-examples
