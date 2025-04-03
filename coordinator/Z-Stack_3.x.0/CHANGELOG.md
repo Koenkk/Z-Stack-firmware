@@ -1,3 +1,8 @@
+# 20250321
+
+- Attempted to fix some `BUFFER_FULL` errors
+- Updated SimpleLink SDK to 8.30.01.01
+
 # 20240710
 
 - Fixed firmware instability issues introduced in the 20230507 firmware
