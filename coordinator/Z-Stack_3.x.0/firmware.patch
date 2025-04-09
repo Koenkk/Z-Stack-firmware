@@ -1,60 +1,483 @@
-From c5918a783796fa26671a8ed1c8515c37277be7ef Mon Sep 17 00:00:00 2001
+From b056309dcb661296e42b8de7633f25a746338648 Mon Sep 17 00:00:00 2001
 From: Koen Kanters <koenkanters94@gmail.com>
-Date: Fri, 21 Mar 2025 22:31:30 +0100
-Subject: [PATCH] Changes
+Date: Tue, 8 Apr 2025 20:45:44 +0200
+Subject: [PATCH] Own changes
 
 ---
+ package.py                                    |  36 ++
+ source/preinclude.h                           | 122 ++++++
+ .../zstack/apps/genericapp/zcl_genericapp.c   |  32 ++
+ .../apps/genericapp/zcl_genericapp_data.c     |  57 ++-
  .../cc13x2_cc26x2_tirtos7_ticlang.cmd         |   8 +-
  .../cc13x2x7_cc26x2x7_tirtos7_ticlang.cmd     |   8 +-
- .../cc13x4_cc26x4_tirtos7_ticlang.cmd         |   2 +-
+ .../cc13x4_cc26x4_tirtos7_ticlang.cmd         |   4 +-
  source/ti/zstack/mt/mt.h                      |   4 +
  source/ti/zstack/mt/mt_util.c                 | 119 +++++-
  source/ti/zstack/mt/mt_version.c              |   6 +-
  source/ti/zstack/mt/mt_zdo.c                  |   5 +
  source/ti/zstack/npi/npi_tl_uart.c            |  49 ++-
  source/ti/zstack/npi/npi_tl_uart.h            |   2 +-
- source/ti/zstack/stack/Config/preinclude.h    | 110 +++++
- source/ti/zstack/stack/af/af.c                |  18 +-
+ source/ti/zstack/stack/af/af.c                |  25 +-
  source/ti/zstack/stack/nwk/nwk_globals.c      |   8 +-
  source/ti/zstack/stack/nwk/nwk_util.c         |  49 +++
  source/ti/zstack/stack/nwk/nwk_util.h         |   4 +
- source/ti/zstack/stack/sys/zglobals.c         |   2 +-
+ source/ti/zstack/stack/sys/zcomdef.h          |   5 +
+ source/ti/zstack/stack/sys/zglobals.c         |   6 +-
+ source/ti/zstack/stack/zcl/zcl.c              |  12 +
  source/ti/zstack/stack/zdo/zd_app.c           |   8 +
  source/ti/zstack/stack/zdo/zd_object.c        |  14 +
  source/ti/zstack/stack/zdo/zd_sec_mgr.c       |  23 ++
  source/ti/zstack/stack/zdo/zd_sec_mgr.h       |   5 +
  source/ti/zstack/startup/zstackstartup.c      |   8 +
  .../.project                                  |  10 +
- .../Stack/Config/znp_cnf.opts                 |   2 +
+ .../Stack/Config/znp_cnf.opts                 |   3 +
  .../ti_devices_config.c                       | 108 +++++
  .../ti_drivers_config.h                       | 283 +++++++++++++
  .../ti_radio_config.c                         | 385 ++++++++++++++++++
  .../ti_radio_config.h                         |  83 ++++
  .../znp.syscfg                                |  10 +-
  .../.project                                  |  10 +
- .../Stack/Config/znp_cnf.opts                 |   2 +
+ .../Stack/Config/znp_cnf.opts                 |   3 +
  .../znp.syscfg                                |   6 +-
  .../.project                                  |  10 +
- .../Stack/Config/znp_cnf.opts                 |   2 +
+ .../Stack/Config/znp_cnf.opts                 |   3 +
  .../znp.syscfg                                |   6 +-
  .../znp_LP_CC2652R7_tirtos7_ticlang/.project  |  10 +
- .../Stack/Config/znp_cnf.opts                 |   2 +
+ .../Stack/Config/znp_cnf.opts                 |   3 +
  .../znp.syscfg                                |   6 +-
  .../znp_LP_CC2652RB_tirtos7_ticlang/.project  |  10 +
- .../Stack/Config/znp_cnf.opts                 |   2 +
+ .../Stack/Config/znp_cnf.opts                 |   3 +
  .../znp.syscfg                                |   6 +-
  .../.cproject                                 |   2 +-
  .../.project                                  |  10 +
- .../Stack/Config/znp_cnf.opts                 |   2 +
+ .../Stack/Config/znp_cnf.opts                 |   3 +
  .../znp.syscfg                                |   2 +
- 43 files changed, 1368 insertions(+), 53 deletions(-)
- create mode 100644 source/ti/zstack/stack/Config/preinclude.h
+ .../.project                                  |  10 +
+ .../Stack/Config/f8wrouter.opts               |   3 +
+ .../ti_devices_config.c                       |   1 +
+ .../ti_drivers_config.h                       |   1 +
+ .../ti_radio_config.c                         |   1 +
+ .../ti_radio_config.h                         |   1 +
+ .../zr_genericapp.syscfg                      |  11 +-
+ .../.project                                  |  10 +
+ .../Stack/Config/f8wrouter.opts               |   3 +
+ .../zr_genericapp.syscfg                      |   7 +-
+ .../.project                                  |  10 +
+ .../Stack/Config/f8wrouter.opts               |   3 +
+ .../zr_genericapp.syscfg                      |   6 +-
+ .../.project                                  |  10 +
+ .../Stack/Config/f8wrouter.opts               |   3 +
+ .../zr_genericapp.syscfg                      |   7 +-
+ .../.project                                  |  10 +
+ .../Stack/Config/f8wrouter.opts               |   3 +
+ .../zr_genericapp.syscfg                      |   7 +-
+ .../.cproject                                 |   2 +-
+ .../.project                                  |  10 +
+ .../Stack/Config/f8wrouter.opts               |   3 +
+ .../zr_genericapp.syscfg                      |   3 +
+ 71 files changed, 1646 insertions(+), 73 deletions(-)
+ create mode 100644 package.py
+ create mode 100644 source/preinclude.h
  create mode 100644 source/ti/zstack/stack/nwk/nwk_util.c
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_drivers_config.h
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.c
  create mode 100644 workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.h
+ create mode 120000 workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c
+ create mode 120000 workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_drivers_config.h
+ create mode 120000 workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.c
+ create mode 120000 workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.h
 
+diff --git a/package.py b/package.py
+new file mode 100644
+index 000000000..ecade4f9a
+--- /dev/null
++++ b/package.py
+@@ -0,0 +1,36 @@
++import glob
++import zipfile
++from pathlib import Path
++import re
++
++preinclude_file = Path("source") / "preinclude.h"
++coordinator_version = re.search(r'CODE_REVISION_NUMBER\s*(\d+)', preinclude_file.read_text())[1]
++router_version = re.search(r'ZCL_GENERIC_APP_SW_BUILD_ID { 8, (.*) }', preinclude_file.read_text())[1].replace("'", "").replace(",", "")
++cc1352p2_is_launchpad = re.search(r'#define LAUNCHPAD_CONFIG (\d)', preinclude_file.read_text())[1] == "1"
++cc1352p2_variant = "launchpad" if cc1352p2_is_launchpad else "other"
++
++dist_dir = Path("dist")
++dist_dir.mkdir(exist_ok=True)
++
++lookup = {
++    # Router
++    "zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang": f"CC2674P10_router_{router_version}",
++    "zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang": f"CC1352P2_CC2652P_{cc1352p2_variant}_router_{router_version}",
++    "zr_genericapp_LP_CC2652R7_tirtos7_ticlang": f"CC2652R7_router_{router_version}",
++    "zr_genericapp_LP_CC2652RB_tirtos7_ticlang": f"CC2652RB_router_{router_version}",
++    "zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang": f"CC2652R_router_{router_version}",
++    "zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang": f"CC1352P7_router_{router_version}",
++    # Coordinator
++    "znp_LP_EM_CC2674P10_tirtos7_ticlang": f"CC2674P10_coordinator_{coordinator_version}",
++    "znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang": f"CC1352P2_CC2652P_{cc1352p2_variant}_coordinator_{coordinator_version}",
++    "znp_LP_CC2652R7_tirtos7_ticlang": f"CC2652R7_coordinator_{coordinator_version}",
++    "znp_LP_CC2652RB_tirtos7_ticlang": f"CC2652RB_coordinator_{coordinator_version}",
++    "znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang": f"CC2652R_coordinator_{coordinator_version}",
++    "znp_LP_CC1352P7_4_tirtos7_ticlang": f"CC1352P7_coordinator_{coordinator_version}",
++}
++
++hex_files = [Path(p) for p in glob.glob("workspace/**/default/*ticlang.hex", recursive=True)]
++for file in hex_files:
++    name = lookup[file.parts[1]]
++    with zipfile.ZipFile(dist_dir / f"{name}.zip", 'w') as zipf:
++        zipf.write(file, arcname=f"{name}.hex")
+diff --git a/source/preinclude.h b/source/preinclude.h
+new file mode 100644
+index 000000000..641087801
+--- /dev/null
++++ b/source/preinclude.h
+@@ -0,0 +1,122 @@
++// Increase MAC buffers, multiplied default value by 10
++#undef MAC_CFG_TX_DATA_MAX
++#define MAC_CFG_TX_DATA_MAX 50
++#undef MAC_CFG_TX_MAX
++#define MAC_CFG_TX_MAX 80 
++#undef MAC_CFG_RX_MAX
++#define MAC_CFG_RX_MAX 50
++
++// From https://www.ti.com/lit/an/swra650b/swra650b.pdf
++#define LINK_DOWN_TRIGGER 12
++#define NWK_ROUTE_AGE_LIMIT 5
++#define DEF_NWK_RADIUS 15
++#define DEFAULT_ROUTE_REQUEST_RADIUS 8
++#define ZDNWKMGR_MIN_TRANSMISSIONS 0
++#define ROUTE_DISCOVERY_TIME 13
++#define MTO_RREQ_LIMIT_TIME 5000
++
++// Increase NV pages to allow for bigger device tables
++// not for `CC2674P10` as it has 5 pages by default.
++#ifndef EM_CC2674P10_LP
++    #undef NVOCMP_NVPAGES
++    #define NVOCMP_NVPAGES 3
++#endif
++
++// Determines the maximum number of “secure partners” that the network Trust Center (ZC) can support. 
++// This value will be the upper limit of Zigbee 3.0 devices which are allowed in the network
++#ifdef EM_CC2674P10_LP
++    #define ZDSECMGR_TC_DEVICE_MAX 400
++#else
++    #define ZDSECMGR_TC_DEVICE_MAX 200
++#endif
++
++// Increase the max number of boardcasts, the default broadcast delivery time is 3 seconds
++// with the value below this will allow for 1 broadcast every 0.15 second
++#define MAX_BCAST 30
++
++//  Determines the maximum number of devices in the Neighbor Table.
++#define MAX_NEIGHBOR_ENTRIES 50
++
++// Number of devices in the standard Routing Table, which is used for AODV routing.
++// Only stores information for 1-hop routes, so this table does not need to be as big as the Source Route table.
++#define MAX_RTG_ENTRIES 150
++#define ROUTE_EXPIRY_TIME 2
++
++#ifdef IS_COORDINATOR
++    // Firmware version, used in mt_version.c
++    #define CODE_REVISION_NUMBER 20250321
++
++    // Required, otherwise firmware crashes after some uptime in some cases.
++    #define NVOCMP_RECOVER_FROM_COMPACT_FAILURE
++
++    // Required in order to use the extended MT API commands.
++    #define FEATURE_NVEXID 1
++
++    // Grants access to the security key data
++    #define MT_SYS_KEY_MANAGEMENT 1
++
++    // Increase by 1 to compensate for lag (default is 7)
++    #define NWK_INDIRECT_MSG_TIMEOUT 8
++
++    // Increase frame retries
++    #define ZMAC_MAX_FRAME_RETRIES 7
++    #define NWK_MAX_DATA_RETRIES 4
++
++    // Disabling MULTICAST is required in order for proper group support.
++    // If MULTICAST is not disabled, the group adress is not included in the APS header
++    #define MULTICAST_ENABLED FALSE
++
++    // Reduce the APS ack wait duration from 6000 ms to 1000 ms (value * 2 = value in ms).
++    // This will make requests timeout quicker, in pratice the default timeout of 6000ms is too long.
++    #define APSC_ACK_WAIT_DURATION_POLLED 500
++
++    // Enable MTO routing
++    // MTO Routing will be used in addition to the standard AODV routing to provide additional route discovery opportunities.
++    // Especially useful for larger networks with multiple hops.
++    #define CONCENTRATOR_ENABLE TRUE
++    #define CONCENTRATOR_ROUTE_CACHE TRUE
++    #define CONCENTRATOR_DISCOVERY_TIME 60
++    #define MAX_RTG_SRC_ENTRIES 250
++    #define SRC_RTG_EXPIRY_TIME 10
++
++    // The number of simultaneous route discoveries in network
++    #define MAX_RREQ_ENTRIES 40
++
++    // Size of the conflicted address table
++    #define CONFLICTED_ADDR_TABLE_SIZE 15
++
++    // Number of devices which have associated directly through the coordinator
++    // This does not determine the upper limit in the number of nodes in the network, 
++    // just the upper limit for number of nodes directly connected to a certain routing node
++    #define NWK_MAX_DEVICE_LIST 75
++#endif
++
++#ifdef IS_ROUTER
++    #define ZCL_GENERIC_APP_SW_BUILD_ID { 8, '2','0','2','5','0','4','0','3' }
++    #define ZCL_REPORT_DESTINATION_DEVICE
++    #define BDB_REPORTING
++    #define CUI_DISABLE
++    #define NWK_MAX_DEVICE_LIST     50
++    #define ZDO_API_ADVANCED
++    #define ATTRID_BASIC_TRANSMIT_POWER 0x1337
++#endif
++
++// Set default transmit power to 9 for PA devices
++#if defined(CC1352P_2) || defined(DeviceFamily_CC13X2X7)
++    #define TXPOWER 9
++#endif
++
++// CC1352P2 specific
++#if defined(CC1352P_2)
++    // Different configs, set `LAUNCHPAD_CONFIG` to `0` for "other" firmware
++    #define LAUNCHPAD_CONFIG 1
++    #if LAUNCHPAD_CONFIG == 1
++        #define CONFIG_RF_24GHZ                         0x0000001c
++        #define CONFIG_RF_HIGH_PA                       0x0000001d
++        #define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA  0xc1
++    #else
++        #define CONFIG_RF_24GHZ                         0x0000006
++        #define CONFIG_RF_HIGH_PA                       0x0000005
++        #define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA  0xfa
++    #endif
++#endif
+diff --git a/source/ti/zstack/apps/genericapp/zcl_genericapp.c b/source/ti/zstack/apps/genericapp/zcl_genericapp.c
+index b6d89494b..42eee6d42 100644
+--- a/source/ti/zstack/apps/genericapp/zcl_genericapp.c
++++ b/source/ti/zstack/apps/genericapp/zcl_genericapp.c
+@@ -53,6 +53,9 @@
+  * INCLUDES
+  */
+ 
++#include <driverlib/sys_ctrl.h>
++#include "osal_nv.h"
++
+ #include "rom_jt_154.h"
+ #include "zcomdef.h"
+ 
+@@ -261,6 +264,16 @@ void sampleApp_task(NVINTF_nvFuncts_t *pfnNV)
+   pfnZdlNV = pfnNV;
+   zclport_registerNV(pfnZdlNV, ZCL_PORT_SCENE_TABLE_NV_ID);
+ 
++#ifdef IS_ROUTER
++  // Init the transmit power NV item, this will be skipped if item is already initialized
++  int8_t transmitPower = TXPOWER;
++  osal_nv_item_init( ZCD_NV_TRANSMIT_POWER, sizeof(transmitPower), &transmitPower );
++
++  // Set transmit power
++  osal_nv_read( ZCD_NV_TRANSMIT_POWER, 0, sizeof( transmitPower ), &transmitPower );
++  ZMacSetTransmitPower( (ZMacTransmitPower_t)transmitPower );
++#endif
++
+   // Initialize application
+   zclGenericApp_initialization();
+ 
+@@ -870,6 +883,9 @@ static void zclGenericApp_processAfIncomingMsgInd(zstack_afIncomingMsgInd_t *pIn
+  */
+ static void zclGenericApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *bdbCommissioningModeMsg)
+ {
++#ifdef IS_ROUTER
++  zstack_bdbStartCommissioningReq_t zstack_bdbStartCommissioningReq;
++#endif
+   switch(bdbCommissioningModeMsg->bdbCommissioningMode)
+   {
+     case BDB_COMMISSIONING_FORMATION:
+@@ -909,6 +925,10 @@ static void zclGenericApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *
+       }
+     break;
+     case BDB_COMMISSIONING_INITIALIZATION:
++#ifdef IS_ROUTER
++      zstack_bdbStartCommissioningReq.commissioning_mode = BDB_COMMISSIONING_MODE_NWK_STEERING | BDB_COMMISSIONING_MODE_FINDING_BINDING;
++      Zstackapi_bdbStartCommissioningReq(appServiceTaskId,&zstack_bdbStartCommissioningReq);
++#endif
+       //Initialization notification can only be successful. Failure on initialization
+       //only happens for ZED and is notified as BDB_COMMISSIONING_PARENT_LOST notification
+ 
+@@ -1209,6 +1229,17 @@ static void zclGenericApp_changeKeyCallback(Button_Handle _btn, Button_EventMask
+  */
+ static void zclGenericApp_processKey(Button_Handle _btn)
+ {
++#ifdef IS_ROUTER
++    NLME_LeaveReq_t         req;
++    memset( &req, 0, sizeof( NLME_LeaveReq_t ) );
++    NLME_LeaveReq(&req);
++    // Sleep for 2 seconds, otherwise leave request is not send
++    Task_sleep(2000 * (1000 / ClockP_getSystemTickPeriod()));
++
++    zgWriteStartupOptions( ZG_STARTUP_SET, ZCD_STARTOPT_DEFAULT_NETWORK_STATE | ZCD_STARTOPT_DEFAULT_CONFIG_STATE);
++      
++    SysCtrlSystemReset();
++#else
+     zstack_bdbStartCommissioningReq_t zstack_bdbStartCommissioningReq;
+     //Button 1
+     if(_btn == gLeftButtonHandle)
+@@ -1230,6 +1261,7 @@ static void zclGenericApp_processKey(Button_Handle _btn)
+     {
+         Zstackapi_bdbResetLocalActionReq(appServiceTaskId);
+     }
++#endif
+ 
+ }
+ 
+diff --git a/source/ti/zstack/apps/genericapp/zcl_genericapp_data.c b/source/ti/zstack/apps/genericapp/zcl_genericapp_data.c
+index 2738ea9a7..f50d91b59 100644
+--- a/source/ti/zstack/apps/genericapp/zcl_genericapp_data.c
++++ b/source/ti/zstack/apps/genericapp/zcl_genericapp_data.c
+@@ -49,6 +49,8 @@
+ #include "zcl_general.h"
+ #include "zcl_ha.h"
+ 
++#include "osal_nv.h"
++
+ /* GENERICAPP_TODO: Include any of the header files below to access specific cluster data
+ #include "zcl_poll_control.h"
+ #include "zcl_electrical_measurement.h"
+@@ -96,6 +98,11 @@ const uint16_t zclGenericApp_identify_clusterRevision = 0x0001;
+ const uint8_t zclGenericApp_HWRevision = GENERICAPP_HWVERSION;
+ const uint8_t zclGenericApp_ZCLVersion = GENERICAPP_ZCLVERSION;
+ const uint8_t zclGenericApp_ManufacturerName[] = { 16, 'T','e','x','a','s','I','n','s','t','r','u','m','e','n','t','s' };
++#ifdef IS_ROUTER
++const uint8_t zclGenericApp_ModelID[] = { 9, 't','i','.','r','o','u','t','e','r' };
++const uint8_t zclGenericApp_SwBuildID[] = ZCL_GENERIC_APP_SW_BUILD_ID;
++int8_t zclGenericApp_TransmitPower;
++#endif
+ const uint8_t zclGenericApp_PowerSource = POWER_SOURCE_MAINS_1_PHASE;
+ uint8_t zclGenericApp_PhysicalEnvironment = PHY_UNSPECIFIED_ENV;
+ 
+@@ -134,7 +141,7 @@ CONST zclAttrRec_t zclGenericApp_Attrs[] =
+     {  // Attribute record
+       ATTRID_BASIC_HW_VERSION,            // Attribute ID - Found in Cluster Library header (ie. zcl_general.h)
+       ZCL_DATATYPE_UINT8,                 // Data Type - found in zcl.h
+-      ACCESS_CONTROL_READ,                // Variable access control - found in zcl.h
++      (ACCESS_CONTROL_READ | ACCESS_CONTROL_AUTH_READ),  // Variable access control - found in zcl.h
+       (void *)&zclGenericApp_HWRevision  // Pointer to attribute variable
+     }
+   },
+@@ -143,16 +150,36 @@ CONST zclAttrRec_t zclGenericApp_Attrs[] =
+     { // Attribute record
+       ATTRID_BASIC_ZCL_VERSION,
+       ZCL_DATATYPE_UINT8,
+-      ACCESS_CONTROL_READ,
++      (ACCESS_CONTROL_READ | ACCESS_REPORTABLE | ACCESS_CONTROL_AUTH_READ),
+       (void *)&zclGenericApp_ZCLVersion
+     }
+   },
++#ifdef IS_ROUTER
++  {
++    ZCL_CLUSTER_ID_GENERAL_BASIC,
++    { // Attribute record
++      ATTRID_BASIC_MODEL_IDENTIFIER,
++      ZCL_DATATYPE_CHAR_STR,
++      (ACCESS_CONTROL_READ | ACCESS_CONTROL_AUTH_READ),
++      (void *)zclGenericApp_ModelID
++    }
++  },
++  {
++    ZCL_CLUSTER_ID_GENERAL_BASIC,
++    { // Attribute record
++      ATTRID_BASIC_SW_BUILD_ID,
++      ZCL_DATATYPE_CHAR_STR,
++      (ACCESS_CONTROL_READ | ACCESS_CONTROL_AUTH_READ),
++      (void *)zclGenericApp_SwBuildID
++    }
++  },
++#endif
+   {
+     ZCL_CLUSTER_ID_GENERAL_BASIC,
+     { // Attribute record
+       ATTRID_BASIC_MANUFACTURER_NAME,
+       ZCL_DATATYPE_CHAR_STR,
+-      ACCESS_CONTROL_READ,
++      (ACCESS_CONTROL_READ | ACCESS_CONTROL_AUTH_READ),
+       (void *)zclGenericApp_ManufacturerName
+     }
+   },
+@@ -161,7 +188,7 @@ CONST zclAttrRec_t zclGenericApp_Attrs[] =
+     { // Attribute record
+       ATTRID_BASIC_POWER_SOURCE,
+       ZCL_DATATYPE_ENUM8,
+-      ACCESS_CONTROL_READ,
++      (ACCESS_CONTROL_READ | ACCESS_CONTROL_AUTH_READ),
+       (void *)&zclGenericApp_PowerSource
+     }
+   },
+@@ -170,7 +197,7 @@ CONST zclAttrRec_t zclGenericApp_Attrs[] =
+     { // Attribute record
+       ATTRID_BASIC_PHYSICAL_ENVIRONMENT,
+       ZCL_DATATYPE_ENUM8,
+-      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE),
++      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE | ACCESS_CONTROL_AUTH_READ),
+       (void *)&zclGenericApp_PhysicalEnvironment
+     }
+   },
+@@ -179,10 +206,21 @@ CONST zclAttrRec_t zclGenericApp_Attrs[] =
+     {  // Attribute record
+       ATTRID_CLUSTER_REVISION,
+       ZCL_DATATYPE_UINT16,
+-      ACCESS_CONTROL_READ,
++      (ACCESS_CONTROL_READ | ACCESS_CONTROL_AUTH_READ),
+       (void *)&zclGenericApp_basic_clusterRevision
+     }
+   },
++#ifdef IS_ROUTER
++  {
++    ZCL_CLUSTER_ID_GENERAL_BASIC,
++    {  // Attribute record
++     ATTRID_BASIC_TRANSMIT_POWER,
++     ZCL_DATATYPE_INT8,
++     (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE | ACCESS_CONTROL_AUTH_READ),
++     (void *)&zclGenericApp_TransmitPower
++    }
++  },
++#endif
+ 
+ #ifdef ZCL_IDENTIFY
+   // *** Identify Cluster Attribute ***
+@@ -191,7 +229,7 @@ CONST zclAttrRec_t zclGenericApp_Attrs[] =
+     { // Attribute record
+       ATTRID_IDENTIFY_IDENTIFY_TIME,
+       ZCL_DATATYPE_UINT16,
+-      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE),
++      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE | ACCESS_CONTROL_AUTH_READ),
+       (void *)&zclGenericApp_IdentifyTime
+     }
+   },
+@@ -201,7 +239,7 @@ CONST zclAttrRec_t zclGenericApp_Attrs[] =
+     {  // Attribute record
+       ATTRID_CLUSTER_REVISION,
+       ZCL_DATATYPE_UINT16,
+-      ACCESS_CONTROL_READ,
++      (ACCESS_CONTROL_READ | ACCESS_CONTROL_AUTH_READ),
+       (void *)&zclGenericApp_identify_clusterRevision
+     }
+   },
+@@ -276,6 +314,9 @@ void zclGenericApp_ResetAttributesToDefaultValues(void)
+ {
+ 
+   zclGenericApp_PhysicalEnvironment = PHY_UNSPECIFIED_ENV;
++#ifdef IS_ROUTER
++  osal_nv_read( ZCD_NV_TRANSMIT_POWER, 0, sizeof( zclGenericApp_TransmitPower ), &zclGenericApp_TransmitPower );
++#endif
+ 
+ #ifdef ZCL_IDENTIFY
+   zclGenericApp_IdentifyTime = 0;
 diff --git a/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd b/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd
 index 54806e395..89a8b8291 100755
 --- a/source/ti/zstack/boards/cc13x2_cc26x2/cc13x2_cc26x2_tirtos7_ticlang.cmd
@@ -107,7 +530,7 @@ index 1e5777c21..ababb2c7f 100755
  #define FLASH_LAST_SIZE         0x2000
  
 diff --git a/source/ti/zstack/boards/cc13x4_cc26x4/cc13x4_cc26x4_tirtos7_ticlang.cmd b/source/ti/zstack/boards/cc13x4_cc26x4/cc13x4_cc26x4_tirtos7_ticlang.cmd
-index ff3cb97e9..4224df526 100755
+index ff3cb97e9..983668b5a 100755
 --- a/source/ti/zstack/boards/cc13x4_cc26x4/cc13x4_cc26x4_tirtos7_ticlang.cmd
 +++ b/source/ti/zstack/boards/cc13x4_cc26x4/cc13x4_cc26x4_tirtos7_ticlang.cmd
 @@ -30,7 +30,7 @@
@@ -119,6 +542,15 @@ index ff3cb97e9..4224df526 100755
  
  HEAPSIZE = 0x4000;  /* Size of heap buffer used by HeapMem */
  
+@@ -51,7 +51,7 @@ HEAPSIZE = 0x4000;  /* Size of heap buffer used by HeapMem */
+ /* modifications in your CCS project and leave this file alone.              */
+ /*                                                                           */
+ /* --heap_size=0                                                             */
+---stack_size=1024
++--stack_size=4096
+ /* --library=rtsv7M3_T_le_eabi.lib                                           */
+ 
+ #define NVOCMP_NVPAGES          5
 diff --git a/source/ti/zstack/mt/mt.h b/source/ti/zstack/mt/mt.h
 index 0435d72c6..28d9e61ff 100644
 --- a/source/ti/zstack/mt/mt.h
@@ -465,139 +897,27 @@ index 499f96c81..576e4b4c8 100644
  #define UART_ISR_BUF_CNT 2
  
  // ****************************************************************************
-diff --git a/source/ti/zstack/stack/Config/preinclude.h b/source/ti/zstack/stack/Config/preinclude.h
-new file mode 100644
-index 000000000..983c35a64
---- /dev/null
-+++ b/source/ti/zstack/stack/Config/preinclude.h
-@@ -0,0 +1,110 @@
-+// Firmware version, used in mt_version.c
-+#define CODE_REVISION_NUMBER 20250321
-+
-+// Required, otherwise firmware crashes after some uptime in some cases.
-+#define NVOCMP_RECOVER_FROM_COMPACT_FAILURE
-+
-+// Required in order to use the extended MT API commands.
-+#define FEATURE_NVEXID 1
-+
-+// Grants access to the security key data
-+#define MT_SYS_KEY_MANAGEMENT 1
-+
-+// Increase by 1 to compensate for lag (default is 7)
-+#define NWK_INDIRECT_MSG_TIMEOUT 8
-+
-+// Increase frame retries
-+#define ZMAC_MAX_FRAME_RETRIES 7
-+#define NWK_MAX_DATA_RETRIES 4
-+
-+// Increase MAC buffers, multiplied default value by 10
-+#undef MAC_CFG_TX_DATA_MAX
-+#define MAC_CFG_TX_DATA_MAX 50
-+#undef MAC_CFG_TX_MAX
-+#define MAC_CFG_TX_MAX 80 
-+#undef MAC_CFG_RX_MAX
-+#define MAC_CFG_RX_MAX 50
-+
-+// From https://www.ti.com/lit/an/swra650b/swra650b.pdf
-+#define LINK_DOWN_TRIGGER 12
-+#define NWK_ROUTE_AGE_LIMIT 5
-+#define DEF_NWK_RADIUS 15
-+#define DEFAULT_ROUTE_REQUEST_RADIUS 8
-+#define ZDNWKMGR_MIN_TRANSMISSIONS 0
-+#define ROUTE_DISCOVERY_TIME 13
-+#define MTO_RREQ_LIMIT_TIME 5000
-+
-+// Increase NV pages to allow for bigger device tables
-+// not for `CC2674P10` as it has 5 pages by default.
-+#ifndef EM_CC2674P10_LP
-+    #undef NVOCMP_NVPAGES
-+    #define NVOCMP_NVPAGES 3
-+#endif
-+
-+// Disabling MULTICAST is required in order for proper group support.
-+// If MULTICAST is not disabled, the group adress is not included in the APS header
-+#define MULTICAST_ENABLED FALSE
-+
-+// Increase the max number of boardcasts, the default broadcast delivery time is 3 seconds
-+// with the value below this will allow for 1 broadcast every 0.15 second
-+#define MAX_BCAST 30
-+
-+// Reduce the APS ack wait duration from 6000 ms to 1000 ms (value * 2 = value in ms).
-+// This will make requests timeout quicker, in pratice the default timeout of 6000ms is too long.
-+#define APSC_ACK_WAIT_DURATION_POLLED 500
-+
-+// Enable MTO routing
-+// MTO Routing will be used in addition to the standard AODV routing to provide additional route discovery opportunities.
-+// Especially useful for larger networks with multiple hops.
-+#define CONCENTRATOR_ENABLE TRUE
-+#define CONCENTRATOR_ROUTE_CACHE TRUE
-+#define CONCENTRATOR_DISCOVERY_TIME 60
-+#define MAX_RTG_SRC_ENTRIES 250
-+#define SRC_RTG_EXPIRY_TIME 10
-+
-+// The number of simultaneous route discoveries in network
-+#define MAX_RREQ_ENTRIES 40
-+
-+// Size of the conflicted address table
-+#define CONFLICTED_ADDR_TABLE_SIZE 15
-+
-+// Number of devices which have associated directly through the coordinator
-+// This does not determine the upper limit in the number of nodes in the network, 
-+// just the upper limit for number of nodes directly connected to a certain routing node
-+#define NWK_MAX_DEVICE_LIST 75
-+
-+//  Determines the maximum number of devices in the Neighbor Table.
-+#define MAX_NEIGHBOR_ENTRIES 50
-+
-+// Number of devices in the standard Routing Table, which is used for AODV routing.
-+// Only stores information for 1-hop routes, so this table does not need to be as big as the Source Route table.
-+#define MAX_RTG_ENTRIES 150
-+#define ROUTE_EXPIRY_TIME 2
-+
-+// Determines the maximum number of “secure partners” that the network Trust Center (ZC) can support. 
-+// This value will be the upper limit of Zigbee 3.0 devices which are allowed in the network
-+#ifdef EM_CC2674P10_LP
-+    #define ZDSECMGR_TC_DEVICE_MAX 400
-+#else
-+    #define ZDSECMGR_TC_DEVICE_MAX 200
-+#endif
-+
-+// Set default transmit power to 9 for PA devices
-+#if defined(CC1352P_2) || defined(DeviceFamily_CC13X2X7)
-+    #define TXPOWER 9
-+#endif
-+
-+// CC1352P2 specific
-+#if defined(CC1352P_2)
-+    // Different configs, comment `LAUNCHPAD_CONFIG` for "other" firmware
-+    #define LAUNCHPAD_CONFIG 1
-+    #ifdef LAUNCHPAD_CONFIG
-+        #define CONFIG_RF_24GHZ                         0x0000001c
-+        #define CONFIG_RF_HIGH_PA                       0x0000001d
-+        #define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA  0xc1
-+    #else
-+        #define CONFIG_RF_24GHZ                         0x0000006
-+        #define CONFIG_RF_HIGH_PA                       0x0000005
-+        #define SET_CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA  0xfa
-+    #endif
-+#endif
 diff --git a/source/ti/zstack/stack/af/af.c b/source/ti/zstack/stack/af/af.c
-index d1de1d45c..1f791c719 100644
+index d1de1d45c..1ae7b9a15 100644
 --- a/source/ti/zstack/stack/af/af.c
 +++ b/source/ti/zstack/stack/af/af.c
-@@ -433,10 +433,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+@@ -433,10 +433,22 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
  #if !defined ( APS_NO_GROUPS )
      // Find the first endpoint for this group
      grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
 -    if ( grpEp == APS_GROUPS_EP_NOT_FOUND )
 -      return;   // No endpoint found
 +    if ( grpEp == APS_GROUPS_EP_NOT_FOUND ) {
++#ifdef IS_COORDINATOR
 +      // No endpoint found, default to endpoint 1.
 +      // In the original source code there is a return here.
 +      // This prevent the messags from being forwarded.
 +      // For our use-case we want to capture all messages.
 +      // Even if the coordinator is not in the group.
 +      epDesc = afFindEndPointDesc( 1 );
++#else
++      return;
++#endif
 +    }
 +    else {
 +      epDesc = afFindEndPointDesc( grpEp );
@@ -607,14 +927,17 @@ index d1de1d45c..1f791c719 100644
      if ( epDesc == NULL )
        return;   // Endpoint descriptor not found
  
-@@ -483,7 +491,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
+@@ -483,7 +495,12 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
      // if the Wildcard ProfileID is received the message should not be sent to ZDO endpoint
      if ( (aff->ProfileID == epProfileID) ||
           ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
 -         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) )
-+         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) ||
++         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID ))
++#ifdef IS_COORDINATOR
 +         // Forward messages to endpoint even with profileID mismatches
-+         ((aff->ProfileID >= 0x100) && (aff->ProfileID <= 0xFC01)) )
++         || ((aff->ProfileID >= 0x100) && (aff->ProfileID <= 0xFC01)) 
++#endif
++        )
      {
        // Save original endpoint
        uint8_t endpoint = aff->DstEndPoint;
@@ -707,19 +1030,69 @@ index 468227b32..804bd303b 100644
  /****************************************************************************
   * Utility function to copy NV items
   ****************************************************************************/
+diff --git a/source/ti/zstack/stack/sys/zcomdef.h b/source/ti/zstack/stack/sys/zcomdef.h
+index 57e0aa34b..bdc449029 100644
+--- a/source/ti/zstack/stack/sys/zcomdef.h
++++ b/source/ti/zstack/stack/sys/zcomdef.h
+@@ -123,6 +123,11 @@ extern "C"
+ #define ZCD_NV_STARTUP_OPTION             0x0003
+ #define ZCD_NV_START_DELAY                0x0004
+ 
++#ifdef IS_ROUTER
++// Custom transmit power NV item
++#define ZCD_NV_TRANSMIT_POWER             0x0010
++#endif
++
+ // NWK Layer NV item IDs
+ #define ZCD_NV_NIB                        0x0021
+ #define ZCD_NV_DEVICE_LIST                0x0022
 diff --git a/source/ti/zstack/stack/sys/zglobals.c b/source/ti/zstack/stack/sys/zglobals.c
-index 0a1d7d2a6..8e7cbf6ff 100644
+index 0a1d7d2a6..3d0801eda 100644
 --- a/source/ti/zstack/stack/sys/zglobals.c
 +++ b/source/ti/zstack/stack/sys/zglobals.c
-@@ -131,7 +131,7 @@ uint8_t zgSecurePermitJoin = TRUE;
+@@ -131,7 +131,11 @@ uint8_t zgSecurePermitJoin = TRUE;
  // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
  // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
  // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
 -uint8_t zgAllowRejoinsWithWellKnownKey = FALSE;
++#ifdef IS_COORDINATOR
 +uint8_t zgAllowRejoinsWithWellKnownKey = TRUE; // https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/882650/3265311#3265311
++#else
++uint8_t zgAllowRejoinsWithWellKnownKey = FALSE; 
++#endif
  
  //allowInstallCodes
  uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
+diff --git a/source/ti/zstack/stack/zcl/zcl.c b/source/ti/zstack/stack/zcl/zcl.c
+index 5d3af48da..ea186c298 100644
+--- a/source/ti/zstack/stack/zcl/zcl.c
++++ b/source/ti/zstack/stack/zcl/zcl.c
+@@ -47,6 +47,8 @@
+ #include "zcl.h"
+ #include "zcl_general.h"
+ 
++#include "osal_nv.h"
++
+ #if defined ( INTER_PAN ) || defined ( BDB_TL_INITIATOR ) || defined ( BDB_TL_TARGET )
+   #include "stub_aps.h"
+ #endif
+@@ -4675,6 +4677,16 @@ static uint8_t zclProcessInWriteCmd( zclIncoming_t *pInMsg )
+             status = zclWriteAttrData( pInMsg->msg->endPoint, &(pInMsg->msg->srcAddr),
+                                        &attrRec, statusRec );
+           }
++
++#ifdef IS_ROUTER
++          if((pInMsg->msg->clusterId == ZCL_CLUSTER_ID_GENERAL_BASIC) && (statusRec->attrID == ATTRID_BASIC_TRANSMIT_POWER))
++          {
++              int8_t transmitPower;
++              OsalPort_memcpy((int8_t*)&transmitPower,statusRec->attrData,sizeof(int8_t));
++              ZMacSetTransmitPower( (ZMacTransmitPower_t)transmitPower );
++              osal_nv_write( ZCD_NV_TRANSMIT_POWER, sizeof( transmitPower ), &transmitPower );
++          }
++#endif
+         }
+         else // Use CB
+         {
 diff --git a/source/ti/zstack/stack/zdo/zd_app.c b/source/ti/zstack/stack/zdo/zd_app.c
 index d67a7798a..4e6e38295 100644
 --- a/source/ti/zstack/stack/zdo/zd_app.c
@@ -869,7 +1242,7 @@ index 72073f7a9..36d913077 100644
      macLowLevelBufferInit();
  
 diff --git a/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project b/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project
-index 4bb416405..cf968f5c6 100644
+index 4bb416405..5a15ca68d 100644
 --- a/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project
 +++ b/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project
 @@ -443,6 +443,11 @@
@@ -877,9 +1250,9 @@ index 4bb416405..cf968f5c6 100644
  			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
  		</link>
 +		<link>
-+			<name>Stack/Config/preinclude.h</name>
++			<name>preinclude.h</name>
 +			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/Config/preinclude.h</locationURI>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
 +		</link>
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
@@ -897,15 +1270,16 @@ index 4bb416405..cf968f5c6 100644
  			<name>Stack/nwk/reflecttrack.h</name>
  			<type>1</type>
 diff --git a/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-index 2a7704196..1ccfc4c0e 100644
+index 2a7704196..694c9c52f 100644
 --- a/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 +++ b/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-@@ -32,3 +32,5 @@
+@@ -32,3 +32,6 @@
  -DMT_GP_CB_FUNC
  
  -DMT_APP_CNF_FUNC
 +
-+-include ../../../source/ti/zstack/stack/Config/preinclude.h
++-DIS_COORDINATOR
++-include ../../../source/preinclude.h
 diff --git a/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c b/workspace/znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c
 new file mode 100644
 index 000000000..c80aafd91
@@ -1832,7 +2206,7 @@ index d4aa40faa..4ea5983c4 100644
  zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
  zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
 diff --git a/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/.project b/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/.project
-index 4bc048a63..157a11e35 100644
+index 4bc048a63..c6ead0dc3 100644
 --- a/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/.project
 +++ b/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/.project
 @@ -443,6 +443,11 @@
@@ -1840,9 +2214,9 @@ index 4bc048a63..157a11e35 100644
  			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
  		</link>
 +		<link>
-+			<name>Stack/Config/preinclude.h</name>
++			<name>preinclude.h</name>
 +			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/Config/preinclude.h</locationURI>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
 +		</link>
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
@@ -1860,15 +2234,16 @@ index 4bc048a63..157a11e35 100644
  			<name>Stack/nwk/reflecttrack.h</name>
  			<type>1</type>
 diff --git a/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-index 2a7704196..1ccfc4c0e 100644
+index 2a7704196..694c9c52f 100644
 --- a/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 +++ b/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-@@ -32,3 +32,5 @@
+@@ -32,3 +32,6 @@
  -DMT_GP_CB_FUNC
  
  -DMT_APP_CNF_FUNC
 +
-+-include ../../../source/ti/zstack/stack/Config/preinclude.h
++-DIS_COORDINATOR
++-include ../../../source/preinclude.h
 diff --git a/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/znp.syscfg b/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/znp.syscfg
 index 3efe0956a..e9679a8ac 100644
 --- a/workspace/znp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/znp.syscfg
@@ -1901,7 +2276,7 @@ index 3efe0956a..e9679a8ac 100644
  zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
  zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
 diff --git a/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/.project b/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/.project
-index f727ae82a..e952dac27 100644
+index f727ae82a..1c91f9ce2 100644
 --- a/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/.project
 +++ b/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/.project
 @@ -443,6 +443,11 @@
@@ -1909,9 +2284,9 @@ index f727ae82a..e952dac27 100644
  			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
  		</link>
 +		<link>
-+			<name>Stack/Config/preinclude.h</name>
++			<name>preinclude.h</name>
 +			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/Config/preinclude.h</locationURI>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
 +		</link>
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
@@ -1929,15 +2304,16 @@ index f727ae82a..e952dac27 100644
  			<name>Stack/nwk/reflecttrack.h</name>
  			<type>1</type>
 diff --git a/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-index 2a7704196..1ccfc4c0e 100644
+index 2a7704196..694c9c52f 100644
 --- a/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 +++ b/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-@@ -32,3 +32,5 @@
+@@ -32,3 +32,6 @@
  -DMT_GP_CB_FUNC
  
  -DMT_APP_CNF_FUNC
 +
-+-include ../../../source/ti/zstack/stack/Config/preinclude.h
++-DIS_COORDINATOR
++-include ../../../source/preinclude.h
 diff --git a/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/znp.syscfg b/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/znp.syscfg
 index e6495498e..be1ffc95b 100644
 --- a/workspace/znp_LP_CC1352P7_4_tirtos7_ticlang/znp.syscfg
@@ -1970,7 +2346,7 @@ index e6495498e..be1ffc95b 100644
  zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
  zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
 diff --git a/workspace/znp_LP_CC2652R7_tirtos7_ticlang/.project b/workspace/znp_LP_CC2652R7_tirtos7_ticlang/.project
-index caa1f9dfa..4b4722a40 100644
+index caa1f9dfa..0fe0d8c9e 100644
 --- a/workspace/znp_LP_CC2652R7_tirtos7_ticlang/.project
 +++ b/workspace/znp_LP_CC2652R7_tirtos7_ticlang/.project
 @@ -443,6 +443,11 @@
@@ -1978,9 +2354,9 @@ index caa1f9dfa..4b4722a40 100644
  			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
  		</link>
 +		<link>
-+			<name>Stack/Config/preinclude.h</name>
++			<name>preinclude.h</name>
 +			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/Config/preinclude.h</locationURI>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
 +		</link>
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
@@ -1998,15 +2374,16 @@ index caa1f9dfa..4b4722a40 100644
  			<name>Stack/nwk/reflecttrack.h</name>
  			<type>1</type>
 diff --git a/workspace/znp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-index 2a7704196..b0f17b492 100644
+index 2a7704196..7f2821dd8 100644
 --- a/workspace/znp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 +++ b/workspace/znp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-@@ -32,3 +32,5 @@
+@@ -32,3 +32,6 @@
  -DMT_GP_CB_FUNC
  
  -DMT_APP_CNF_FUNC
 +
-+-include ../../../source/ti/zstack/stack/Config/preinclude.h
++-DIS_COORDINATOR
++-include ../../../source/preinclude.h
 \ No newline at end of file
 diff --git a/workspace/znp_LP_CC2652R7_tirtos7_ticlang/znp.syscfg b/workspace/znp_LP_CC2652R7_tirtos7_ticlang/znp.syscfg
 index 219224b2c..7086c8e45 100644
@@ -2040,7 +2417,7 @@ index 219224b2c..7086c8e45 100644
  zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
  zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
 diff --git a/workspace/znp_LP_CC2652RB_tirtos7_ticlang/.project b/workspace/znp_LP_CC2652RB_tirtos7_ticlang/.project
-index f7730d18b..983a2d842 100644
+index f7730d18b..a2e98d745 100644
 --- a/workspace/znp_LP_CC2652RB_tirtos7_ticlang/.project
 +++ b/workspace/znp_LP_CC2652RB_tirtos7_ticlang/.project
 @@ -443,6 +443,11 @@
@@ -2048,9 +2425,9 @@ index f7730d18b..983a2d842 100644
  			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
  		</link>
 +		<link>
-+			<name>Stack/Config/preinclude.h</name>
++			<name>preinclude.h</name>
 +			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/Config/preinclude.h</locationURI>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
 +		</link>
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
@@ -2068,15 +2445,16 @@ index f7730d18b..983a2d842 100644
  			<name>Stack/nwk/reflecttrack.h</name>
  			<type>1</type>
 diff --git a/workspace/znp_LP_CC2652RB_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_LP_CC2652RB_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-index 2a7704196..1ccfc4c0e 100644
+index 2a7704196..694c9c52f 100644
 --- a/workspace/znp_LP_CC2652RB_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 +++ b/workspace/znp_LP_CC2652RB_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-@@ -32,3 +32,5 @@
+@@ -32,3 +32,6 @@
  -DMT_GP_CB_FUNC
  
  -DMT_APP_CNF_FUNC
 +
-+-include ../../../source/ti/zstack/stack/Config/preinclude.h
++-DIS_COORDINATOR
++-include ../../../source/preinclude.h
 diff --git a/workspace/znp_LP_CC2652RB_tirtos7_ticlang/znp.syscfg b/workspace/znp_LP_CC2652RB_tirtos7_ticlang/znp.syscfg
 index 7deb5984a..e846cbebc 100644
 --- a/workspace/znp_LP_CC2652RB_tirtos7_ticlang/znp.syscfg
@@ -2122,7 +2500,7 @@ index 7486d11b4..b8e826c2f 100644
                          <toolChain id="com.ti.ccstudio.buildDefinitions.TMS470_TICLANG_4.0.exe.DebugToolchain.381829176" name="TI Build Tools" secondaryOutputs="" superClass="com.ti.ccstudio.buildDefinitions.TMS470_TICLANG_4.0.exe.DebugToolchain" targetTool="com.ti.ccstudio.buildDefinitions.TMS470_TICLANG_4.0.exe.linkerDebug.2117744147">
                              <option id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.1082040289" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS" valueType="stringList">
 diff --git a/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/.project b/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/.project
-index 56441e3bd..7f3f0ccd4 100644
+index 56441e3bd..cde23d1ba 100644
 --- a/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/.project
 +++ b/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/.project
 @@ -443,6 +443,11 @@
@@ -2130,9 +2508,9 @@ index 56441e3bd..7f3f0ccd4 100644
  			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
  		</link>
 +		<link>
-+			<name>Stack/Config/preinclude.h</name>
++			<name>preinclude.h</name>
 +			<type>1</type>
-+			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/Config/preinclude.h</locationURI>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
 +		</link>
  		<link>
  			<name>Stack/MAC/mac_api.h</name>
@@ -2150,15 +2528,16 @@ index 56441e3bd..7f3f0ccd4 100644
  			<name>Stack/nwk/reflecttrack.h</name>
  			<type>1</type>
 diff --git a/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/Stack/Config/znp_cnf.opts b/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-index 2a7704196..1ccfc4c0e 100644
+index 2a7704196..694c9c52f 100644
 --- a/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/Stack/Config/znp_cnf.opts
 +++ b/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/Stack/Config/znp_cnf.opts
-@@ -32,3 +32,5 @@
+@@ -32,3 +32,6 @@
  -DMT_GP_CB_FUNC
  
  -DMT_APP_CNF_FUNC
 +
-+-include ../../../source/ti/zstack/stack/Config/preinclude.h
++-DIS_COORDINATOR
++-include ../../../source/preinclude.h
 diff --git a/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/znp.syscfg b/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/znp.syscfg
 index c8b870c45..4f4e30f23 100644
 --- a/workspace/znp_LP_EM_CC2674P10_tirtos7_ticlang/znp.syscfg
@@ -2176,6 +2555,476 @@ index c8b870c45..4f4e30f23 100644
  zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
  zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
 +zstack.rf.txPower                            = "5";
+ zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+ zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+ zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
+diff --git a/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project
+index 6b9733f49..338223c32 100644
+--- a/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project
++++ b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/.project
+@@ -503,6 +503,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
+ 		</link>
++		<link>
++			<name>preinclude.h</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/MAC/mac_api.h</name>
+ 			<type>1</type>
+@@ -768,6 +773,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
+ 		</link>
++		<link>
++			<name>Stack/nwk/nwk_util.c</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/nwk/reflecttrack.h</name>
+ 			<type>1</type>
+diff --git a/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/Stack/Config/f8wrouter.opts b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+index e5660451e..2bc71db01 100644
+--- a/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/Stack/Config/f8wrouter.opts
++++ b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+@@ -9,3 +9,6 @@
+ -DADDRMGR_NV_SINGLES
+ -DBINDINGTABLE_NV_SINGLES
+ -DASSOCLIST_NV_SINGLES
++
++-DIS_ROUTER
++-include ../../../source/preinclude.h
+diff --git a/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c
+new file mode 120000
+index 000000000..6e29a8e45
+--- /dev/null
++++ b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c
+@@ -0,0 +1 @@
++../znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_devices_config.c
+\ No newline at end of file
+diff --git a/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_drivers_config.h b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_drivers_config.h
+new file mode 120000
+index 000000000..dcd76f70e
+--- /dev/null
++++ b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_drivers_config.h
+@@ -0,0 +1 @@
++../znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_drivers_config.h
+\ No newline at end of file
+diff --git a/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.c b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.c
+new file mode 120000
+index 000000000..a53a13dd6
+--- /dev/null
++++ b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.c
+@@ -0,0 +1 @@
++../znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.c
+\ No newline at end of file
+diff --git a/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.h b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.h
+new file mode 120000
+index 000000000..cfa1ab404
+--- /dev/null
++++ b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.h
+@@ -0,0 +1 @@
++../znp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/ti_radio_config.h
+\ No newline at end of file
+diff --git a/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/zr_genericapp.syscfg b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/zr_genericapp.syscfg
+index af6c62cb7..96a3cc514 100644
+--- a/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/zr_genericapp.syscfg
++++ b/workspace/zr_genericapp_CC1352P_2_LAUNCHXL_tirtos7_ticlang/zr_genericapp.syscfg
+@@ -5,6 +5,10 @@
+  * @v2CliArgs --board "/ti/boards/CC1352P_2_LAUNCHXL" --device "CC1352P" --package "VQFN (RGZ)" --rtos "tirtos7" --product "simplelink_cc13xx_cc26xx_sdk@8.30.01.01"
+  * @versions {"tool":"1.23.0+4000"}
+  */
++scripting.excludeFromBuild("ti_devices_config.c");
++scripting.excludeFromBuild("ti_radio_config.c");
++scripting.excludeFromBuild("ti_radio_config.h");
++scripting.excludeFromBuild("ti_drivers_config.h");
+ 
+ /**
+  * Import the modules used in this configuration.
+@@ -66,6 +70,7 @@ CCFG.enableBootloaderBackdoor = true;
+ CCFG.levelBootloaderBackdoor  = "Active low";
+ CCFG.forceVddr                = true;
+ CCFG.dioBootloaderBackdoor    = 15;
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFG_CCFGCC26XXTemplate0";
+ 
+ rfdesign.rfDesign = "LAUNCHXL-CC1352P-2";
+@@ -88,8 +93,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
+-NVS1.internalFlash.regionSize = 0x4000;
+-NVS1.internalFlash.regionBase = 0x52000;
++NVS1.internalFlash.regionBase = 0x50000;
++NVS1.internalFlash.regionSize = 0x6000;
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
+@@ -179,6 +184,8 @@ zstack.deviceTypeReadOnly                    = true;
+ zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+ zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+ zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
++zstack.rf.txPower                            = "20";
++zstack.rf.primaryChannels                    = [11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26];
+ zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+ zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+ zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
+diff --git a/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/.project b/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/.project
+index 80a923cc6..4fb89e1f5 100644
+--- a/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/.project
++++ b/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/.project
+@@ -503,6 +503,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
+ 		</link>
++		<link>
++			<name>preinclude.h</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/MAC/mac_api.h</name>
+ 			<type>1</type>
+@@ -768,6 +773,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
+ 		</link>
++		<link>
++			<name>Stack/nwk/nwk_util.c</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/nwk/reflecttrack.h</name>
+ 			<type>1</type>
+diff --git a/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/f8wrouter.opts b/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+index e5660451e..2bc71db01 100644
+--- a/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/f8wrouter.opts
++++ b/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+@@ -9,3 +9,6 @@
+ -DADDRMGR_NV_SINGLES
+ -DBINDINGTABLE_NV_SINGLES
+ -DASSOCLIST_NV_SINGLES
++
++-DIS_ROUTER
++-include ../../../source/preinclude.h
+diff --git a/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/zr_genericapp.syscfg b/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/zr_genericapp.syscfg
+index 65e1a4caa..829146d80 100644
+--- a/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/zr_genericapp.syscfg
++++ b/workspace/zr_genericapp_CC26X2R1_LAUNCHXL_tirtos7_ticlang/zr_genericapp.syscfg
+@@ -63,6 +63,7 @@ CCFG.enableBootloader         = true;
+ CCFG.enableBootloaderBackdoor = true;
+ CCFG.levelBootloaderBackdoor  = "Active low";
+ CCFG.dioBootloaderBackdoor    = 13;
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFG_CCFGCC26XXTemplate0";
+ 
+ Display1.$hardware  = system.deviceData.board.components.XDS110UART;
+@@ -83,8 +84,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
+-NVS1.internalFlash.regionSize = 0x4000;
+-NVS1.internalFlash.regionBase = 0x52000;
++NVS1.internalFlash.regionBase = 0x50000;
++NVS1.internalFlash.regionSize = 0x6000;
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
+@@ -172,6 +173,8 @@ zstack.deviceTypeReadOnly                    = true;
+ zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+ zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+ zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
++zstack.rf.txPower                            = "5";
++zstack.rf.primaryChannels                    = [11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26];
+ zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+ zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+ zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
+diff --git a/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/.project b/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/.project
+index b0f293784..102e9587c 100644
+--- a/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/.project
++++ b/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/.project
+@@ -503,6 +503,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
+ 		</link>
++		<link>
++			<name>preinclude.h</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/MAC/mac_api.h</name>
+ 			<type>1</type>
+@@ -768,6 +773,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
+ 		</link>
++		<link>
++			<name>Stack/nwk/nwk_util.c</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/nwk/reflecttrack.h</name>
+ 			<type>1</type>
+diff --git a/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/Stack/Config/f8wrouter.opts b/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+index e5660451e..2bc71db01 100644
+--- a/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/Stack/Config/f8wrouter.opts
++++ b/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+@@ -9,3 +9,6 @@
+ -DADDRMGR_NV_SINGLES
+ -DBINDINGTABLE_NV_SINGLES
+ -DASSOCLIST_NV_SINGLES
++
++-DIS_ROUTER
++-include ../../../source/preinclude.h
+diff --git a/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/zr_genericapp.syscfg b/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/zr_genericapp.syscfg
+index f252080dd..7b7df4d85 100644
+--- a/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/zr_genericapp.syscfg
++++ b/workspace/zr_genericapp_LP_CC1352P7_4_tirtos7_ticlang/zr_genericapp.syscfg
+@@ -65,6 +65,7 @@ CCFG.enableBootloader         = true;
+ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 15;
+ CCFG.levelBootloaderBackdoor  = "Active low";
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFG_CCFGCC26XXTemplate0";
+ 
+ rfdesign.rfDesign = "LP_CC1352P7-4";
+@@ -87,8 +88,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
+-NVS1.internalFlash.regionSize = 0x4000;
+-NVS1.internalFlash.regionBase = 0xAA000;
++NVS1.internalFlash.regionSize = 0x8000;
++NVS1.internalFlash.regionBase = 0xA6000;
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
+@@ -179,6 +180,7 @@ zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touch
+ zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+ zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
+ zstack.rf.txPower                            = "10";
++zstack.rf.primaryChannels                    = [11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26];
+ zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+ zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+ zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
+diff --git a/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/.project b/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/.project
+index 8240004f7..c7b2a3ca2 100644
+--- a/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/.project
++++ b/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/.project
+@@ -503,6 +503,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
+ 		</link>
++		<link>
++			<name>preinclude.h</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/MAC/mac_api.h</name>
+ 			<type>1</type>
+@@ -768,6 +773,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
+ 		</link>
++		<link>
++			<name>Stack/nwk/nwk_util.c</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/nwk/reflecttrack.h</name>
+ 			<type>1</type>
+diff --git a/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/f8wrouter.opts b/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+index e5660451e..2bc71db01 100644
+--- a/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/f8wrouter.opts
++++ b/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+@@ -9,3 +9,6 @@
+ -DADDRMGR_NV_SINGLES
+ -DBINDINGTABLE_NV_SINGLES
+ -DASSOCLIST_NV_SINGLES
++
++-DIS_ROUTER
++-include ../../../source/preinclude.h
+diff --git a/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/zr_genericapp.syscfg b/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/zr_genericapp.syscfg
+index c116cba7f..78f6595e4 100644
+--- a/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/zr_genericapp.syscfg
++++ b/workspace/zr_genericapp_LP_CC2652R7_tirtos7_ticlang/zr_genericapp.syscfg
+@@ -63,6 +63,7 @@ CCFG.enableBootloader         = true;
+ CCFG.enableBootloaderBackdoor = true;
+ CCFG.levelBootloaderBackdoor  = "Active low";
+ CCFG.dioBootloaderBackdoor    = 13;
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFG_CCFGCC26XXTemplate0";
+ 
+ Display1.$hardware  = system.deviceData.board.components.XDS110UART;
+@@ -83,8 +84,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
+-NVS1.internalFlash.regionSize = 0x4000;
+-NVS1.internalFlash.regionBase = 0xAA000;
++NVS1.internalFlash.regionSize = 0x8000;
++NVS1.internalFlash.regionBase = 0xA6000;
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
+@@ -172,6 +173,8 @@ zstack.deviceTypeReadOnly                    = true;
+ zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+ zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+ zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
++zstack.rf.primaryChannels                    = [11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26];
++zstack.rf.txPower                            = "5";
+ zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+ zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+ zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
+diff --git a/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/.project b/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/.project
+index ef4bc2c88..c6ac069ef 100644
+--- a/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/.project
++++ b/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/.project
+@@ -503,6 +503,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
+ 		</link>
++		<link>
++			<name>preinclude.h</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/MAC/mac_api.h</name>
+ 			<type>1</type>
+@@ -768,6 +773,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
+ 		</link>
++		<link>
++			<name>Stack/nwk/nwk_util.c</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/nwk/reflecttrack.h</name>
+ 			<type>1</type>
+diff --git a/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/Stack/Config/f8wrouter.opts b/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+index e5660451e..2bc71db01 100644
+--- a/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/Stack/Config/f8wrouter.opts
++++ b/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+@@ -9,3 +9,6 @@
+ -DADDRMGR_NV_SINGLES
+ -DBINDINGTABLE_NV_SINGLES
+ -DASSOCLIST_NV_SINGLES
++
++-DIS_ROUTER
++-include ../../../source/preinclude.h
+diff --git a/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/zr_genericapp.syscfg b/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/zr_genericapp.syscfg
+index c28058861..c3422caec 100644
+--- a/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/zr_genericapp.syscfg
++++ b/workspace/zr_genericapp_LP_CC2652RB_tirtos7_ticlang/zr_genericapp.syscfg
+@@ -65,6 +65,7 @@ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 13;
+ CCFG.levelBootloaderBackdoor  = "Active low";
+ CCFG.srcClkLF                 = "Derived from HF XOSC";
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFG_CCFGCC26XXTemplate0";
+ 
+ Display1.$hardware  = system.deviceData.board.components.XDS110UART;
+@@ -85,8 +86,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
+ 
+ NVS1.$name                    = "CONFIG_NVSINTERNAL";
+ NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
+-NVS1.internalFlash.regionSize = 0x4000;
+-NVS1.internalFlash.regionBase = 0x52000;
++NVS1.internalFlash.regionBase = 0x50000;
++NVS1.internalFlash.regionSize = 0x6000;
+ 
+ NVS2.$name                          = "CONFIG_NVSEXTERNAL";
+ NVS2.nvsType                        = "External";
+@@ -174,6 +175,8 @@ zstack.deviceTypeReadOnly                    = true;
+ zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+ zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+ zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
++zstack.rf.txPower                            = "5";
++zstack.rf.primaryChannels                    = [11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26];
+ zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
+ zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
+ zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
+diff --git a/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/.cproject b/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/.cproject
+index bb3408813..15f6ef083 100644
+--- a/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/.cproject
++++ b/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/.cproject
+@@ -13,7 +13,7 @@
+                 </extensions>
+             </storageModule>
+             <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+-                <configuration artifactExtension="out" artifactName="${ProjName}" buildProperties="" cleanCommand="${CG_CLEAN_CMD}" description="" id="com.ti.ccstudio.buildDefinitions.TMS470.Default.955479207" name="default" parent="com.ti.ccstudio.buildDefinitions.TMS470.Default">
++                <configuration artifactExtension="out" artifactName="${ProjName}" buildProperties="" cleanCommand="${CG_CLEAN_CMD}" description="" id="com.ti.ccstudio.buildDefinitions.TMS470.Default.955479207" name="default" parent="com.ti.ccstudio.buildDefinitions.TMS470.Default" postbuildStep="${CG_TOOL_ROOT}/bin/tiarmobjcopy ${BuildArtifactFileName} --output-target ihex ${BuildArtifactFileBaseName}.hex">
+                     <folderInfo id="com.ti.ccstudio.buildDefinitions.TMS470.Default.955479207." name="/" resourcePath="">
+                         <toolChain id="com.ti.ccstudio.buildDefinitions.TMS470_TICLANG_4.0.exe.DebugToolchain.1354913905" name="TI Build Tools" secondaryOutputs="" superClass="com.ti.ccstudio.buildDefinitions.TMS470_TICLANG_4.0.exe.DebugToolchain" targetTool="com.ti.ccstudio.buildDefinitions.TMS470_TICLANG_4.0.exe.linkerDebug.736406772">
+                             <option id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.1452584310" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS" valueType="stringList">
+diff --git a/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/.project b/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/.project
+index d8cfe99a9..a12928303 100644
+--- a/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/.project
++++ b/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/.project
+@@ -503,6 +503,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ti154stack/common/boards/mac_user_config.h</locationURI>
+ 		</link>
++		<link>
++			<name>preinclude.h</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/preinclude.h</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/MAC/mac_api.h</name>
+ 			<type>1</type>
+@@ -768,6 +773,11 @@
+ 			<type>1</type>
+ 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.h</locationURI>
+ 		</link>
++		<link>
++			<name>Stack/nwk/nwk_util.c</name>
++			<type>1</type>
++			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/zstack/stack/nwk/nwk_util.c</locationURI>
++		</link>
+ 		<link>
+ 			<name>Stack/nwk/reflecttrack.h</name>
+ 			<type>1</type>
+diff --git a/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/Stack/Config/f8wrouter.opts b/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+index e5660451e..2bc71db01 100644
+--- a/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/Stack/Config/f8wrouter.opts
++++ b/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/Stack/Config/f8wrouter.opts
+@@ -9,3 +9,6 @@
+ -DADDRMGR_NV_SINGLES
+ -DBINDINGTABLE_NV_SINGLES
+ -DASSOCLIST_NV_SINGLES
++
++-DIS_ROUTER
++-include ../../../source/preinclude.h
+diff --git a/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/zr_genericapp.syscfg b/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/zr_genericapp.syscfg
+index 898048549..03390ba76 100644
+--- a/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/zr_genericapp.syscfg
++++ b/workspace/zr_genericapp_LP_EM_CC2674P10_tirtos7_ticlang/zr_genericapp.syscfg
+@@ -65,6 +65,7 @@ CCFG.enableBootloader         = true;
+ CCFG.enableBootloaderBackdoor = true;
+ CCFG.dioBootloaderBackdoor    = 15;
+ CCFG.levelBootloaderBackdoor  = "Active low";
++CCFG.enableDCDC               = false;
+ CCFG.ccfgTemplate.$name       = "ti_devices_CCFG_CCFGCC26XXTemplate0";
+ 
+ Display1.$hardware  = system.deviceData.board.components.XDS110UART;
+@@ -177,6 +178,8 @@ zstack.deviceTypeReadOnly                    = true;
+ zstack.touchlink.$name                       = "ti_zstack_touchlink_zstack_touchlink0";
+ zstack.pm.$name                              = "ti_zstack_pm_zstack_pm0";
+ zstack.rf.$name                              = "ti_zstack_rf_zstack_rf0";
++zstack.rf.txPower                            = "5";
++zstack.rf.primaryChannels                    = [11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26];
  zstack.rf.radioConfig.$name                  = "ti_devices_radioconfig_settings_ieee_15_40";
  zstack.rf.radioConfig.codeExportConfig.$name = "ti_devices_radioconfig_code_export_param0";
  zstack.rf.coexSettings.$name                 = "ti_zstack_rf_zstack_coex_mod0";
