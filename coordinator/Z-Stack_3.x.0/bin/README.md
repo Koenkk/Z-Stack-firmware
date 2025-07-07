@@ -28,7 +28,7 @@ The list of supported firmware versions and Zigbee adapters in alphabetical orde
     <td>?</td>
   </tr>
   <tr>
-  <td><a href="https://github.com/codm/cc2652-raspberry-pi-module">cod.m Zigbee CC2652P RPi Module</a></td>
+    <td><a href="https://shop.codm.de/en/automation/zigbee/zigbee-cc2652p7-raspberry-pi-module">cod.m Zigbee CC2652P RPi Module 0.2</a></td>
     <td>CC2652P<br>(RFSTAR RF-BM-2652P2)</td>
     <td>CC1352P2_CC2652P_launchpad_*.zip</td>
     <td>DIO_15</td>
@@ -37,8 +37,18 @@ The list of supported firmware versions and Zigbee adapters in alphabetical orde
     <td>N/A</td>
     <td>?</td>
   </tr>
-<tr>
-    <td><a href="https://shop.codm.de/en/automation/zigbee/40/zigbee-coordinator-cc2652p7-PoE">cod.m Zigbee Coordinator CC2652P7 (CZC-1.0)</a></td>
+  <tr>
+    <td><a href="https://shop.codm.de/en/automation/zigbee/zigbee-cc2652p7-raspberry-pi-module">cod.m Zigbee CC2652P7 RPi Module 0.4</a></td>
+    <td>CC2652P7<br>(RFSTAR RF-BM-2652P4I)</td>
+    <td>CC1352P7_*.zip</td>
+    <td>DIO_15</td>
+    <td>No</td>
+    <td>DIO_28: 2.4Ghz<br>DIO_29: 20dBm PA</td>
+    <td>DIO_7 (Orange)</td>
+    <td>?</td>
+  </tr>
+  <tr>
+    <td><a href="https://shop.codm.de/en/ZigBee-Coordinator-CC2652P7-CZC-1.2/90810-POE-SW">cod.m Zigbee Coordinator CC2652P7 (CZC-1.X)</a></td>
     <td>CC2652P7<br>(RFSTAR RF-BM-2652P4I)</td>
     <td>CC1352P7_*.zip</td>
     <td>DIO_15</td>
