@@ -5,7 +5,7 @@ Subject: [PATCH] Own changes
 
 ---
  package.py                                    |  36 ++
- source/preinclude.h                           | 122 ++++++
+ source/preinclude.h                           | 132 ++++++
  .../zstack/apps/genericapp/zcl_genericapp.c   |  32 ++
  .../apps/genericapp/zcl_genericapp_data.c     |  57 ++-
  .../cc13x2_cc26x2_tirtos7_ticlang.cmd         |   8 +-
@@ -135,7 +135,7 @@ new file mode 100644
 index 000000000..641087801
 --- /dev/null
 +++ b/source/preinclude.h
-@@ -0,0 +1,122 @@
+@@ -0,0 +1,132 @@
 +// Increase MAC buffers, multiplied default value by 10
 +#undef MAC_CFG_TX_DATA_MAX
 +#define MAC_CFG_TX_DATA_MAX 50
@@ -154,15 +154,20 @@ index 000000000..641087801
 +#define MTO_RREQ_LIMIT_TIME 5000
 +
 +// Increase NV pages to allow for bigger device tables
-+// not for `CC2674P10` as it has 5 pages by default.
-+#ifndef EM_CC2674P10_LP
++// CC2674P10 has 5 pages by default; CC1352P7/CC2652P7 has enough flash for 5 pages too.
++#if defined(EM_CC2674P10_LP) || defined(DeviceFamily_CC13X2X7)
++    // already 5 pages by default on CC2674P10; set explicitly for CC1352P7/CC2652P7
++    #undef NVOCMP_NVPAGES
++    #define NVOCMP_NVPAGES 5
++#else
 +    #undef NVOCMP_NVPAGES
 +    #define NVOCMP_NVPAGES 3
 +#endif
 +
-+// Determines the maximum number of “secure partners” that the network Trust Center (ZC) can support. 
-+// This value will be the upper limit of Zigbee 3.0 devices which are allowed in the network
-+#ifdef EM_CC2674P10_LP
++// Determines the maximum number of “secure partners” that the network Trust Center (ZC) can support.
++// This value will be the upper limit of Zigbee 3.0 devices which are allowed in the network.
++// CC2674P10 and CC1352P7/CC2652P7 have enough SRAM (152KB+) for 400 devices.
++#if defined(EM_CC2674P10_LP) || defined(DeviceFamily_CC13X2X7)
 +    #define ZDSECMGR_TC_DEVICE_MAX 400
 +#else
 +    #define ZDSECMGR_TC_DEVICE_MAX 200
@@ -214,7 +219,12 @@ index 000000000..641087801
 +    #define CONCENTRATOR_ENABLE TRUE
 +    #define CONCENTRATOR_ROUTE_CACHE TRUE
 +    #define CONCENTRATOR_DISCOVERY_TIME 60
-+    #define MAX_RTG_SRC_ENTRIES 250
++    // CC1352P7/CC2652P7 and CC2674P10 have enough SRAM for larger source route tables
++    #if defined(EM_CC2674P10_LP) || defined(DeviceFamily_CC13X2X7)
++        #define MAX_RTG_SRC_ENTRIES 400
++    #else
++        #define MAX_RTG_SRC_ENTRIES 250
++    #endif
 +    #define SRC_RTG_EXPIRY_TIME 10
 +
 +    // The number of simultaneous route discoveries in network
@@ -523,9 +533,9 @@ index 1e5777c21..ababb2c7f 100755
 -#define FLASH_SIZE              0xAA000
 -#define FLASH_NV_BASE           0xAA000
 -#define FLASH_NV_SIZE           0x4000
-+#define FLASH_SIZE              0xA6000
-+#define FLASH_NV_BASE           0xA6000
-+#define FLASH_NV_SIZE           0x8000
++#define FLASH_SIZE              0xA4000
++#define FLASH_NV_BASE           0xA4000
++#define FLASH_NV_SIZE           0xA000
  #define FLASH_LAST_BASE         0xAE000
  #define FLASH_LAST_SIZE         0x2000
  
