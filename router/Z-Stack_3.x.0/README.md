@@ -1,7 +1,7 @@
 # Z-Stack 3.x.0 router firmwares
 
 ## What firmware to pick for my device?
-Same logic as the coordinator firmware applies. See [README.md of the coordinator firmware](../../../coordinator/Z-Stack_3.x.0/bin/README.md).
+Same logic as the coordinator firmware applies. See [README.md of the coordinator firmware](../../coordinator/Z-Stack_3.x.0/README.md).
 
 ## Pairing
 After reflashing the router will automatically pair.
