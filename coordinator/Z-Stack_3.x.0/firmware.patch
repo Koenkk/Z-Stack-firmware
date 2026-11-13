@@ -5,7 +5,7 @@ Subject: [PATCH] Own changes
 
 ---
  package.py                                    |  36 ++
- source/preinclude.h                           | 122 ++++++
+ source/preinclude.h                           | 123 ++++++
  .../zstack/apps/genericapp/zcl_genericapp.c   |  32 ++
  .../apps/genericapp/zcl_genericapp_data.c     |  57 ++-
  .../cc13x2_cc26x2_tirtos7_ticlang.cmd         |   8 +-
@@ -75,7 +75,7 @@ Subject: [PATCH] Own changes
  .../.project                                  |  10 +
  .../Stack/Config/f8wrouter.opts               |   3 +
  .../zr_genericapp.syscfg                      |   3 +
- 71 files changed, 1646 insertions(+), 73 deletions(-)
+ 71 files changed, 1647 insertions(+), 73 deletions(-)
  create mode 100644 package.py
  create mode 100644 source/preinclude.h
  create mode 100644 source/ti/zstack/stack/nwk/nwk_util.c
@@ -132,10 +132,10 @@ index 000000000..ecade4f9a
 +        zipf.write(file, arcname=f"{name}.hex")
 diff --git a/source/preinclude.h b/source/preinclude.h
 new file mode 100644
-index 000000000..641087801
+index 000000000..687c9baec
 --- /dev/null
 +++ b/source/preinclude.h
-@@ -0,0 +1,122 @@
+@@ -0,0 +1,123 @@
 +// Increase MAC buffers, multiplied default value by 10
 +#undef MAC_CFG_TX_DATA_MAX
 +#define MAC_CFG_TX_DATA_MAX 50
@@ -235,7 +235,8 @@ index 000000000..641087801
 +    #define BDB_REPORTING
 +    #define CUI_DISABLE
 +    #define NWK_MAX_DEVICE_LIST     50
-+    #define ZDO_API_ADVANCED
++    // Respond to routing table requests (Mgmt_Rtg_req)
++    #define ZDO_MGMT_RTG_RESPONSE
 +    #define ATTRID_BASIC_TRANSMIT_POWER 0x1337
 +#endif
 +
